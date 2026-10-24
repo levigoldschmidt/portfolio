@@ -1,0 +1,259 @@
+{
+  "categories": [
+    {
+      "name": "Architecture",
+      "items": [
+        {
+          "title": "Versailles",
+          "file": "photos/architecture/73.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Versailles",
+          "file": "photos/architecture/76.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Versailles",
+          "file": "photos/architecture/71.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Versailles",
+          "file": "photos/architecture/72.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Immeubles modernes",
+          "file": "photos/architecture/64.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Rue parisienne",
+          "file": "photos/architecture/60.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Facades et palmiers",
+          "file": "photos/architecture/58.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Facade vitrée",
+          "file": "photos/architecture/67.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Composition architecturale",
+          "file": "photos/architecture/66.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Immeuble Singapour",
+          "file": "photos/architecture/17.png",
+          "type": "image"
+        },
+        {
+          "title": "Immeuble Singapour",
+          "file": "photos/architecture/20.png",
+          "type": "image"
+        },
+        {
+          "title": "Immeuble Singapour Mastercard",
+          "file": "photos/architecture/19.png",
+          "type": "image"
+        },
+        {
+          "title": "Immeuble Singapour",
+          "file": "photos/architecture/21.png",
+          "type": "image"
+        },
+        {
+          "title": "Immeuble 16ème Paris",
+          "file": "photos/architecture/22.png",
+          "type": "image"
+        },
+        {
+          "title": "Mosquée de Singapour",
+          "file": "photos/architecture/16.png",
+          "type": "image"
+        },
+        {
+          "title": "Hôtel Singapour",
+          "file": "photos/architecture/15.png",
+          "type": "image"
+        },
+        {
+          "title": "Philharmonie de Paris",
+          "file": "photos/architecture/13.png",
+          "type": "image"
+        },
+        {
+          "title": "Philharmonie de Paris",
+          "file": "photos/architecture/14.png",
+          "type": "image"
+        },
+        {
+          "title": "Paris",
+          "file": "photos/architecture/12.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/6.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/5.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/7.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/9.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/8.png",
+          "type": "image"
+        },
+        {
+          "title": "La Défense Paris",
+          "file": "photos/architecture/10.png",
+          "type": "image"
+        },
+        {
+          "title": "Tour Triangle",
+          "file": "photos/architecture/1.png",
+          "type": "image"
+        },
+        {
+          "title": "Tour Triangle",
+          "file": "photos/architecture/2.png",
+          "type": "image"
+        },
+        {
+          "title": "Tour Triangle",
+          "file": "photos/architecture/3.png",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "2026",
+      "items": [
+        {
+          "title": "Tour Eiffel dans la brume",
+          "file": "photos/2026/79.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Porte et roue",
+          "file": "photos/2026/62.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Motos vintage",
+          "file": "photos/2026/51.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Mouettes & Cormorans",
+          "file": "photos/2026/42.png",
+          "type": "image"
+        },
+        {
+          "title": "Voilier & Ponton",
+          "file": "photos/2026/38.png",
+          "type": "image"
+        },
+        {
+          "title": "Soirée à la fenêtre",
+          "file": "photos/2026/36.png",
+          "type": "image"
+        },
+        {
+          "title": "Ferme & Drapeaux",
+          "file": "photos/2026/34.png",
+          "type": "image"
+        },
+        {
+          "title": "Lac turquoise",
+          "file": "photos/2026/31.png",
+          "type": "image"
+        },
+        {
+          "title": "Textures de bois",
+          "file": "photos/2026/29.png",
+          "type": "image"
+        },
+        {
+          "title": "Oiseaux",
+          "file": "photos/2026/28.png",
+          "type": "image"
+        },
+        {
+          "title": "Village lacustre",
+          "file": "photos/2026/27.png",
+          "type": "image"
+        },
+        {
+          "title": "PSG",
+          "file": "photos/2026/24.png",
+          "type": "image"
+        },
+        {
+          "title": "PSG",
+          "file": "photos/2026/26.png",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "A1387",
+      "items": [
+        {
+          "title": "Seine et Institut",
+          "file": "photos/a1387/MD235FDA.jpg",
+          "type": "image"
+        },
+        {
+          "title": "Vidéo",
+          "file": "photos/a1387/download.mp4",
+          "type": "video"
+        },
+        {
+          "title": "Fête foraine & Jardins",
+          "file": "photos/a1387/48.png",
+          "type": "image"
+        },
+        {
+          "title": "Genève",
+          "file": "photos/a1387/46.png",
+          "type": "image"
+        },
+        {
+          "title": "Plage du Léman",
+          "file": "photos/a1387/41.png",
+          "type": "image"
+        },
+        {
+          "title": "Saule pleureur",
+          "file": "photos/a1387/32.png",
+          "type": "image"
+        },
+        {
+          "title": "Concert",
+          "file": "photos/a1387/49.png",
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}

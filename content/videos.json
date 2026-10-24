@@ -1,0 +1,14 @@
+{
+  "videos": [
+    {
+      "title": "Vidéo 1",
+      "youtube": "yH7cXiIshAE",
+      "thumbnail": "videos/yH7cXiIshAE.jpg"
+    },
+    {
+      "title": "Vidéo 2",
+      "youtube": "z9ppxJcqtEc",
+      "thumbnail": "videos/z9ppxJcqtEc.jpg"
+    }
+  ]
+}

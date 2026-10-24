@@ -1,0 +1,25 @@
+{
+  "name": "GOLDSCHMIDT LEVI",
+  "description": "Portfolio de Lévi Goldschmidt — architecture, projets, photographies et vidéos.",
+  "language": "fr",
+  "base_url": "",
+  "logo": "site/logo.png",
+  "nav": [
+    {
+      "label": "PROJETS",
+      "href": "projets/"
+    },
+    {
+      "label": "PHOTOS",
+      "href": "photos/"
+    },
+    {
+      "label": "VIDÉOS",
+      "href": "videos/"
+    },
+    {
+      "label": "CV",
+      "href": "cv/"
+    }
+  ]
+}

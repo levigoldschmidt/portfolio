@@ -1,0 +1,1185 @@
+{
+  "categories": [
+    "Architecture",
+    "Lycée"
+  ],
+  "projects": [
+    {
+      "id": "6acb7c51511bd7be12379afb",
+      "slug": "s2-projet-1-the-room",
+      "title": "S2 Projet 1 : the room",
+      "category": "Architecture",
+      "year": "",
+      "cover": null,
+      "sections": []
+    },
+    {
+      "id": "6ac91cdaf5d8c0a29f64dace",
+      "slug": "s2-intensif-structure",
+      "title": "S2 Intensif structure",
+      "category": "Architecture",
+      "year": "",
+      "cover": "projets/s2-intensif-structure/levigoldscmidt1010.jpg",
+      "sections": [
+        {
+          "id": "gallery",
+          "label": "Compte rendu",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s2-intensif-structure/PrsentationV2_1.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_2.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_3.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_4.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_5.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_6.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_7.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_8.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_9.jpg",
+            "projets/s2-intensif-structure/PrsentationV2_10.jpg"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquette",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s2-intensif-structure/levigoldscmidt10101.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt1010.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt10111.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt10121.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt1012.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt1014.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt10171.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt1017.jpg",
+            "projets/s2-intensif-structure/levigoldscmidt1019.jpg"
+          ]
+        },
+        {
+          "id": "video",
+          "label": "Vidéo",
+          "type": "videos",
+          "grayscale": true,
+          "videos": [
+            {
+              "youtube": "9xryal4O0uY",
+              "thumbnail": "videos/9xryal4O0uY.jpg"
+            }
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s2-intensif-structure/PrsentationV2.pdf",
+              "name": "prsentationv2.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a42388554b2db1b435e18f2",
+      "slug": "pfs-2-habitat-solidaire",
+      "title": "PFS 2 : Habitat Solidaire",
+      "category": "Architecture",
+      "year": "2026",
+      "cover": "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_12.jpg",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir un ensemble de logements collectifs et inclusifs (colocations étudiantes, habitat transgénérationnel ou hébergement d'urgence) implanté sur le site historique de l'ancien hôpital de La Rochefoucauld, à Paris (14e arrondissement). Le projet repose sur la conception et la déclinaison d'« Unités d'habitation » combinatoires de 150 m², pensées pour accueillir 5 à 6 occupants en équilibrant vie communautaire et intimité individuelle. Insérée dans une bande constructible étroite le long d'une venelle en pente, cette architecture répétitive crée un filtre poreux entre la rue et le nouveau parc public. L'enjeu est de travailler l'imbrication des pleins et des vides, la relation au sol et les aménagements extérieurs tout en prolongeant la vocation sociale de ce site patrimonial.\n\nConcept : Développer le projet autour d'une trame carrée rigide organisée autour d'un patio central en triple hauteur. Cet atrium distribue les logements étudiants grâce à un jeu de passerelles suspendues. Chaque unité suit un plan carré identique doté d'une loggia privée. L'exploration de la façade épaisse permet d'intégrer du mobilier sur mesure (tables, banquettes, bacs de végétation) ainsi que des rideaux amovibles personnalisables pour chaque étudiant.\n\nDurée : 4 semaines\n\nNote : 17/20 (Meilleure note)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-2-habitat-solidaire/CROQUIS_1.png",
+            "projets/pfs-2-habitat-solidaire/CROQUIS_2.png",
+            "projets/pfs-2-habitat-solidaire/CROQUIS_3.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_6.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_7.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_8.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_9.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_10.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_11.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_1.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_2.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_3.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_4.png",
+            "projets/pfs-2-habitat-solidaire/elementsgraphique_5.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_1.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_2.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_3.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_4.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_5.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_6.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_7.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_8.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_9.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_10.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_30.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_11.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_12.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_13.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_14.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_15.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_16.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_17.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_18.jpg",
+            "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_19.jpg"
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Rendus 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-2-habitat-solidaire/Sanstitre_1.png",
+            "projets/pfs-2-habitat-solidaire/Sanstitre_2.png",
+            "projets/pfs-2-habitat-solidaire/Sanstitre_3.png",
+            "projets/pfs-2-habitat-solidaire/Sanstitre_4.png",
+            "projets/pfs-2-habitat-solidaire/Sanstitre_5.png",
+            "projets/pfs-2-habitat-solidaire/Sanstitre_6.png"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/pfs-2-habitat-solidaire/GOLDSCHMIDT_Lvi_Compress1.pdf",
+              "name": "goldschmidt_lvi_compress1.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a3da8098a0c489f7120871a",
+      "slug": "s1-projet-7-l-atelier-d-artiste",
+      "title": "S1 Projet 7 : L'Atelier d'Artiste",
+      "category": "Architecture",
+      "year": "2025",
+      "cover": "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1020.jpg",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir une maison-atelier urbaine à Ivry-sur-Seine, articulant un espace de travail et d'exposition de 125 m² avec un logement de 3 pièces de 80 m² sur une parcelle étroite (7,50 m × 17 m). Le projet repose sur la mise en œuvre de dispositifs architecturaux majeurs — double hauteur, patio et travail de la lumière naturelle — pour qualifier les espaces et l'intériorité. L'enjeu est de scénographier le parcours entre travail et habitat, en travaillant la volumétrie, les cadrages de vue, la précision des usages et la mise en scène d'œuvres au sein du showroom.\n\nConcept : Créer un atelier pour un artisan verrier composé d'une galerie d'exposition au rez-de-chaussée et d'un espace de travail en contrebas bénéficiant d'une double hauteur. Le logement se développe en duplex traversant aux étages supérieurs (R+1 et R+2), offrant des vues plongeantes sur l'atelier et accueillant deux chambres au dernier niveau. Le projet réinvestit le concept de façade épaisse à travers de larges montants verticaux qui intègrent des loggias, des terrasses, des assises et des tablettes intérieures/extérieures.\n\nDurée : 3 semaines\n\nNote : 18/20 (Meilleure note)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_1.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_2.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_3.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_4.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_10.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_1-2.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_2-2.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_3-2.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_4-2.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_5.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_6.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_7.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_8.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Sanstitre_9.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt10081.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1010.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt10111.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt10121.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1019.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1020-2.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1021.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1022.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1027.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1028.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1029.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1033.jpg",
+            "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1034.jpg"
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Rendus 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-7-l-atelier-d-artiste/Image1_001.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Image3.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Image4.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/Image4_000.png",
+            "projets/s1-projet-7-l-atelier-d-artiste/sdfg.png"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-7-l-atelier-d-artiste/A0RENDU3V2siteinternet.pdf",
+              "name": "a0rendu3v2siteinternet.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a46df5d2d1a9e24c13c6def",
+      "slug": "s1-projet-6",
+      "title": "S1 Projet 6",
+      "category": "Architecture",
+      "year": "2024",
+      "cover": "projets/s1-projet-6/LevyGoldschmit1011.jpg",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir l'analyse et la représentation graphique complète d'un bâtiment remarquable issu du Guide d'architecture Paris 1900-2008 d'Éric Lapierre. L'exercice repose sur un travail de recherche documentaire et de relevé in situ pour décrypter le projet sous ses aspects spatiaux, constructifs et techniques. L'objectif est de restituer avec précision l'édifice à travers la réalisation de documents graphiques normés (plans, coupes, façades), la fabrication d'une maquette d'étude et la formulation d'hypothèses architecturales pour les éléments non documentés.\n\nConcept : Analyse spatiale et constructive de l'ensemble mixte regroupant l'église Saint-Luc et son immeuble de logements. Le travail met en évidence l'articulation et la cohabitation entre le programme culturel/sacré de l'église et la fonction résidentielle au sein de la même structure.\n\nDurée : 3 semaines\n\nNote : 15/20 (Meilleure note)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/A034CROQUISDETAILSEGLISE.png",
+            "projets/s1-projet-6/A035CROQUISSOCLECOMMUN.png",
+            "projets/s1-projet-6/A036CROQUISSOCLECOMMUN.png",
+            "projets/s1-projet-6/A037PLAN.png",
+            "projets/s1-projet-6/A039CROQUISTOUSLESESPACES.png",
+            "projets/s1-projet-6/A0310COUPESOUSSOL.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-6/elementgraphique.png",
+            "projets/s1-projet-6/elementgraphiques_1.png",
+            "projets/s1-projet-6/elementgraphiques_2.png",
+            "projets/s1-projet-6/elementgraphiques_3.png",
+            "projets/s1-projet-6/elementgraphiques_5.png",
+            "projets/s1-projet-6/elementgraphiques_6.png",
+            "projets/s1-projet-6/elementgraphiques_7.png",
+            "projets/s1-projet-6/elementgraphiques_8.png",
+            "projets/s1-projet-6/elementgraphiques_9.png",
+            "projets/s1-projet-6/elementgraphiques_10.png",
+            "projets/s1-projet-6/elementgraphiques_11.png",
+            "projets/s1-projet-6/elementgraphiques_12.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/LevyGoldschmit1007.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1011-2.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1014.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1017.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1019.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1020.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1023.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1024.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1025.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1026.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1027.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1028.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1030.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1031.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1032.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1033.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1034.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1035.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1036.jpg",
+            "projets/s1-projet-6/LevyGoldschmit1037.jpg"
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Rendus 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/Image1_003.png",
+            "projets/s1-projet-6/Image3.png",
+            "projets/s1-projet-6/Image4.png",
+            "projets/s1-projet-6/Image5.png",
+            "projets/s1-projet-6/Image6.png"
+          ]
+        },
+        {
+          "id": "building",
+          "label": "Bâtiment",
+          "heading": "Images du Bâtiment",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-6/DSC_0001.jpg",
+            "projets/s1-projet-6/DSC_0010.jpg",
+            "projets/s1-projet-6/DSC_0019.jpg",
+            "projets/s1-projet-6/DSC_0024.jpg",
+            "projets/s1-projet-6/DSC_0025.jpg",
+            "projets/s1-projet-6/DSC_0048.jpg",
+            "projets/s1-projet-6/DSC_0067.jpg",
+            "projets/s1-projet-6/DSC_0069.jpg",
+            "projets/s1-projet-6/DSC_0071.jpg",
+            "projets/s1-projet-6/DSC_0085.jpg",
+            "projets/s1-projet-6/DSC_0093.jpg",
+            "projets/s1-projet-6/DSC_0104.jpg",
+            "projets/s1-projet-6/DSC_0138.jpg",
+            "projets/s1-projet-6/DSC_0157.jpg",
+            "projets/s1-projet-6/DSC_0163.jpg"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-6/RENDUFINALE.pdf",
+              "name": "rendufinale.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/s1-projet-6/GOLDSCHMIDT_Lvi2_compressed.pdf",
+              "name": "goldschmidt_lvi2_compressed.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a47ce0ed4bceb4a3fd2a756",
+      "slug": "s1-projet-5",
+      "title": "S1 Projet 5",
+      "category": "Architecture",
+      "year": "2026",
+      "cover": "projets/s1-projet-5/elementsgraphique_6.png",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir une extension contemporaine sous forme de logement sur le toit d'un bâtiment existant au cœur de la cité-jardin historique de la Butte-Rouge, à Châtenay-Malabry. Le projet commence par un travail d'observation en duo et de dessin sur place pour comprendre le quartier, son histoire et son architecture. L'objectif est d'étudier le passage de la rue à l'espace privé de l'habitat, puis d'imaginer un nouveau lieu de vie moderne qui s'intègre au-dessus d'un bâtiment existant tout en respectant son cadre naturel et patrimonial.\n\nConcept : Analyse de l'édifice existant et réflexion sur l'aménagement intérieur à travers la composition des façades et le travail des ouvertures. Le projet développe un duplex destiné à une famille de cinq enfants, ceinturé de terrasses périphériques pour offrir un prolongement extérieur généreux à l'ensemble des espaces de vie.\n\nDurée : 3 semaines\n\nNote : 15/20 (Meilleure note)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-5/Releverbatiment_1.png",
+            "projets/s1-projet-5/Releverbatiment_2.png",
+            "projets/s1-projet-5/coupeurbaine.png",
+            "projets/s1-projet-5/facadeGAUCHEDROITEAVANT.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-5/elementsgraphique_1.png",
+            "projets/s1-projet-5/elementsgraphique_2.png",
+            "projets/s1-projet-5/elementsgraphique_3.png",
+            "projets/s1-projet-5/elementsgraphique_4.png",
+            "projets/s1-projet-5/elementsgraphique_5.png",
+            "projets/s1-projet-5/elementsgraphique_6.png",
+            "projets/s1-projet-5/elementsgraphique_7.png",
+            "projets/s1-projet-5/elementsgraphique_8.png",
+            "projets/s1-projet-5/elementsgraphique_9.png",
+            "projets/s1-projet-5/elementsgraphique_10.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_1.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_2.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_3.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_4.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_5.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_6.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_7.png",
+            "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE_10_8.png"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-5/Rendu31.pdf",
+              "name": "rendu31.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/s1-projet-5/Analyse_LviGOLDSCHMIDTAxelPENNE.pdf",
+              "name": "analyse_lvigoldschmidtaxelpenne.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a44db66dd81f8bd01e07200",
+      "slug": "pfs-1-un-espace-couvert",
+      "title": "PFS 1 : Un Espace Couvert",
+      "category": "Architecture",
+      "year": "2024",
+      "cover": "projets/pfs-1-un-espace-couvert/Image2_000.png",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectif : Concevoir une halle couverte de moins de 300 m² (marché couvert ou abri pour nageurs) implantée sur la place de Stalingrad, directement face à la Rotonde de Stalingrad (ancienne barrière d'octroi de Claude Nicolas Ledoux). Le projet interroge le thème du \"couvrir\" et de la structure dans un contexte urbain dense, marqué par la présence de l'eau du bassin de la Villette, du métro aérien et de forts flux piétons. En jouant sur les altimétries, les accès et la porosité, l'enjeu est de définir une stratégie d'implantation forte — entre ostentation et disparition — capable de faire entrer ce nouvel édifice en dialogue direct avec le monument historique de la Rotonde.\n\nConcept : Dessiner deux grands toits pentus pour générer des volumes intérieurs généreux adaptés à l'échelle d'une halle. Ces deux structures sont reliées par une grande passerelle suspendue qui connecte directement les toitures, aménagées en terrasses et en espaces de restauration surplombant le site.\n\nDurée : 4 semaines\n\nNote : 15/20 (Meilleure note : 17/20)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_1.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_2.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_3.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_4.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_5.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_6.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_7.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_8.png",
+            "projets/pfs-1-un-espace-couvert/elementsgraphique_9.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-1-un-espace-couvert/Sanstitre_1.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_2.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_3.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_4.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_5.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_6.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_7.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_8.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_9.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_10.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_11.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_12.png",
+            "projets/pfs-1-un-espace-couvert/Sanstitre_13.png"
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Rendus 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/pfs-1-un-espace-couvert/Image2_000.png"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/pfs-1-un-espace-couvert/FROJET4LINESPACECOUVERT1.pdf",
+              "name": "frojet4linespacecouvert1.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a44bfb3e5406d7cd2cb1e21",
+      "slug": "s1-projet-3-la-fenetre-l-enveloppe",
+      "title": "S1 Projet 3 : La Fenêtre L'Enveloppe",
+      "category": "Architecture",
+      "year": "2024",
+      "cover": "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9711.JPEG",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir un module de logement étudiant duplicable, pensé comme une grande fenêtre habitée où l'ensemble des fonctions (dormir, cuisiner, travailler, se laver, ranger) s'intègre directement le long de la façade. Imaginé à partir de dimensions strictes (5 m × 3,7 m sur 5 m de hauteur) et mono-orienté, le projet explore l'architecture de l'intérieur vers l'extérieur. L'enjeu est de composer une enveloppe sur mesure en travaillant le cadrage de la vue, la lumière naturelle, le confort d'été et l'isolation pour offrir des qualités d'espaces uniques à chaque usage.\n\nConcept : Développer un logement sur deux niveaux marqué par un décrochement formant une terrasse. La grande baie vitrée en façade accueille l'ensemble des fonctions et crée un jeu de déséquilibre visuel entre masse et vide, simulant un volume imposant suspendu au-dessus du vide. La façade épaisse devient elle-même un espace habité en intégrant directement le mobilier et les usages.\n\nDurée : 3 semaines\n\nNote : 16/20 (Meilleure note du groupe)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/ELEMENTSGRAPHIQUE_1.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/ELEMENTSGRAPHIQUE_2.png",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/ELEMENTSGRAPHIQUE_3.png",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/ELEMENTSGRAPHIQUE_4.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9710.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9711.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9716.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9718.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9725.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9729.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9732.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9733.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9736.jpg",
+            "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9737.jpg"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-3-la-fenetre-l-enveloppe/PDF.pdf",
+              "name": "pdf.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a43816f8de0bd70dfce8262",
+      "slug": "s1-projet-2-le-toit-l-ossature",
+      "title": "S1 Projet 2 : Le Toit L'Ossature",
+      "category": "Architecture",
+      "year": "2024",
+      "cover": "projets/s1-projet-2-le-toit-l-ossature/IMG_9707.JPEG",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectifs : Concevoir un pavillon de service dédié aux mobilités douces, implanté au cœur du parc des Grands-Moulins et pensé comme un point de rassemblement pour les cyclistes. Développé sur deux niveaux, le bâtiment articule des espaces intérieurs et extérieurs comprenant un atelier de réparation, un abri pour 25 vélos, des bureaux et une terrasse en belvédère. L'ensemble repose sur une réflexion approfondie autour de la structure bois, en jouant sur la trame, les dimensions des éléments et l'épaisseur des matériaux pour assurer la stabilité du bâtiment tout en affirmant son identité.\n\nConcept : Créer un édifice assurant la jonction entre les différents niveaux du parc et de l'avenue. L'architecture exploite des escaliers en gradins pour offrir à la fois des zones de rangement et des terrasses extérieures. Au rez-de-chaussée, le garage à vélos propose une gradation spatiale, organisant les fonctions du plus public au plus intime dans la profondeur du bâtiment, tandis que des percées visuelles sous les escaliers lient les deux étages.\n\nDurée : 3 semaines\n\nNote : 15/20 (Meilleure note : 17/20)"
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_1.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_2.png",
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_3.png",
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_4.png",
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_5.png",
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_6.png",
+            "projets/s1-projet-2-le-toit-l-ossature/elementgraphique_7.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9766.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9694.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9697.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9698.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9700.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9702.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9703.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9705.jpg",
+            "projets/s1-projet-2-le-toit-l-ossature/IMG_9707.jpg"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-2-le-toit-l-ossature/Sanstitre.pdf",
+              "name": "sanstitre.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a41713e3f20c0a8f7339def",
+      "slug": "s1-projet-1-le-mur-la-masse",
+      "title": "S1 Projet 1 : Le Mur La Masse",
+      "category": "Architecture",
+      "year": "2024",
+      "cover": "projets/s1-projet-1-le-mur-la-masse/IMG_9739.jpg",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Objectif : Concevoir une micro-architecture en plâtre, dessinée à partir d'une forme géométrique simple (carré, cercle, diagonale) pour organiser trois fonctions de base : dormir, se laver et manger. Le projet repose sur une sculpture dans la masse : il n'y a ni toit, ni portes, ni fenêtres, ni meubles rapportés. La table, le lit ou la douche sont directement extrudés du sol et des murs. L'espace s'oriente selon la course du soleil pour jouer avec la lumière naturelle et la hauteur des parois. L'objectif final est de concevoir le projet en creux (son négatif) afin de le mouler en une seule pièce.\n\nConcept : Imaginer une pièce en demi-cercle dont les espaces et les ouvertures s'orientent en suivant la courbe de cette géométrie. Un mur épais intègre directement l'ensemble des fonctions (cuisine, sanitaires, chambre). Le projet joue sur des variations de niveaux et un travail d'escaliers pour accentuer la profondeur et la perception des volumes.\n\nDurée : 1 semaine\n\nNote : 15/20 (Meilleure note : 16/20)"
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-1-le-mur-la-masse/Plan_1.png",
+            "projets/s1-projet-1-le-mur-la-masse/Plan_2.png",
+            "projets/s1-projet-1-le-mur-la-masse/Plan_3.png",
+            "projets/s1-projet-1-le-mur-la-masse/Plan_4.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9749.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9751.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9755.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9757.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9739.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9741.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9743.jpg",
+            "projets/s1-projet-1-le-mur-la-masse/IMG_9746.jpg"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/s1-projet-1-le-mur-la-masse/PDF.pdf",
+              "name": "pdf.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a4eacaafcaa495813c4c7d2",
+      "slug": "cheepygood",
+      "title": "CheepyGood",
+      "category": "Lycée",
+      "year": "2024",
+      "cover": "projets/cheepygood/df.PNG",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "CheepyGood by Minitech — Little robots that do big things. Projet de design produit développé au lycée : modélisation 3D d'un petit robot compact, vue éclatée et présentation éditoriale type magazine. Dimensions : 58 × 46 × 34 mm."
+        },
+        {
+          "id": "gallery",
+          "label": "Images",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/cheepygood/arrg.PNG"
+          ]
+        },
+        {
+          "id": "video",
+          "label": "Vidéo",
+          "type": "videos",
+          "grayscale": true,
+          "videos": [
+            {
+              "youtube": "ACzamYSsTnM",
+              "thumbnail": "videos/ACzamYSsTnM.jpg"
+            }
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/cheepygood/Codedifferentyeux_.pdf",
+              "name": "codedifferentyeux_.pdf",
+              "viewable": false
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a520138f0eb788229d0a355",
+      "slug": "tino",
+      "title": "Tino",
+      "category": "Lycée",
+      "year": "2024",
+      "cover": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.png",
+      "sections": [
+        {
+          "id": "gallery",
+          "label": "Images",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_1.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_2.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_3.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_4.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_5.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_6.png"
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.pdf",
+              "name": "compte-rendutinolvigoldschmidt.pdf",
+              "viewable": false
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a4fb9fc36f3d781488766d7",
+      "slug": "enigmati-x",
+      "title": "Enigmati'X",
+      "category": "Lycée",
+      "year": "2024",
+      "cover": "projets/enigmati-x/1_6.png",
+      "cover_scale": 1.5,
+      "sections": [
+        {
+          "id": "gallery",
+          "label": "Images",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/enigmati-x/1_1.png",
+            "projets/enigmati-x/1_2.png",
+            "projets/enigmati-x/1_3.png",
+            "projets/enigmati-x/1_4.png",
+            "projets/enigmati-x/1_5.png",
+            "projets/enigmati-x/1_6.png",
+            "projets/enigmati-x/1_7.png",
+            "projets/enigmati-x/1_8.png",
+            "projets/enigmati-x/1_9.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Rubee X",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/enigmati-x/GOLDSCHMIDTLevi1ere7_1.png",
+            "projets/enigmati-x/GOLDSCHMIDTLevi1ere7_2.png",
+            "projets/enigmati-x/GOLDSCHMIDTLevi1ere7_3.png",
+            "projets/enigmati-x/GOLDSCHMIDTLevi1ere7_4.png",
+            "projets/enigmati-x/GOLDSCHMIDTLevidrawio.png"
+          ]
+        },
+        {
+          "id": "process",
+          "label": "Statique avec Frottement",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_1.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_2.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_3.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_4.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_5.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_6.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_7.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_8.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_9.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_10.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_11.png",
+            "projets/enigmati-x/StatiqueAvecFrottementsLviGOLDSCHMIDT1er7_12.png"
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Présentation Finale",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/enigmati-x/MAEUProjectfinalprsentation_3.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_4.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_5.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_6.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_7.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_8.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_9.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_10.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_11.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_12.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_13.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_14.png",
+            "projets/enigmati-x/MAEUProjectfinalprsentation_15.png"
+          ]
+        },
+        {
+          "id": "video",
+          "label": "Vidéo",
+          "type": "videos",
+          "grayscale": true,
+          "videos": [
+            {
+              "youtube": "quMEFBAmII0",
+              "thumbnail": "videos/quMEFBAmII0.jpg"
+            }
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/enigmati-x/GOLDSCHMIDTLevidrawio.pdf",
+              "name": "goldschmidtlevidrawio.pdf",
+              "viewable": false
+            },
+            {
+              "file": "projets/enigmati-x/GOLDSCHMIDTLevi1ere7.pdf",
+              "name": "goldschmidtlevi1ere7.pdf",
+              "viewable": false
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6acced17fd972c4b34bf42e6",
+      "slug": "steam-racing-world-finals-singapour-2025",
+      "title": "Steam Racing World Finals Singapour 2025",
+      "category": "Lycée",
+      "year": "2025",
+      "cover": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_13.jpg",
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "Aeris est une équipe de cinq membres du lycée Jean Mermoz de Saint-Louis, qualifiée pour la finale mondiale STEM Racing 2025 à Singapour après sa victoire aux finales nationales françaises.\n\nLe projet couvre tous les aspects d'une entreprise : ingénierie (conception CAO sous Onshape, simulations CFD, optimisation de la masse, usinage 5 axes chez ISL), gestion de projet (ClickUp, matrice RACI, budget de 30 000 €), marketing, réseaux sociaux, recherche de sponsors et développement durable.\n\nLa voiture Aeris, d'une masse d'environ 48,3 g, est équipée de roulements hybrides céramique Kanzen et de roues en aluminium 7075. Le modèle MATLAB/Simulink estime un temps de piste de 1,067 s sur 24 mètres.\n\nLes portfolios Enterprise, Project Management, Engineering, Engineering Drawings et 3D Renders sont disponibles dans la section PDF."
+        },
+        {
+          "id": "renders",
+          "label": "RENDU 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_21.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_12.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_13.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_14.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_15.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_16.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_17.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_18.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_19.jpg"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "ENGINEERING DRAWING",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_12.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_13.jpg"
+          ]
+        },
+        {
+          "id": "process",
+          "label": "ENGINEERING PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_11.jpg"
+          ]
+        },
+        {
+          "id": "enterprise",
+          "label": "ENTERPRISE PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/1-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/2-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/3-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/4-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/5-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/6-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/7-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/8-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/9-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/10-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/11.jpg"
+          ]
+        },
+        {
+          "id": "management",
+          "label": "MANAGEMENT PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/1-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/2-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/3-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/4-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/5-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/6-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/7-3.jpg"
+          ]
+        },
+        {
+          "id": "video",
+          "label": "Vidéo",
+          "type": "videos",
+          "grayscale": true,
+          "videos": [
+            {
+              "youtube": "CdkBjUj9o8c",
+              "thumbnail": "videos/CdkBjUj9o8c.jpg"
+            },
+            {
+              "youtube": "dWZzyhAs1Fw",
+              "start": 8940,
+              "thumbnail": "videos/dWZzyhAs1Fw.jpg"
+            },
+            {
+              "youtube": "VgGMCiO6VZw",
+              "thumbnail": "videos/VgGMCiO6VZw.jpg"
+            },
+            {
+              "youtube": "9i3xYSSv-KQ",
+              "thumbnail": "videos/9i3xYSSv-KQ.jpg"
+            },
+            {
+              "youtube": "2EILB7Cyb5s",
+              "thumbnail": "videos/2EILB7Cyb5s.jpg"
+            }
+          ]
+        },
+        {
+          "id": "pit",
+          "label": "Pit display",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154828.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154836.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154846.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154857.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154907.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154914.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154940.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154955.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_155003.jpg"
+          ]
+        },
+        {
+          "id": "social",
+          "label": "Réseaux sociaux",
+          "type": "links",
+          "links": [
+            {
+              "label": "Instagram — @aeris.racing",
+              "url": "https://www.instagram.com/aeris.racing/"
+            },
+            {
+              "label": "LinkedIn — AERIS RACING",
+              "url": "https://www.linkedin.com/company/aeris-racing"
+            },
+            {
+              "label": "YouTube — @AerisF1inschoolyoutube",
+              "url": "https://www.youtube.com/@AerisF1inschoolyoutube/videos"
+            },
+            {
+              "label": "STEM Racing — stemracing.com",
+              "url": "https://www.stemracing.com/"
+            }
+          ]
+        },
+        {
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_enterprise_compressed.pdf",
+              "name": "t83_stem_racing_fr_enterprise_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_projectmanagement_compressed.pdf",
+              "name": "t83_stem_racing_fr_projectmanagement_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_drawings_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_renders_compressed.pdf",
+              "viewable": true
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    }
+  ]
+}

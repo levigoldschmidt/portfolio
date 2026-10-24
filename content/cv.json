@@ -1,0 +1,45 @@
+{
+  "hero": "cv/DSC_0400.jpg",
+  "hero_alt": "Goldschmidt Levi",
+  "contact": "07 49 61 77 84 | levi.goldschmidt@gmail.com | Ferme leihouse Biederthal 68480, France | LinkedIn : Lévi Goldschmidt",
+  "sections": [
+    {
+      "title": "FORMATIONS",
+      "items": [
+        "2025 - Présent — 2ème année à l'École Nationale Supérieure d'Architecture de Paris-Val de Seine (ENSA PVS) , Paris",
+        "2022 - 2025 — Baccalauréat Général Sections européenne Anglais Science de l'ingénieur Mention Très Bien, Lycée Jean Mermoz Saint Louis, France, Spécialités Mathématique , Physique chimie , Option Mathématiques expertes",
+        "2021 — Formation d'initiation au logiciel GibbsCam (FAO), Productec (Rossemaison - 2842)"
+      ]
+    },
+    {
+      "title": "EXPERIENCES",
+      "items": [
+        "2026 — Stage Ouvrier : Pracht Charpente & Menuiserie (Entreprise familiale) Levoncourt, France, Immersion sur chantier : découverte pratique des métiers du bois, compréhension des assemblages structurels et du travail du matériau brut.",
+        "2026 — Bénévolat au Championnat de France STEM racing : Support logistique, accueil des équipes et assistance technique lors de la finale nationale.",
+        "2025 — Champion de France & Finaliste Mondial à Singapour de la competition STEM racing : Ingénierie (conception CAD 3D, analyse aérodynamique), gestion globale de projet (recherche de sponsors, budget,) et présentation orale devant un jury international en anglais.",
+        "2021 — Stage de découverte en agence d'architecture : Handschin Schweighauser Architekten ETH SIA Bâle, Suisse, Observation des phases de projet, relevés de terrain. Étude et projet court de réhabilitation d'un silo agricole.",
+        "2020 — Stage d'Observation : Diametal Oltingue, France, Immersion en milieu industriel et découverte des procédés de fabrication de haute précision."
+      ]
+    },
+    {
+      "title": "COMPETENCES",
+      "items": [
+        "Logiciels Architecture : Archicad, Revit, Twinmotion, Onshape, SketchUp, Suite Affinity",
+        "Langues : Français : Langue maternelle, Anglais : B2 (Section européenne), Allemand : B1 (scolaire)"
+      ]
+    },
+    {
+      "title": "CENTRES D'INTERETS",
+      "items": [
+        "Automobile & Mécanique : Restauration complète d'une BMW 1502 de 1975 (mécanique, électricité, carrosserie).",
+        "Création Audiovisuelle : Photographie, réalisation vidéo.",
+        "Musique : Piano et Guitare basse au sein d'un groupe de music.",
+        "Sports & Engagement : Football, badminton, scoutisme (développement du leadership, travail d'équipe et autonomie)"
+      ]
+    }
+  ],
+  "pdf": {
+    "file": "cv/CV.pdf",
+    "name": "cv.pdf"
+  }
+}
