@@ -11,7 +11,52 @@
       "category": "Architecture",
       "year": "",
       "cover": null,
-      "sections": []
+      "sections": [
+        {
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": ""
+        },
+        {
+          "id": "process",
+          "label": "Processus / Croquis",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/A0310COUPESOUSSOL.png"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "Plans & Coupes",
+          "type": "images",
+          "grayscale": false,
+          "images": [
+            "projets/s1-projet-6/elementgraphique.png"
+          ]
+        },
+        {
+          "id": "models",
+          "label": "Maquettes",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/LevyGoldschmit1007.jpg"
+           
+          ]
+        },
+        {
+          "id": "renders",
+          "label": "Rendus 3D",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/s1-projet-6/Image1_003.png"
+            
+          ]
+        }
+      ]
     },
     {
       "id": "6ac91cdaf5d8c0a29f64dace",

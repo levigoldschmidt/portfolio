@@ -32,16 +32,40 @@ static/css, js  ─┘
 
 ## Edit and preview
 
-```sh
-source .venv/bin/activate          # or: python3 -m venv .venv && pip install -r requirements.txt
+### Windows (PowerShell)
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 # 1. edit content/*.json and add files to media/
-python build_site.py               # 2. rebuild site/
-.venv/bin/python -m http.server --directory site 8000   # 3. open http://127.0.0.1:8000/
+python build_site.py
+python -m http.server --directory site 8000
 ```
 
-To run the already-built website locally, without rebuilding it, only run the
-last command (the `site/` folder must exist) and open
-<http://127.0.0.1:8000/>. Press `Ctrl+C` to stop the server.
+Then open <http://127.0.0.1:8000/>. If PowerShell blocks activation, run the
+virtual environment's Python directly instead:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe build_site.py
+.\.venv\Scripts\python.exe -m http.server --directory site 8000
+```
+
+### macOS and Linux
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+# 1. edit content/*.json and add files to media/
+python build_site.py
+python -m http.server --directory site 8000
+```
+
+To run the already-built website locally without rebuilding it, run only the
+last command for your platform (the `site/` folder must exist). Press `Ctrl+C`
+to stop the server.
 - **Adding a project:** copy a project block in `content/projects.json`,
   give it a unique `slug`, and put its images in `media/projets/<slug>/`.
 - **Image thumbnails:** they are cached in `.cache/`. The first build takes a
