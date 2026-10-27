@@ -162,6 +162,7 @@ class Builder:
         self.make_zips = not args.no_zips
         self.global_zip = self.make_zips and args.global_zip
         self.pages: list[str] = []
+        self.style_version = hashlib.sha256((STATIC / "css" / "style.css").read_bytes()).hexdigest()[:12]
 
     # ---------- layout ----------
     def layout(self, page: Page, *, title: str, body: str, active: str = "", description: str = "",
@@ -200,7 +201,7 @@ class Builder:
 <meta property="og:title" content="{esc(full_title)}">
 <meta property="og:description" content="{esc(description)}">
 {chr(10).join(head_extra)}
-<link rel="stylesheet" href="{rel('assets/css/style.css')}">
+<link rel="stylesheet" href="{rel('assets/css/style.css')}?v={self.style_version}">
 <script src="{rel('assets/js/main.js')}" defer></script>
 </head>
 <body>
