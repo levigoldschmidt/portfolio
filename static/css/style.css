@@ -183,12 +183,11 @@ main { padding-top: var(--header-h); min-height: 60vh; }
   align-items: start;
 }
 .photo-grid button {
-  position: relative; display: block; overflow: hidden; width: 100%; aspect-ratio: 16 / 9;
+  position: relative; display: block; overflow: hidden; width: 100%;
   background: var(--muted-bg);
 }
 .photo-grid img, .photo-grid video {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; transition: transform .7s ease-out;
+  width: 100%; height: auto; transition: transform .7s ease-out;
 }
 .photo-grid button:hover img, .photo-grid button:hover video { transform: scale(1.03); }
 

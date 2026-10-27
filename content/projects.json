@@ -1,7 +1,8 @@
 {
   "categories": [
     "Architecture",
-    "Lycée"
+    "Lycée",
+    "Personnel"
   ],
   "projects": [
     {
@@ -1223,6 +1224,37 @@
             }
           ],
           "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "bmw-1502",
+      "slug": "bmw-1502",
+      "title": "BMW 1502",
+      "category": "Personnel",
+      "year": "",
+      "cover": null,
+      "sections": [
+        {
+          "id": "moteurs",
+          "label": "Moteurs",
+          "type": "images",
+          "grayscale": false,
+          "images": []
+        },
+        {
+          "id": "carrosserie",
+          "label": "Carrosserie",
+          "type": "images",
+          "grayscale": false,
+          "images": []
+        },
+        {
+          "id": "videos",
+          "label": "Vidéos",
+          "type": "videos",
+          "grayscale": false,
+          "videos": []
         }
       ]
     }

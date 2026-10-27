@@ -27,8 +27,9 @@ static/css, js  ─┘
 - `static/css/style.css`, `static/js/main.js`: the hand-written styles and
   behavior (lightbox, mobile carousels, click-to-load YouTube, PDF viewer,
   section navigation). These files are copied to `site/assets/`.
-- `build_site.py`: the generator. It uses Python's standard library plus
-  Pillow, which makes resized WebP versions of the images.
+- `build_site.py`: the generator. Pillow creates cached WebP variants up to
+  800 px wide for thumbnails and 2,000 px wide for larger image views. Original
+  files in `media/` are not modified.
 
 ## Edit and preview
 
@@ -38,7 +39,8 @@ static/css, js  ─┘
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-# 1. edit content/*.json and add files to media/
+# Add original images to media/ and reference them in content/*.json.
+# Each build automatically creates the thumbnail and large-view variants.
 python build_site.py
 python -m http.server --directory site 8000
 ```
@@ -68,7 +70,12 @@ last command for your platform (the `site/` folder must exist). Press `Ctrl+C`
 to stop the server.
 - **Adding a project:** copy a project block in `content/projects.json`,
   give it a unique `slug`, and put its images in `media/projets/<slug>/`.
-- **Image thumbnails:** they are cached in `.cache/`. The first build takes a
+- **Adding images:** place originals in `media/` and add their paths to the
+  appropriate project or photo entry in `content/*.json`. Then run
+  `python build_site.py`; it creates up-to-800 px thumbnails and up-to-2,000 px
+  large views, while keeping originals unchanged. Clicking a gallery image
+  opens the large view. Pillow must be installed from `requirements.txt`.
+- **Image variants:** they are cached in `.cache/`. The first build takes a
   few minutes, later builds take seconds.
 - **`site/`:** it is regenerated on every build, so don't edit it by hand.
 

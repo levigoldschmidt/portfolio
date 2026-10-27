@@ -6,9 +6,8 @@
     python build_site.py --global-zip    # also add the big all-images ZIP
     .venv/bin/python -m http.server --directory site 8000   # preview
 
-Only the Python standard library is required. If Pillow is installed, lightweight
-WebP thumbnails are generated for the grids (cached in .cache/), otherwise the
-original images are used everywhere.
+Pillow generates cached WebP image variants up to 800 px for thumbnails and
+2000 px for larger views. The original files remain untouched.
 """
 from __future__ import annotations
 
@@ -261,18 +260,18 @@ class Builder:
         return f'<section id="{esc(sid)}" class="section">{heading}{inner}</section>'
 
     def image_section(self, page: Page, group: str, title: str, images: list[str], gray: bool) -> str:
-        orig = [page.rel(self.images.original(p)) for p in images]
+        large_images = [page.rel(self.images.variant(p, LARGE_WIDTH).src) for p in images]
         grid = "".join(
             f'<button type="button" data-lightbox="{esc(group)}" data-src="{src}" data-alt="{esc(title)} {i}"'
             f' aria-label="Agrandir l’image {i} sur {len(images)}">'
             f'{self.img(page, p, alt=f"{title} {i}", width=THUMB_WIDTH, gray=gray)}</button>'
-            for i, (p, src) in enumerate(zip(images, orig), 1)
+            for i, (p, src) in enumerate(zip(images, large_images), 1)
         )
         slides = "".join(
             f'<button type="button" class="slide{" active" if i == 1 else ""}" data-lightbox="{esc(group)}"'
             f' data-src="{src}" data-alt="{esc(title)} {i}" aria-label="Agrandir l’image {i} sur {len(images)}">'
-            f'{self.img(page, p, alt=f"{title} {i}", width=THUMB_WIDTH * 3 // 2, gray=gray)}</button>'
-            for i, (p, src) in enumerate(zip(images, orig), 1)
+            f'{self.img(page, p, alt=f"{title} {i}", width=THUMB_WIDTH, gray=gray)}</button>'
+            for i, (p, src) in enumerate(zip(images, large_images), 1)
         )
         arrows = counter = ""
         if len(images) > 1:
@@ -413,7 +412,7 @@ class Builder:
             tiles = []
             for item in category["items"]:
                 n += 1
-                src = page.rel(self.images.original(item["file"]))
+                src = page.rel(self.images.variant(item["file"], LARGE_WIDTH).src)
                 label = f'Agrandir : {item["title"]} ({n} sur {total})'
                 if item.get("type") == "video":
                     media = (f'<video src="{src}" muted autoplay loop playsinline preload="metadata"'
@@ -535,7 +534,8 @@ def main() -> int:
                         help="also build the ~250 MB 'TOUT TÉLÉCHARGER (ZIP)' archive of every image")
     args = parser.parse_args()
     if Image is None and not args.no_thumbnails:
-        warnings.append("Pillow is not installed: grids use the original images (pip install pillow)")
+        parser.error("Pillow is required for image resizing; install dependencies with "
+                     "'python -m pip install -r requirements.txt' or use --no-thumbnails")
     builder = Builder(args)
     builder.run()
     files = [p for p in OUT.rglob("*") if p.is_file()]
