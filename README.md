@@ -16,20 +16,30 @@ static/css, js  ─┘
 - `content/projects.json`: categories and projects, in display order. Each
   project has a title, year, cover and a list of `sections`:
   - `text`
-  - `images` (`grayscale: true|false`)
-  - `videos` (YouTube id, optional start time)
-  - `links`
+  - `images` (`grayscale: true|false`), supplied as explicit image paths or
+    discovered from media `folders`; optional `video_folders` adds local videos
+    to the same image gallery with generated frame thumbnails; `mute_videos`
+    can silence those videos when opened
+  - `videos` (YouTube id and optional start time, or local media `folders`);
+    YouTube videos can set `muted: true` to start muted while keeping player
+    controls available
+  - `links` (optional `instagram_posts` embeds public Instagram posts in place;
+    the videos remain hosted by Instagram and are not processed or cropped)
   - `pdfs` (`viewable: true` adds a VOIR button)
+  - Sections can set `requires_code: true` to blur content until the visitor
+    enters the project access code. This is a visual deterrent only; a static
+    site cannot protect files from visitors who inspect the page or media URLs.
 - `content/photos.json`, `content/videos.json`, `content/cv.json`: the other
-  pages.
+  pages. English text is maintained in `content/translations.en.json`.
 - `media/`: every image, PDF and video, referenced from the JSON by their path
   relative to `media/`.
 - `static/css/style.css`, `static/js/main.js`: the hand-written styles and
   behavior (lightbox, mobile carousels, click-to-load YouTube, PDF viewer,
   section navigation). These files are copied to `site/assets/`.
 - `build_site.py`: the generator. Pillow creates cached WebP variants up to
-  800 px wide for thumbnails and 2,000 px wide for larger image views. Original
-  files in `media/` are not modified.
+  800 px wide for thumbnails and 2,000 px wide for larger image views.
+  `imageio-ffmpeg` extracts cached video poster frames. Original files in
+  `media/` are not modified.
 
 ## Edit and preview
 
@@ -77,6 +87,10 @@ to stop the server.
   opens the large view. Pillow must be installed from `requirements.txt`.
 - **Image variants:** they are cached in `.cache/`. The first build takes a
   few minutes, later builds take seconds.
+- **Local video thumbnails:** add a section's video folders under
+  `video_folders` to show videos in that photo gallery. The build extracts a
+  frame for each thumbnail; clicking it opens the video player. Set
+  `mute_videos: true` on the image section to mute its videos.
 - **`site/`:** it is regenerated on every build, so don't edit it by hand.
 
 ### Build options
@@ -85,8 +99,9 @@ to stop the server.
 | --- | --- |
 | `--base-url https://example.com` | Adds canonical links and `sitemap.xml` (set this for the real domain). |
 | `--no-thumbnails` | Uses the original images instead of resized WebP versions. |
-| `--no-zips` | Skips the per-project “images ZIP” downloads. |
-| `--global-zip` | Also builds `downloads/portfolio-images.zip` (about 250 MB, too large for GitHub Pages). |
+| `--enable-image-downloads` | Enables per-project and photo image ZIP downloads (disabled by default). |
+| `--no-zips` | Skips all image ZIP downloads, even when enabled. |
+| `--global-zip` | Also builds `downloads/portfolio-images.zip` (requires `--enable-image-downloads`; about 250 MB, too large for GitHub Pages). |
 
 ## Deploy
 
@@ -100,6 +115,9 @@ to stop the server.
   and the publish directory to `site`.
 - **Routes:** each page is a folder with an `index.html`, such as `/projets/`,
   `/photos/`, `/videos/`, `/cv/` and `/projets/<slug>/`.
+  - French is the default language. Use the `FR / EN` switch in the header to
+    change languages; English pages are generated under `/en/`, for example
+    `/en/projets/`, `/en/photos/`, `/en/videos/` and `/en/cv/`.
   - The old Base44 URLs (`/project/<id>`) redirect to the new pages.
   - `404.html` is used by hosts that support it.
 

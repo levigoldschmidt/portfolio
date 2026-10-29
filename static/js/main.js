@@ -2,6 +2,38 @@
   "use strict";
 
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const english = document.documentElement.lang === "en";
+  const protectedForms = $$(".protected-gate");
+  if (protectedForms.length) {
+    const storageKey = "stem-racing-portfolios-unlocked";
+    const unlock = () => {
+      $$(".protected-area").forEach((area) => {
+        area.classList.add("is-unlocked");
+        const content = area.querySelector(".protected-content");
+        content.removeAttribute("aria-hidden");
+        content.removeAttribute("inert");
+        area.querySelector(".protected-gate").hidden = true;
+      });
+    };
+    if (sessionStorage.getItem(storageKey) === "true") unlock();
+    protectedForms.forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = form.elements.namedItem("access-code");
+        const error = form.querySelector(".protected-error");
+        if (input.value === "2007") {
+          sessionStorage.setItem(storageKey, "true");
+          unlock();
+        } else {
+          error.hidden = false;
+          input.select();
+        }
+      });
+      form.elements.namedItem("access-code").addEventListener("input", () => {
+        form.querySelector(".protected-error").hidden = true;
+      });
+    });
+  }
   const ICON = {
     prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>',
@@ -39,11 +71,11 @@
       box.hidden = true;
       box.setAttribute("role", "dialog");
       box.setAttribute("aria-modal", "true");
-      box.setAttribute("aria-label", "Visionneuse");
+      box.setAttribute("aria-label", english ? "Image viewer" : "Visionneuse");
       box.innerHTML =
-        `<button type="button" class="close" aria-label="Fermer"><span>${ICON.back}RETOUR</span></button>` +
-        `<button type="button" class="arrow prev" aria-label="Image précédente">${ICON.prev}</button>` +
-        `<button type="button" class="arrow next" aria-label="Image suivante">${ICON.next}</button>` +
+        `<button type="button" class="close" aria-label="${english ? "Close" : "Fermer"}"><span>${ICON.back}${english ? "BACK" : "RETOUR"}</span></button>` +
+        `<button type="button" class="arrow prev" aria-label="${english ? "Previous image" : "Image précédente"}">${ICON.prev}</button>` +
+        `<button type="button" class="arrow next" aria-label="${english ? "Next image" : "Image suivante"}">${ICON.next}</button>` +
         '<div class="stage"></div><div class="counter" aria-live="polite"></div>';
       document.body.append(box);
       stage = box.querySelector(".stage");
@@ -78,12 +110,23 @@
       let media;
       if (isVideo(item.src)) {
         media = document.createElement("video");
-        Object.assign(media, { src: item.src, controls: true, autoplay: true, loop: true, muted: true, playsInline: true });
+        media.src = item.src;
+        media.controls = true;
+        media.loop = true;
+        media.muted = item.muted;
+        media.playsInline = true;
+        if (item.muted) {
+          media.addEventListener("volumechange", () => {
+            if (!media.muted) media.muted = true;
+          });
+        }
+        media.autoplay = true;
       } else {
         media = document.createElement("img");
         media.src = item.src;
         media.alt = item.alt;
       }
+      if (item.grayscale) media.classList.add("gray");
       stage.append(media);
       const multiple = items.length > 1;
       counter.textContent = multiple ? `${index + 1} / ${items.length}` : "";
@@ -107,7 +150,12 @@
       const inCarousel = Boolean(trigger.closest(".carousel"));
       const triggers = $$(`[data-lightbox="${CSS.escape(group)}"]`)
         .filter((t) => Boolean(t.closest(".carousel")) === inCarousel);
-      items = triggers.map((t) => ({ src: t.dataset.src, alt: t.dataset.alt || "" }));
+      items = triggers.map((t) => ({
+        src: t.dataset.src,
+        alt: t.dataset.alt || "",
+        muted: t.dataset.muted === "true",
+        grayscale: t.dataset.grayscale === "true"
+      }));
       index = Math.max(0, triggers.indexOf(trigger));
       opener = trigger;
       render();
@@ -158,7 +206,13 @@
     const button = e.target.closest("[data-youtube]");
     if (!button) return;
     e.preventDefault();
+    const muted = button.dataset.muted === "true";
     const params = new URLSearchParams({ autoplay: "1", rel: "0" });
+    if (muted) {
+      params.set("mute", "1");
+      params.set("controls", "1");
+      params.set("disablekb", "1");
+    }
     if (button.dataset.start) params.set("start", button.dataset.start);
     const iframe = document.createElement("iframe");
     iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(button.dataset.youtube)}?${params}`;
@@ -166,8 +220,16 @@
     iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
     iframe.allowFullscreen = true;
     iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    if (button.dataset.grayscale === "true") iframe.classList.add("gray");
     button.replaceWith(iframe);
   });
+
+  if (document.querySelector(".instagram-grid")) {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.instagram.com/embed.js";
+    document.body.append(script);
+  }
 
   /* PDF viewer modal; on touch devices the browser's own viewer is used instead. */
   const pdfViewer = (() => {
@@ -178,13 +240,13 @@
       modal.hidden = true;
       modal.setAttribute("role", "dialog");
       modal.setAttribute("aria-modal", "true");
-      modal.setAttribute("aria-label", "Lecteur PDF");
+      modal.setAttribute("aria-label", english ? "PDF viewer" : "Lecteur PDF");
       modal.innerHTML =
-        '<div class="pdf-bar"><span class="hint">DOUBLE-CLIC POUR TÉLÉCHARGER</span><div class="actions">' +
+        `<div class="pdf-bar"><span class="hint">${english ? "DOUBLE-CLICK TO DOWNLOAD" : "DOUBLE-CLIC POUR TÉLÉCHARGER"}</span><div class="actions">` +
         '<a class="download" download>' +
-        '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>TÉLÉCHARGER</a>' +
-        '<button type="button" class="close-pdf" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>' +
-        '</div></div><iframe title="Lecteur PDF"></iframe>';
+        `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>${english ? "DOWNLOAD" : "TÉLÉCHARGER"}</a>` +
+        `<button type="button" class="close-pdf" aria-label="${english ? "Close" : "Fermer"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>` +
+        `</div></div><iframe title="${english ? "PDF viewer" : "Lecteur PDF"}"></iframe>`;
       document.body.append(modal);
       frame = modal.querySelector("iframe");
       download = modal.querySelector(".download");
@@ -230,7 +292,7 @@
     const links = $$("a", subnav);
     const headerNav = document.createElement("nav");
     headerNav.className = "header-subnav";
-    headerNav.setAttribute("aria-label", "Sections");
+    headerNav.setAttribute("aria-label", english ? "Sections" : "Sections");
     links.forEach((a) => headerNav.append(a.cloneNode(true)));
     header.querySelector(".inner").append(headerNav);
     const allLinks = [...links, ...$$("a", headerNav)];

@@ -24,8 +24,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Pillow
-        run: pip install "pillow==11.3.0"
+      - name: Install build dependencies
+        run: pip install -r requirements.txt
 
       - id: pages
         uses: actions/configure-pages@v6

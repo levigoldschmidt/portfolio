@@ -1,40 +1,108 @@
 {
   "hero": "cv/DSC_0400.jpg",
   "hero_alt": "Goldschmidt Levi",
-  "contact": "07 49 61 77 84 | levi.goldschmidt@gmail.com | Ferme leihouse Biederthal 68480, France | LinkedIn : Lévi Goldschmidt",
+  "name": "Goldschmidt Lévi",
+  "contacts": [
+    {
+      "label": "+33 7 49 61 77 84",
+      "href": "tel:+33749617784"
+    },
+    {
+      "label": "levi.goldschmidt@gmail.com",
+      "href": "mailto:levi.goldschmidt@gmail.com"
+    },
+    {
+      "label": "LinkedIn : Goldschmidt Lévi",
+      "href": "https://www.linkedin.com/in/goldschmidt-l%C3%A9vi-3995b9279/"
+    },
+    {
+      "label": "1 Ferme Leihouse, Biederthal 68480, France"
+    }
+  ],
+  "profile": "Étudiant en 2ᵉ année à l'École Nationale Supérieure d'Architecture de Paris-Val de Seine (ENSA PVS), je recherche un stage pratique de 4 semaines pour le mois de juillet 2027.",
   "sections": [
     {
       "title": "FORMATIONS",
+      "layout": "timeline",
       "items": [
-        "2025 - Présent — 2ème année à l'École Nationale Supérieure d'Architecture de Paris-Val de Seine (ENSA PVS) , Paris",
-        "2022 - 2025 — Baccalauréat Général Sections européenne Anglais Science de l'ingénieur Mention Très Bien, Lycée Jean Mermoz Saint Louis, France, Spécialités Mathématique , Physique chimie , Option Mathématiques expertes",
-        "2021 — Formation d'initiation au logiciel GibbsCam (FAO), Productec (Rossemaison - 2842)"
+        {
+          "heading": "Depuis 2025 — 2ᵉ année à l'École Nationale Supérieure d'Architecture de Paris-Val de Seine (ENSA PVS)",
+          "meta": "Paris"
+        },
+        {
+          "heading": "2022–2025 — Baccalauréat général",
+          "meta": "Lycée Jean Mermoz, Saint-Louis, France",
+          "description": "Section européenne anglais, sciences de l'ingénieur. Spécialités : mathématiques et physique-chimie ; option mathématiques expertes. Mention Très Bien."
+        },
+        {
+          "heading": "2021 — Formation d'initiation au logiciel GibbsCAM (FAO)",
+          "meta": "Productec, Rossemaison, Suisse"
+        }
       ]
     },
     {
-      "title": "EXPERIENCES",
+      "title": "EXPÉRIENCES",
+      "layout": "timeline",
       "items": [
-        "2026 — Stage Ouvrier : Pracht Charpente & Menuiserie (Entreprise familiale) Levoncourt, France, Immersion sur chantier : découverte pratique des métiers du bois, compréhension des assemblages structurels et du travail du matériau brut.",
-        "2026 — Bénévolat au Championnat de France STEM racing : Support logistique, accueil des équipes et assistance technique lors de la finale nationale.",
-        "2025 — Champion de France & Finaliste Mondial à Singapour de la competition STEM racing : Ingénierie (conception CAD 3D, analyse aérodynamique), gestion globale de projet (recherche de sponsors, budget,) et présentation orale devant un jury international en anglais.",
-        "2021 — Stage de découverte en agence d'architecture : Handschin Schweighauser Architekten ETH SIA Bâle, Suisse, Observation des phases de projet, relevés de terrain. Étude et projet court de réhabilitation d'un silo agricole.",
-        "2020 — Stage d'Observation : Diametal Oltingue, France, Immersion en milieu industriel et découverte des procédés de fabrication de haute précision."
+        {
+          "heading": "2026 — Stage ouvrier",
+          "meta": "Pracht Charpente & Menuiserie, Levoncourt, France",
+          "description": "Immersion sur chantier et découverte pratique des métiers du bois."
+        },
+        {
+          "heading": "2026 — Bénévolat au Championnat de France STEM Racing",
+          "description": "Accueil des équipes et assistance technique."
+        },
+        {
+          "heading": "2025 — Champion de France et finaliste mondial à Singapour de la compétition STEM Racing",
+          "description": "Ingénierie, gestion de projet (recherche de sponsors, budget) et présentation orale devant un jury international en anglais."
+        },
+        {
+          "heading": "2021 — Stage de découverte en agence d'architecture",
+          "meta": "Handschin Schweighauser Architekten ETH SIA, Bâle, Suisse",
+          "description": "Observation des phases de projet et relevés de terrain. Projet court et fictif de réhabilitation d'un silo agricole."
+        },
+        {
+          "heading": "2020 — Stage d'observation",
+          "meta": "Diametal, Oltingue, France",
+          "description": "Immersion en milieu industriel et découverte des procédés de fabrication de haute précision."
+        }
       ]
     },
     {
-      "title": "COMPETENCES",
+      "title": "COMPÉTENCES",
+      "layout": "bullets",
       "items": [
-        "Logiciels Architecture : Archicad, Revit, Twinmotion, Onshape, SketchUp, Suite Affinity",
-        "Langues : Français : Langue maternelle, Anglais : B2 (Section européenne), Allemand : B1 (scolaire)"
+        {
+          "label": "Logiciels",
+          "text": "Archicad, Revit, Twinmotion, Onshape, SketchUp, Suite Affinity."
+        },
+        {
+          "label": "Langues",
+          "text": "français (langue maternelle), anglais (B2, section européenne), allemand (B1, niveau scolaire)."
+        }
       ]
     },
     {
-      "title": "CENTRES D'INTERETS",
+      "title": "CENTRES D'INTÉRÊT",
+      "layout": "bullets",
       "items": [
-        "Automobile & Mécanique : Restauration complète d'une BMW 1502 de 1975 (mécanique, électricité, carrosserie).",
-        "Création Audiovisuelle : Photographie, réalisation vidéo.",
-        "Musique : Piano et Guitare basse au sein d'un groupe de music.",
-        "Sports & Engagement : Football, badminton, scoutisme (développement du leadership, travail d'équipe et autonomie)"
+        {
+          "label": "Automobile & mécanique",
+          "text": "restauration en cours d'une BMW 1502 de 1975 (mécanique, électricité, carrosserie)."
+        },
+        {
+          "label": "Création audiovisuelle",
+          "text": "photographie et réalisation vidéo."
+        },
+        {
+          "label": "Musique",
+          "text": "guitare basse au sein d'un groupe de musique."
+        },
+        {
+          "label": "Sports & engagement",
+          "text": "football, badminton et scoutisme."
+        }
       ]
     }
   ],
