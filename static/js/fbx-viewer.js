@@ -3,6 +3,7 @@ async function initializeViewer() {
   if (!viewer) return;
   const stage = viewer.querySelector("[data-model-stage]");
   const source = viewer.querySelector("[data-model-src]").dataset.modelSrc;
+  const orientationSource = viewer.querySelector("[data-model-orientation]").dataset.modelOrientationSrc;
   const status = stage.querySelector(".model-status");
   const resetButton = viewer.querySelector("[data-model-reset]");
   const cutControls = viewer.querySelector("[data-model-cut-controls]");
@@ -10,11 +11,13 @@ async function initializeViewer() {
   const english = document.documentElement.lang === "en";
   let THREE;
   let FBXLoader;
+  let GLTFLoader;
   let OrbitControls;
   try {
-    [THREE, { FBXLoader }, { OrbitControls }] = await Promise.all([
+    [THREE, { FBXLoader }, { GLTFLoader }, { OrbitControls }] = await Promise.all([
       import("three"),
       import("three/addons/loaders/FBXLoader.js"),
+      import("three/addons/loaders/GLTFLoader.js"),
       import("three/addons/controls/OrbitControls.js"),
     ]);
   } catch (error) {
@@ -26,7 +29,8 @@ async function initializeViewer() {
   }
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#bec9d1");
-  const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100000);
+  let cameraFrustumHeight = 1;
+  const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.01, 100000);
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -62,6 +66,10 @@ async function initializeViewer() {
     const height = stage.clientHeight;
     if (!width || !height) return;
     camera.aspect = width / height;
+    camera.left = -cameraFrustumHeight * camera.aspect / 2;
+    camera.right = cameraFrustumHeight * camera.aspect / 2;
+    camera.top = cameraFrustumHeight / 2;
+    camera.bottom = -cameraFrustumHeight / 2;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
   };
@@ -92,6 +100,9 @@ async function initializeViewer() {
           : "Le modèle 3D n’a pas pu être chargé.";
         return;
       }
+
+      cameraFrustumHeight = maxDimension * 1.7;
+      resize();
 
       const centeredModel = new THREE.Group();
       centeredModel.position.copy(center).negate();
@@ -144,28 +155,6 @@ async function initializeViewer() {
         scene.add(group);
         return { group, hideTimer: 0 };
       });
-      const orientationSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      orientationSvg.setAttribute("viewBox", "0 0 100 100");
-      orientationSvg.setAttribute("role", "group");
-      orientationSvg.setAttribute("aria-label", english ? "View orientation" : "Orientation de la vue");
-      const orientationFaces = [
-        { axis: "x", sign: 1, vertices: [1, 3, 7, 5], name: english ? "Right" : "Droite" },
-        { axis: "x", sign: -1, vertices: [0, 4, 6, 2], name: english ? "Left" : "Gauche" },
-        { axis: "y", sign: 1, vertices: [2, 6, 7, 3], name: english ? "Top" : "Dessus" },
-        { axis: "y", sign: -1, vertices: [0, 1, 5, 4], name: english ? "Bottom" : "Dessous" },
-        { axis: "z", sign: 1, vertices: [4, 5, 7, 6], name: english ? "Front" : "Avant" },
-        { axis: "z", sign: -1, vertices: [0, 2, 3, 1], name: english ? "Back" : "Arrière" },
-      ];
-      const cubeVertices = [
-        new THREE.Vector3(-1, -1, -1),
-        new THREE.Vector3(1, -1, -1),
-        new THREE.Vector3(-1, 1, -1),
-        new THREE.Vector3(1, 1, -1),
-        new THREE.Vector3(-1, -1, 1),
-        new THREE.Vector3(1, -1, 1),
-        new THREE.Vector3(-1, 1, 1),
-        new THREE.Vector3(1, 1, 1),
-      ];
       const setCameraDirection = (direction, up = new THREE.Vector3(0, 1, 0)) => {
         const distance = camera.position.distanceTo(controls.target);
         camera.position.copy(controls.target).addScaledVector(direction.clone().normalize(), distance);
@@ -173,181 +162,227 @@ async function initializeViewer() {
         camera.lookAt(controls.target);
         controls.update();
       };
-      const makeViewTarget = (element, label, setView) => {
-        element.setAttribute("role", "button");
-        element.setAttribute("tabindex", "0");
-        element.setAttribute("aria-label", label);
-        element.style.display = "none";
-        element.addEventListener("pointerup", (event) => {
-          if (event.button !== 0) return;
-          event.preventDefault();
-          event.stopPropagation();
-          setView();
-        });
-        element.addEventListener("keydown", (event) => {
-          if (event.key !== "Enter" && event.key !== " ") return;
-          event.preventDefault();
-          setView();
-        });
+      let selectedFaceKey = null;
+      let setSelectedFace = (face) => {
+        selectedFaceKey = `${face.sign > 0 ? "+" : "-"}${face.axis}`;
       };
-      const faceElements = orientationFaces.map((face) => {
-        const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        const faceKey = `${face.sign > 0 ? "+" : "-"}${face.axis}`;
-        group.setAttribute("data-view", faceKey);
-        makeViewTarget(
-          group,
-          english ? `View from ${face.name}` : `Vue ${face.name.toLowerCase()}`,
-          () => {
-            const direction = new THREE.Vector3();
-            direction[face.axis] = face.sign;
-            const up = face.axis === "y"
-              ? new THREE.Vector3(0, 0, face.sign > 0 ? -1 : 1)
-              : new THREE.Vector3(0, 1, 0);
-            setCameraDirection(direction, up);
-          },
-        );
-        const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      const orientationCubeScene = new THREE.Scene();
+      orientationCubeScene.add(new THREE.HemisphereLight(0xffffff, 0x777777, 2));
+      const orientationKeyLight = new THREE.DirectionalLight(0xffffff, 2);
+      orientationKeyLight.position.set(2, 3, 4);
+      orientationCubeScene.add(orientationKeyLight);
+      const orientationCamera = new THREE.OrthographicCamera(-1.2, 1.2, 1.2, -1.2, 0.01, 100);
+      const orientationRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      orientationRenderer.setClearColor(0x000000, 0);
+      orientationRenderer.setPixelRatio(Math.min(window.devicePixelRatio * 2, 4));
+      orientationRenderer.domElement.setAttribute("aria-hidden", "true");
+      orientationRenderer.domElement.className = "model-orientation-canvas";
+      const orientationLabels = document.createElement("div");
+      orientationLabels.className = "model-orientation-labels";
+      const orientationFacesByWorldAxis = [
+        { axis: "x", sign: 1, localNormal: new THREE.Vector3(1, 0, 0), localU: new THREE.Vector3(0, 1, 0), name: english ? "Right" : "Droite" },
+        { axis: "x", sign: -1, localNormal: new THREE.Vector3(-1, 0, 0), localU: new THREE.Vector3(0, 1, 0), name: english ? "Left" : "Gauche" },
+        { axis: "y", sign: 1, localNormal: new THREE.Vector3(0, 0, 1), localU: new THREE.Vector3(1, 0, 0), name: english ? "Top" : "Dessus" },
+        { axis: "y", sign: -1, localNormal: new THREE.Vector3(0, 0, -1), localU: new THREE.Vector3(1, 0, 0), name: english ? "Bottom" : "Dessous" },
+        { axis: "z", sign: 1, localNormal: new THREE.Vector3(0, -1, 0), localU: new THREE.Vector3(1, 0, 0), name: english ? "Front" : "Avant" },
+        { axis: "z", sign: -1, localNormal: new THREE.Vector3(0, 1, 0), localU: new THREE.Vector3(1, 0, 0), name: english ? "Back" : "Arrière" },
+      ];
+      const orientationLabelsByKey = new Map();
+      orientationFacesByWorldAxis.forEach((face) => {
+        const key = `${face.sign > 0 ? "+" : "-"}${face.axis}`;
+        const label = document.createElement("button");
+        label.type = "button";
+        label.className = "model-orientation-label";
         label.textContent = face.name.toUpperCase();
-        group.append(polygon, label);
-        orientationSvg.append(group);
-        return { face, polygon, label };
-      });
-      const edgePairs = [];
-      for (let first = 0; first < cubeVertices.length; first += 1) {
-        for (let second = first + 1; second < cubeVertices.length; second += 1) {
-          const differences = ["x", "y", "z"].filter((axis) => cubeVertices[first][axis] !== cubeVertices[second][axis]);
-          if (differences.length === 1) edgePairs.push([first, second]);
-        }
-      }
-      const edgeElements = edgePairs.map(([first, second], index) => {
-        const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        group.setAttribute("data-edge", String(index + 1));
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        group.append(line);
-        const direction = cubeVertices[first].clone().add(cubeVertices[second]);
-        makeViewTarget(
-          group,
-          english ? "Diagonal view" : "Vue diagonale",
-          () => setCameraDirection(direction),
-        );
-        orientationSvg.append(group);
-        return { first, second, group, line };
-      });
-      const cornerElements = cubeVertices.map((vertex, index) => {
-        const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        const key = `${vertex.x > 0 ? "+" : "-"}${vertex.y > 0 ? "+" : "-"}${vertex.z > 0 ? "+" : "-"}`;
-        group.setAttribute("data-corner", key);
-        const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        point.setAttribute("r", "6");
-        group.append(point);
-        makeViewTarget(
-          group,
-          english ? "Axonometric view" : "Vue axonométrique",
-          () => setCameraDirection(vertex),
-        );
-        orientationSvg.append(group);
-        return { vertex, group, point, index };
-      });
-      const projected = new THREE.Vector3();
-      const inverseCameraRotation = new THREE.Quaternion();
-      const projectVector = (vector) => {
-        projected.copy(vector).applyQuaternion(inverseCameraRotation);
-        return { x: projected.x, y: -projected.y };
-      };
-      const projectCubePoint = (vertex) => {
-        projected.copy(vertex).applyQuaternion(inverseCameraRotation);
-        return { x: 50 + projected.x * 23, y: 50 - projected.y * 23, z: projected.z };
-      };
-      updateOrientationCube = () => {
-        camera.updateMatrixWorld();
-        inverseCameraRotation.copy(camera.quaternion).invert();
-        faceElements.forEach(({ polygon, label }) => {
-          polygon.parentElement.style.display = "none";
-          polygon.parentElement.removeAttribute("aria-hidden");
-          polygon.removeAttribute("points");
-          label.removeAttribute("x");
-          label.removeAttribute("y");
+        label.setAttribute("aria-label", english ? `View from ${face.name}` : `Vue ${face.name.toLowerCase()}`);
+        label.addEventListener("click", () => {
+          const direction = new THREE.Vector3();
+          direction[face.axis] = face.sign;
+          const up = face.axis === "y"
+            ? new THREE.Vector3(0, 0, face.sign > 0 ? -1 : 1)
+            : new THREE.Vector3(0, 1, 0);
+          setSelectedFace(face);
+          setCameraDirection(direction, up);
+          updateOrientationCube();
         });
-        edgeElements.forEach(({ group }) => {
-          group.style.display = "none";
-          group.removeAttribute("aria-hidden");
-        });
-        cornerElements.forEach(({ group }) => {
-          group.style.display = "none";
-          group.removeAttribute("aria-hidden");
-        });
-        const visibleFaces = faceElements
-          .map(({ face, polygon, label }) => {
-            const normal = new THREE.Vector3();
-            normal[face.axis] = face.sign;
-            normal.applyQuaternion(inverseCameraRotation);
-            const points = face.vertices.map((vertexIndex) => projectCubePoint(cubeVertices[vertexIndex]));
-            const centerX = points.reduce((sum, point) => sum + point.x, 0) / points.length;
-            const centerY = points.reduce((sum, point) => sum + point.y, 0) / points.length;
-            const depth = points.reduce((sum, point) => sum + point.z, 0) / points.length;
-            return { face, polygon, label, normal, points, centerX, centerY, depth };
-          })
-          .filter((face) => face.normal.z > 0.001)
-          .sort((a, b) => a.depth - b.depth);
+        orientationLabels.append(label);
+        orientationLabelsByKey.set(key, label);
+      });
 
-        visibleFaces.forEach(({ face, polygon, label, points, centerX, centerY }) => {
-          polygon.parentElement.style.display = "";
-          polygon.setAttribute("points", points.map((point) => `${point.x},${point.y}`).join(" "));
-          const baselineAxis = face.axis === "x" ? "z" : "x";
-          const verticalAxis = face.axis === "y" ? "z" : "y";
-          const baselineVector = new THREE.Vector3();
-          const verticalVector = new THREE.Vector3();
-          baselineVector[baselineAxis] = 1;
-          verticalVector[verticalAxis] = 1;
-          const baseline = projectVector(baselineVector);
-          const vertical = projectVector(verticalVector);
-          const baselineLength = Math.hypot(baseline.x, baseline.y);
-          const verticalLength = Math.hypot(vertical.x, vertical.y);
-          const textWidth = label.getComputedTextLength();
-          const widthScale = Math.min(46 * baselineLength * 0.78, textWidth * 1.35) / textWidth;
-          const heightScale = Math.min(5.5, 46 * verticalLength * 0.3) / 7;
-          if (baseline.x < 0) {
-            baseline.x *= -1;
-            baseline.y *= -1;
+      const orientationLoader = new GLTFLoader();
+      orientationLoader.load(
+        orientationSource,
+        (gltf) => {
+          const orientationModel = gltf.scene;
+          const orientationBounds = new THREE.Box3().setFromObject(orientationModel);
+          const orientationCenter = orientationBounds.getCenter(new THREE.Vector3());
+          const orientationSize = orientationBounds.getSize(new THREE.Vector3());
+          const orientationMaxDimension = Math.max(orientationSize.x, orientationSize.y, orientationSize.z);
+          if (!Number.isFinite(orientationMaxDimension) || orientationMaxDimension <= 0) {
+            console.error("The orientation GLTF has no measurable geometry.");
+            orientationControl.setAttribute("aria-label", english
+              ? "The orientation cube could not be loaded."
+              : "Le cube d’orientation n’a pas pu être chargé.");
+            return;
           }
-          const baselineUnitX = baseline.x / baselineLength;
-          const baselineUnitY = baseline.y / baselineLength;
-          const verticalUnitX = vertical.x / verticalLength;
-          const verticalUnitY = vertical.y / verticalLength;
-          label.setAttribute(
-            "transform",
-            `matrix(${baselineUnitX * widthScale} ${baselineUnitY * widthScale} ${-verticalUnitX * heightScale} ${-verticalUnitY * heightScale} ${centerX} ${centerY})`,
-          );
-          orientationSvg.append(polygon.parentElement);
-        });
 
-        edgeElements.forEach(({ first, second, group, line }) => {
-          const visibleOnFace = visibleFaces.some(({ face }) =>
-            face.vertices.includes(first) && face.vertices.includes(second));
-          if (!visibleOnFace) return;
-          const start = projectCubePoint(cubeVertices[first]);
-          const end = projectCubePoint(cubeVertices[second]);
-          group.style.display = "";
-          line.setAttribute("x1", String(start.x));
-          line.setAttribute("y1", String(start.y));
-          line.setAttribute("x2", String(end.x));
-          line.setAttribute("y2", String(end.y));
-          orientationSvg.append(group);
-        });
-        const visibleCorners = cornerElements
-          .map((corner) => ({ ...corner, position: projectCubePoint(corner.vertex) }))
-          .filter((corner) => corner.position.z > 0.001)
-          .sort((a, b) => a.position.z - b.position.z);
-        visibleCorners.forEach(({ group, point, position }) => {
-          group.style.display = "";
-          point.setAttribute("cx", String(position.x));
-          point.setAttribute("cy", String(position.y));
-          orientationSvg.append(group);
-        });
-      };
-      orientationControl.replaceChildren(orientationSvg);
-      orientationControl.hidden = false;
+          const orientationRoot = new THREE.Group();
+          orientationRoot.rotation.x = -Math.PI / 2;
+          orientationRoot.scale.setScalar(1.2 / orientationMaxDimension);
+          orientationModel.position.sub(orientationCenter);
+          orientationRoot.add(orientationModel);
+          orientationCubeScene.add(orientationRoot);
+          orientationModel.traverse((part) => {
+            if (!part.isMesh) return;
+            part.material = part.material.clone();
+            part.material.side = THREE.DoubleSide;
+          });
+
+          const orientationHalfExtents = orientationSize.clone().multiplyScalar(0.5);
+          const faceSize = orientationMaxDimension * 0.7467;
+          orientationFacesByWorldAxis.forEach((face) => {
+            const textCanvas = document.createElement("canvas");
+            textCanvas.width = 512;
+            textCanvas.height = 192;
+            const context = textCanvas.getContext("2d");
+            if (!context) {
+              throw new Error("Could not create the orientation label canvas.");
+            }
+            context.fillStyle = "#202a31";
+            context.font = "700 96px Arial, sans-serif";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.fillText(face.name.toUpperCase(), 256, 96, 490);
+            const texture = new THREE.CanvasTexture(textCanvas);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            const labelMaterial = new THREE.MeshBasicMaterial({
+              map: texture,
+              transparent: true,
+              depthWrite: false,
+              side: THREE.DoubleSide,
+            });
+            const labelMesh = new THREE.Mesh(
+              new THREE.PlaneGeometry(faceSize * 0.9, faceSize * 0.32),
+              labelMaterial,
+            );
+            const localV = face.localNormal.clone().cross(face.localU).normalize();
+            const basis = new THREE.Matrix4().makeBasis(face.localU, localV, face.localNormal);
+            labelMesh.position.copy(face.localNormal).multiplyScalar(
+              orientationHalfExtents[face.localNormal.x ? "x" : face.localNormal.y ? "y" : "z"] + 0.00008,
+            );
+            labelMesh.quaternion.setFromRotationMatrix(basis);
+            labelMesh.renderOrder = 3;
+            orientationRoot.add(labelMesh);
+          });
+
+          const highlightMaterial = new THREE.MeshBasicMaterial({
+            color: 0x42a9d2,
+            transparent: true,
+            opacity: 0.68,
+            depthWrite: false,
+            side: THREE.DoubleSide,
+          });
+          const highlight = new THREE.Mesh(
+            new THREE.PlaneGeometry(faceSize, faceSize),
+            highlightMaterial,
+          );
+          highlight.visible = false;
+          highlight.renderOrder = 2;
+          orientationRoot.add(highlight);
+
+          const orientationCanvasSize = orientationControl.clientWidth || 112;
+          orientationRenderer.setSize(orientationCanvasSize, orientationCanvasSize, false);
+          orientationControl.replaceChildren(orientationRenderer.domElement, orientationLabels);
+          orientationControl.hidden = false;
+
+          const orientationRaycaster = new THREE.Raycaster();
+          const orientationPointer = new THREE.Vector2();
+          const orientationInverse = new THREE.Quaternion();
+          const selectedFacePosition = new THREE.Vector3();
+          const selectedFaceRotation = new THREE.Quaternion();
+          setSelectedFace = (face) => {
+            selectedFaceKey = `${face.sign > 0 ? "+" : "-"}${face.axis}`;
+            selectedFacePosition.set(0, 0, 0).addScaledVector(
+              face.localNormal,
+              orientationHalfExtents[face.localNormal.x ? "x" : face.localNormal.y ? "y" : "z"] + 0.00004,
+            );
+            highlight.position.copy(selectedFacePosition);
+            selectedFaceRotation.setFromUnitVectors(new THREE.Vector3(0, 0, 1), face.localNormal);
+            highlight.quaternion.copy(selectedFaceRotation);
+            highlight.visible = true;
+          };
+          const orientToSurface = (event) => {
+            if (event.button !== 0) return;
+            const rect = orientationRenderer.domElement.getBoundingClientRect();
+            orientationPointer.set(
+              ((event.clientX - rect.left) / rect.width) * 2 - 1,
+              -((event.clientY - rect.top) / rect.height) * 2 + 1,
+            );
+            orientationRaycaster.setFromCamera(orientationPointer, orientationCamera);
+            const hits = orientationRaycaster.intersectObject(orientationModel, true);
+            if (!hits.length) return;
+            const localNormal = hits[0].face.normal.clone();
+            const worldNormal = localNormal.clone().transformDirection(hits[0].object.matrixWorld);
+            orientationInverse.copy(orientationRoot.quaternion).invert();
+            localNormal.copy(worldNormal).applyQuaternion(orientationInverse).normalize();
+            const dominantAxis = ["x", "y", "z"].reduce((best, axis) =>
+              Math.abs(localNormal[axis]) > Math.abs(localNormal[best]) ? axis : best, "x");
+            if (Math.abs(localNormal[dominantAxis]) > 0.96) {
+              const worldDirection = localNormal.clone().applyQuaternion(orientationRoot.quaternion);
+              const axis = ["x", "y", "z"].reduce((best, candidate) =>
+                Math.abs(worldDirection[candidate]) > Math.abs(worldDirection[best]) ? candidate : best, "x");
+              const face = orientationFacesByWorldAxis.find((candidate) =>
+                candidate.axis === axis && candidate.sign === Math.sign(worldDirection[axis]));
+              if (!face) return;
+              setSelectedFace(face);
+              const direction = new THREE.Vector3();
+              direction[face.axis] = face.sign;
+              const up = face.axis === "y"
+                ? new THREE.Vector3(0, 0, face.sign > 0 ? -1 : 1)
+                : new THREE.Vector3(0, 1, 0);
+              setCameraDirection(direction, up);
+            } else {
+              selectedFaceKey = null;
+              highlight.visible = false;
+              setCameraDirection(worldNormal);
+            }
+            updateOrientationCube();
+          };
+          let lastPointerActivation = 0;
+          orientationRenderer.domElement.addEventListener("pointerup", (event) => {
+            lastPointerActivation = performance.now();
+            orientToSurface(event);
+          });
+          orientationRenderer.domElement.addEventListener("click", (event) => {
+            if (performance.now() - lastPointerActivation < 500) return;
+            orientToSurface(event);
+          });
+
+          updateOrientationCube = () => {
+            const viewDirection = camera.position.clone().sub(controls.target).normalize();
+            orientationCamera.position.copy(viewDirection).multiplyScalar(4);
+            orientationCamera.up.copy(camera.up);
+            orientationCamera.lookAt(0, 0, 0);
+            orientationCamera.updateMatrixWorld();
+            orientationRoot.updateMatrixWorld(true);
+            orientationFacesByWorldAxis.forEach((face) => {
+              const label = orientationLabelsByKey.get(`${face.sign > 0 ? "+" : "-"}${face.axis}`);
+              const worldNormal = face.localNormal.clone().transformDirection(orientationRoot.matrixWorld);
+              label.dataset.selected = String(selectedFaceKey === `${face.sign > 0 ? "+" : "-"}${face.axis}`);
+              label.style.display = worldNormal.dot(viewDirection) > 0.001 ? "" : "none";
+            });
+            orientationRenderer.render(orientationCubeScene, orientationCamera);
+          };
+          updateOrientationCube();
+        },
+        undefined,
+        (error) => {
+          console.error("Could not load the orientation GLTF.", error);
+          orientationControl.setAttribute("aria-label", english
+            ? "The orientation cube could not be loaded."
+            : "Le cube d’orientation n’a pas pu être chargé.");
+        },
+      );
 
       const planeStates = [];
       planeDefinitions.forEach((definition, index) => {
@@ -475,7 +510,7 @@ async function initializeViewer() {
         });
       });
 
-      const distance = (maxDimension / 2) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.3;
+      const distance = maxDimension * 3.5;
       const initialPosition = new THREE.Vector3(distance, distance * 0.72, distance);
       camera.position.copy(initialPosition);
       camera.near = maxDimension / 1000;
@@ -486,6 +521,7 @@ async function initializeViewer() {
       controls.target.set(0, 0, 0);
       controls.update();
       controls.saveState();
+      updateOrientationCube();
       status.remove();
     },
     undefined,

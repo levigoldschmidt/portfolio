@@ -249,7 +249,8 @@
           "id": "model-3d",
           "label": "Maquette 3D interactive",
           "type": "3d_model",
-          "file": "projets/s1-projet-7-l-atelier-d-artiste/Projet V12 Leihouse.fbx"
+          "file": "projets/s1-projet-7-l-atelier-d-artiste/Projet V12 Leihouse.fbx",
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
         {
           "id": "process",

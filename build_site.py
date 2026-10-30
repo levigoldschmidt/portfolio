@@ -542,9 +542,15 @@ class Builder:
                 inner = f'<p class="prose">{esc(self.tr(s["text"]))}</p>'
             elif kind == "3d_model":
                 model = page.rel(self.images.original(s["file"]))
+                orientation_model = (
+                    page.rel(self.images.original(s["orientation_model"]))
+                    if s.get("orientation_model")
+                    else ""
+                )
                 inner = (
                     '<div class="interactive-model" data-fbx-viewer>'
                     f'<div class="model-stage" data-model-stage><div class="model-orientation" data-model-orientation '
+                    f'data-model-orientation-src="{esc(orientation_model)}" '
                     f'aria-label="{esc(self.tr("Cube d’orientation"))}" hidden></div>'
                     f'<p class="model-status" role="status">'
                     f'{esc(self.tr("Chargement du modèle 3D…"))}</p></div>'

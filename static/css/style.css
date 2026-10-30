@@ -190,29 +190,17 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 .model-orientation {
   position: absolute; z-index: 2; top: 12px; right: 12px; width: 112px; height: 112px;
 }
-.model-orientation svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.model-orientation [data-view], .model-orientation [data-edge], .model-orientation [data-corner] {
-  cursor: pointer; outline: none;
+.model-orientation-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: pointer; }
+.model-orientation-labels { position: absolute; inset: 0; pointer-events: none; }
+.model-orientation-label {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; padding: 0; border: 0;
+  clip-path: inset(50%); background: transparent; color: #202a31; pointer-events: none;
 }
-.model-orientation polygon {
-  stroke: #555; stroke-width: 1.5; stroke-linejoin: bevel; transition: fill .15s, stroke .15s;
+.model-orientation-label:focus-visible {
+  top: 50%; left: 50%; width: auto; height: auto; padding: 3px 5px; clip-path: none;
+  transform: translate(-50%, -50%); background: #fff; outline: 1px solid #245c7d;
+  font-size: 9px; pointer-events: auto;
 }
-.model-orientation [data-view] polygon { fill: rgba(245,245,242,.96); pointer-events: all; }
-.model-orientation [data-view^="-"] polygon { fill: rgba(190,198,204,.97); }
-.model-orientation [data-view]:hover polygon,
-.model-orientation [data-view]:focus-visible polygon,
-.model-orientation [data-edge]:hover line,
-.model-orientation [data-edge]:focus-visible line { stroke: #245c7d; stroke-opacity: 1; }
-.model-orientation [data-corner]:hover circle,
-.model-orientation [data-corner]:focus-visible circle { fill: transparent; stroke: #245c7d; }
-.model-orientation text {
-  fill: #222; font: 600 7px Arial, sans-serif; text-anchor: middle; dominant-baseline: middle;
-  pointer-events: none; user-select: none;
-}
-.model-orientation [data-corner] circle {
-  fill: transparent; stroke: transparent; stroke-width: 8; pointer-events: all;
-}
-.model-orientation [data-edge] line { stroke: transparent; stroke-width: 12; pointer-events: stroke; }
 .model-status {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   padding: 24px; color: var(--muted-fg); font-size: 11px; letter-spacing: .12em; text-align: center;
