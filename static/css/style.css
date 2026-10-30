@@ -197,7 +197,7 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 .model-orientation polygon {
   stroke: #555; stroke-width: 1.5; stroke-linejoin: bevel; transition: fill .15s, stroke .15s;
 }
-.model-orientation [data-view] polygon { fill: rgba(245,245,242,.96); }
+.model-orientation [data-view] polygon { fill: rgba(245,245,242,.96); pointer-events: all; }
 .model-orientation [data-view^="-"] polygon { fill: rgba(190,198,204,.97); }
 .model-orientation [data-view]:hover polygon,
 .model-orientation [data-view]:focus-visible polygon,

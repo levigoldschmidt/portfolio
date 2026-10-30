@@ -178,7 +178,12 @@ async function initializeViewer() {
         element.setAttribute("tabindex", "0");
         element.setAttribute("aria-label", label);
         element.style.display = "none";
-        element.addEventListener("click", setView);
+        element.addEventListener("pointerup", (event) => {
+          if (event.button !== 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          setView();
+        });
         element.addEventListener("keydown", (event) => {
           if (event.key !== "Enter" && event.key !== " ") return;
           event.preventDefault();
@@ -246,6 +251,10 @@ async function initializeViewer() {
       });
       const projected = new THREE.Vector3();
       const inverseCameraRotation = new THREE.Quaternion();
+      const projectVector = (vector) => {
+        projected.copy(vector).applyQuaternion(inverseCameraRotation);
+        return { x: projected.x, y: -projected.y };
+      };
       const projectCubePoint = (vertex) => {
         projected.copy(vertex).applyQuaternion(inverseCameraRotation);
         return { x: 50 + projected.x * 23, y: 50 - projected.y * 23, z: projected.z };
@@ -285,8 +294,31 @@ async function initializeViewer() {
         visibleFaces.forEach(({ face, polygon, label, points, centerX, centerY }) => {
           polygon.parentElement.style.display = "";
           polygon.setAttribute("points", points.map((point) => `${point.x},${point.y}`).join(" "));
-          label.setAttribute("x", String(centerX));
-          label.setAttribute("y", String(centerY));
+          const baselineAxis = face.axis === "x" ? "z" : "x";
+          const verticalAxis = face.axis === "y" ? "z" : "y";
+          const baselineVector = new THREE.Vector3();
+          const verticalVector = new THREE.Vector3();
+          baselineVector[baselineAxis] = 1;
+          verticalVector[verticalAxis] = 1;
+          const baseline = projectVector(baselineVector);
+          const vertical = projectVector(verticalVector);
+          const baselineLength = Math.hypot(baseline.x, baseline.y);
+          const verticalLength = Math.hypot(vertical.x, vertical.y);
+          const textWidth = label.getComputedTextLength();
+          const widthScale = Math.min(46 * baselineLength * 0.78, textWidth * 1.35) / textWidth;
+          const heightScale = Math.min(5.5, 46 * verticalLength * 0.3) / 7;
+          if (baseline.x < 0) {
+            baseline.x *= -1;
+            baseline.y *= -1;
+          }
+          const baselineUnitX = baseline.x / baselineLength;
+          const baselineUnitY = baseline.y / baselineLength;
+          const verticalUnitX = vertical.x / verticalLength;
+          const verticalUnitY = vertical.y / verticalLength;
+          label.setAttribute(
+            "transform",
+            `matrix(${baselineUnitX * widthScale} ${baselineUnitY * widthScale} ${-verticalUnitX * heightScale} ${-verticalUnitY * heightScale} ${centerX} ${centerY})`,
+          );
           orientationSvg.append(polygon.parentElement);
         });
 
