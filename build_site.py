@@ -170,6 +170,7 @@ class Builder:
         self.pages: list[str] = []
         self.style_version = hashlib.sha256((STATIC / "css" / "style.css").read_bytes()).hexdigest()[:12]
         self.script_version = hashlib.sha256((STATIC / "js" / "main.js").read_bytes()).hexdigest()[:12]
+        self.fbx_script_version = hashlib.sha256((STATIC / "js" / "fbx-viewer.js").read_bytes()).hexdigest()[:12]
 
     def tr(self, text: str, **values: str | int) -> str:
         translated = self.translations.get(text, text) if self.language == "en" else text
@@ -252,6 +253,7 @@ class Builder:
 <meta property="og:description" content="{esc(description)}">
 {chr(10).join(head_extra)}
 <link rel="stylesheet" href="{rel('assets/css/style.css')}?v={self.style_version}">
+<script type="importmap">{{"imports":{{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}}}</script>
 <script src="{rel('assets/js/main.js')}?v={self.script_version}" defer></script>
 </head>
 <body>
@@ -538,6 +540,23 @@ class Builder:
             kind = s["type"]
             if kind == "text":
                 inner = f'<p class="prose">{esc(self.tr(s["text"]))}</p>'
+            elif kind == "3d_model":
+                model = page.rel(self.images.original(s["file"]))
+                inner = (
+                    '<div class="interactive-model" data-fbx-viewer>'
+                    f'<div class="model-stage" data-model-stage><div class="model-orientation" data-model-orientation '
+                    f'aria-label="{esc(self.tr("Cube d’orientation"))}" hidden></div>'
+                    f'<p class="model-status" role="status">'
+                    f'{esc(self.tr("Chargement du modèle 3D…"))}</p></div>'
+                    '<div class="model-controls">'
+                    f'<p>{esc(self.tr("Faites glisser pour faire tourner le modèle, utilisez la molette ou pincez pour zoomer, et le clic droit ou deux doigts pour le déplacer."))}</p>'
+                    f'<button type="button" data-model-reset>{esc(self.tr("Réinitialiser les plans"))}</button>'
+                    f'</div><div class="model-cut-controls" data-model-cut-controls '
+                    f'aria-label="{esc(self.tr("Plans de coupe"))}" hidden></div>'
+                    f'<p class="model-slicing-note">{esc(self.tr("Chaque plan se déplace selon sa normale et s’incline avec les rotations X/Y/Z ; les surfaces de coupe ne sont pas refermées."))}</p>'
+                    f'<span class="visually-hidden" data-model-src="{esc(model)}"></span></div>'
+                    f'<script type="module" src="{page.rel("assets/js/fbx-viewer.js")}?v={self.fbx_script_version}"></script>'
+                )
             elif kind == "images":
                 images = s.get("images")
                 if "folders" in s:

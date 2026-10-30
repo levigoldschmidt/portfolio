@@ -23,6 +23,8 @@ static/css, js  ─┘
   - `videos` (YouTube id and optional start time, or local media `folders`);
     YouTube videos can set `muted: true` to start muted while keeping player
     controls available
+  - `3d_model` (interactive FBX model; displayed in white with rotate, pan and
+    zoom controls using Three.js from jsDelivr)
   - `links` (optional `instagram_posts` embeds public Instagram posts in place;
     the videos remain hosted by Instagram and are not processed or cropped)
   - `pdfs` (`viewable: true` adds a VOIR button)

@@ -246,6 +246,12 @@
           "text": "Objectifs : Concevoir une maison-atelier urbaine à Ivry-sur-Seine, articulant un espace de travail et d'exposition de 125 m² avec un logement de 3 pièces de 80 m² sur une parcelle étroite (7,50 m × 17 m). Le projet repose sur la mise en œuvre de dispositifs architecturaux majeurs — double hauteur, patio et travail de la lumière naturelle — pour qualifier les espaces et l'intériorité. L'enjeu est de scénographier le parcours entre travail et habitat, en travaillant la volumétrie, les cadrages de vue, la précision des usages et la mise en scène d'œuvres au sein du showroom.\n\nConcept : Créer un atelier pour un artisan verrier composé d'une galerie d'exposition au rez-de-chaussée et d'un espace de travail en contrebas bénéficiant d'une double hauteur. Le logement se développe en duplex traversant aux étages supérieurs (R+1 et R+2), offrant des vues plongeantes sur l'atelier et accueillant deux chambres au dernier niveau. Le projet réinvestit le concept de façade épaisse à travers de larges montants verticaux qui intègrent des loggias, des terrasses, des assises et des tablettes intérieures/extérieures.\n\nDurée : 3 semaines\n\nNote : 18/20 (Meilleure note)"
         },
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "file": "projets/s1-projet-7-l-atelier-d-artiste/Projet V12 Leihouse.fbx"
+        },
+        {
           "id": "process",
           "label": "Processus / Croquis",
           "type": "images",
