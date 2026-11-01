@@ -10,8 +10,15 @@ async function initializeViewer() {
   const fullscreenButton = viewer.querySelector("[data-model-fullscreen]");
   const fullscreenStatus = viewer.querySelector("[data-model-fullscreen-status]");
   const cutControls = viewer.querySelector("[data-model-cut-controls]");
+  const settingsPanel = viewer.querySelector("[data-model-settings-panel]");
+  const settingsToggle = viewer.querySelector("[data-model-settings-toggle]");
   const orientationControl = viewer.querySelector("[data-model-orientation]");
   const english = document.documentElement.lang === "en";
+  settingsToggle.addEventListener("click", () => {
+    const isExpanded = settingsToggle.getAttribute("aria-expanded") === "true";
+    settingsToggle.setAttribute("aria-expanded", String(!isExpanded));
+    settingsPanel.hidden = isExpanded;
+  });
   const updateFullscreenButton = () => {
     const isFullscreen = document.fullscreenElement === viewer;
     fullscreenButton.textContent = isFullscreen
@@ -41,13 +48,31 @@ async function initializeViewer() {
   let OBJLoader;
   let GLTFLoader;
   let OrbitControls;
+  let EffectComposer;
+  let RenderPass;
+  let SSAOPass;
+  let OutputPass;
   try {
-    [THREE, { FBXLoader }, { OBJLoader }, { GLTFLoader }, { OrbitControls }] = await Promise.all([
+    [
+      THREE,
+      { FBXLoader },
+      { OBJLoader },
+      { GLTFLoader },
+      { OrbitControls },
+      { EffectComposer },
+      { RenderPass },
+      { SSAOPass },
+      { OutputPass },
+    ] = await Promise.all([
       import("three"),
       import("three/addons/loaders/FBXLoader.js"),
       import("three/addons/loaders/OBJLoader.js"),
       import("three/addons/loaders/GLTFLoader.js"),
       import("three/addons/controls/OrbitControls.js"),
+      import("three/addons/postprocessing/EffectComposer.js"),
+      import("three/addons/postprocessing/RenderPass.js"),
+      import("three/addons/postprocessing/SSAOPass.js"),
+      import("three/addons/postprocessing/OutputPass.js"),
     ]);
   } catch (error) {
     console.error("Could not load the 3D viewer libraries.", error);
@@ -57,7 +82,7 @@ async function initializeViewer() {
     return;
   }
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color("#bec9d1");
+  scene.background = new THREE.Color("#ffffff");
   let cameraFrustumHeight = 1;
   const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.01, 100000);
   let renderer;
@@ -72,17 +97,38 @@ async function initializeViewer() {
   }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMapping = THREE.NoToneMapping;
   renderer.localClippingEnabled = true;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   stage.append(renderer.domElement);
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const ssaoPass = new SSAOPass(scene, camera, stage.clientWidth || 1, stage.clientHeight || 1);
+  ssaoPass.kernelRadius = 1.2;
+  ssaoPass.ssaoMaterial.defines.PERSPECTIVE_CAMERA = 0;
+  ssaoPass.depthRenderMaterial.defines.PERSPECTIVE_CAMERA = 0;
+  const ssaoIntensity = 1.5;
+  const aoOutputExpression = "vec3( 1.0 - occlusion )";
+  if (!ssaoPass.ssaoMaterial.fragmentShader.includes(aoOutputExpression)) {
+    throw new Error("The Three.js SSAO shader output could not be configured.");
+  }
+  ssaoPass.ssaoMaterial.fragmentShader = ssaoPass.ssaoMaterial.fragmentShader.replace(
+    aoOutputExpression,
+    `vec3( pow( 1.0 - occlusion, ${ssaoIntensity} ) )`,
+  );
+  ssaoPass.ssaoMaterial.needsUpdate = true;
+  composer.addPass(ssaoPass);
+  composer.addPass(new OutputPass());
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x555555, 1.1));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
-  keyLight.position.set(1, 2, 3);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(2048, 2048);
+  keyLight.shadow.bias = -0.0001;
+  keyLight.shadow.normalBias = 0.02;
+  keyLight.shadow.radius = 4;
   scene.add(keyLight);
-  const fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
-  fillLight.position.set(-2, 1, -2);
-  scene.add(fillLight);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -101,6 +147,7 @@ async function initializeViewer() {
     camera.bottom = -cameraFrustumHeight / 2;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
+    composer.setSize(width, height);
   };
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(stage);
@@ -146,14 +193,6 @@ async function initializeViewer() {
         return;
       }
       model.scale.setScalar(modelScale);
-      model.traverse((part) => {
-        if (!part.isMesh) return;
-        part.material = new THREE.MeshStandardMaterial({
-          color: 0xfafafa,
-          roughness: 0.88,
-          side: THREE.FrontSide,
-        });
-      });
 
       const bounds = new THREE.Box3().setFromObject(model);
       const size = bounds.getSize(new THREE.Vector3());
@@ -167,13 +206,33 @@ async function initializeViewer() {
         return;
       }
 
-      cameraFrustumHeight = maxDimension * 1.7;
+      cameraFrustumHeight = maxDimension * 0.84;
       resize();
+      const lightDistance = maxDimension * 2;
+      keyLight.position.set(lightDistance, lightDistance * 1.5, lightDistance);
+      keyLight.shadow.camera.left = -maxDimension * 2;
+      keyLight.shadow.camera.right = maxDimension * 2;
+      keyLight.shadow.camera.top = maxDimension * 2;
+      keyLight.shadow.camera.bottom = -maxDimension * 2;
+      keyLight.shadow.camera.near = 0.1;
+      keyLight.shadow.camera.far = maxDimension * 8;
+      keyLight.shadow.camera.updateProjectionMatrix();
 
       const centeredModel = new THREE.Group();
       centeredModel.position.copy(center).negate();
       scene.add(centeredModel);
-
+      const shadowGround = new THREE.Mesh(
+        new THREE.PlaneGeometry(
+          Math.max(size.x * 4, maxDimension * 4),
+          Math.max(size.z * 4, maxDimension * 4),
+        ),
+        new THREE.ShadowMaterial({ color: 0x808590, opacity: 0.2 }),
+      );
+      shadowGround.rotation.x = -Math.PI / 2;
+      shadowGround.position.y = -size.y / 2 - maxDimension * 1e-4;
+      shadowGround.receiveShadow = true;
+      shadowGround.renderOrder = 1;
+      scene.add(shadowGround);
       const planeRadius = size.length() / 2;
       const rotation = new THREE.Euler();
       const planeDefinitions = [
@@ -182,15 +241,85 @@ async function initializeViewer() {
         { normal: new THREE.Vector3(0, 0, 1), enabled: false },
       ];
       const clippingPlanes = planeDefinitions.map(({ normal }) => new THREE.Plane(normal.clone(), 0));
-      const material = new THREE.MeshStandardMaterial({
-        color: 0xfafafa,
-        roughness: 0.88,
+      const clayMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.2,
+        roughness: 0.95,
         side: THREE.FrontSide,
         clippingPlanes,
       });
+      clayMaterial.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <normal_fragment_maps>",
+          `#include <normal_fragment_maps>
+          vec3 worldNormal = normalize(transpose(mat3(viewMatrix)) * normal);
+          float horizontalFace = smoothstep(0.55, 0.75, abs(worldNormal.y));
+          diffuseColor.rgb *= mix(vec3(0.823), vec3(1.0), horizontalFace);`,
+        );
+      };
+      clayMaterial.customProgramCacheKey = () => "architectural-clay";
+      const interiorMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.2,
+        roughness: 0.85,
+        side: THREE.FrontSide,
+        clippingPlanes,
+      });
+      const whiteMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.15,
+        roughness: 0.9,
+        side: THREE.FrontSide,
+        clippingPlanes,
+      });
+      const glazingMaterial = new THREE.MeshStandardMaterial({
+        color: 0xe0e8f0,
+        transparent: true,
+        opacity: 0.25,
+        roughness: 0.85,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+        clippingPlanes,
+      });
+      const edgeMaterial = new THREE.LineBasicMaterial({
+        color: 0x555555,
+        transparent: true,
+        opacity: 0.28,
+        clippingPlanes,
+        depthTest: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
+      });
+      const interiorName = /(MOBILIER|MEUBLE|EQUIPEMENT|CUISINE|SANITAIRE|INTERIEUR|INTERIOR|FURNITURE|CABINET)/i;
+      const glassName = /(VERRE|VITRAGE|BAIE|FENETRE|FENÊTRE|WINDOW|GLASS)/i;
+      const whiteStructureName = /(STRUCTURE|POTEAU|POUTRE|ESCALIER|01_PORTEUR.*BOIS)/i;
+      const whiteFloorName = /(DALLE|PLANCHER|TOITURE|TOIT|ROOF|SLAB|FLOOR)/i;
       model.traverse((part) => {
         if (!part.isMesh) return;
-        part.material = material;
+        const isDimensionGeometry = /00_COTATION|COTATION|DIMENSION/i.test(part.name);
+        if (!isDimensionGeometry && glassName.test(part.name)) {
+          part.material = glazingMaterial;
+        } else if (interiorName.test(part.name)) {
+          part.material = interiorMaterial;
+        } else if (whiteStructureName.test(part.name) || whiteFloorName.test(part.name)) {
+          part.material = whiteMaterial;
+        } else {
+          part.material = clayMaterial;
+        }
+        part.castShadow = !isDimensionGeometry;
+        part.receiveShadow = !isDimensionGeometry;
+        if (!isDimensionGeometry) {
+          const edgeGeometry = new THREE.EdgesGeometry(part.geometry, 25);
+          const edges = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+          edges.name = "Architectural edges";
+          edges.renderOrder = 2;
+          part.add(edges);
+        }
       });
       centeredModel.add(model);
 
@@ -220,77 +349,7 @@ async function initializeViewer() {
         scene.add(group);
         return { group, hideTimer: 0 };
       });
-      const sectionSurfaces = planeDefinitions.map((_, index) => {
-        const cap = new THREE.Mesh(
-          new THREE.BufferGeometry(),
-          new THREE.MeshBasicMaterial({
-            color: 0x000000,
-            side: THREE.DoubleSide,
-            clippingPlanes: clippingPlanes.filter((__, planeIndex) => planeIndex !== index),
-            depthTest: true,
-            depthWrite: false,
-            polygonOffset: true,
-            polygonOffsetFactor: -4,
-            polygonOffsetUnits: -4,
-          }),
-        );
-        cap.renderOrder = 1;
-        cap.frustumCulled = false;
-        cap.visible = false;
-        scene.add(cap);
-        return cap;
-      });
-      const sectionEdges = planeDefinitions.map((_, index) => {
-        const edges = new THREE.LineSegments(
-          new THREE.BufferGeometry(),
-          new THREE.LineBasicMaterial({
-            color: 0x000000,
-            clippingPlanes: clippingPlanes.filter((__, planeIndex) => planeIndex !== index),
-          }),
-        );
-        edges.renderOrder = 2;
-        edges.frustumCulled = false;
-        edges.visible = false;
-        scene.add(edges);
-        return edges;
-      });
-      const surfaceTimers = planeDefinitions.map(() => 0);
       let planeStates = [];
-      const isSimplePolygon = (polygon, coordinateTolerance) => {
-        const areaTolerance = coordinateTolerance * coordinateTolerance;
-        const cross = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-        const onSegment = (a, b, point) => point.x >= Math.min(a.x, b.x) - coordinateTolerance
-          && point.x <= Math.max(a.x, b.x) + coordinateTolerance
-          && point.y >= Math.min(a.y, b.y) - coordinateTolerance
-          && point.y <= Math.max(a.y, b.y) + coordinateTolerance;
-        const intersects = (a, b, c, d) => {
-          const abC = cross(a, b, c);
-          const abD = cross(a, b, d);
-          const cdA = cross(c, d, a);
-          const cdB = cross(c, d, b);
-          if (((abC > areaTolerance && abD < -areaTolerance)
-            || (abC < -areaTolerance && abD > areaTolerance))
-            && ((cdA > areaTolerance && cdB < -areaTolerance)
-              || (cdA < -areaTolerance && cdB > areaTolerance))) {
-            return true;
-          }
-          return (Math.abs(abC) <= areaTolerance && onSegment(a, b, c))
-            || (Math.abs(abD) <= areaTolerance && onSegment(a, b, d))
-            || (Math.abs(cdA) <= areaTolerance && onSegment(c, d, a))
-            || (Math.abs(cdB) <= areaTolerance && onSegment(c, d, b));
-        };
-        for (let first = 0; first < polygon.length; first += 1) {
-          const firstNext = (first + 1) % polygon.length;
-          for (let second = first + 1; second < polygon.length; second += 1) {
-            const secondNext = (second + 1) % polygon.length;
-            if (first === second || firstNext === second || secondNext === first) continue;
-            if (intersects(polygon[first], polygon[firstNext], polygon[second], polygon[secondNext])) {
-              return false;
-            }
-          }
-        }
-        return true;
-      };
       const createSectionGeometries = (plane) => {
         const tolerance = Math.max(maxDimension * 1e-5, 1e-5);
         const pointKey = (point) => [
@@ -304,8 +363,7 @@ async function initializeViewer() {
           : new THREE.Vector3(0, 1, 0);
         const u = new THREE.Vector3().crossVectors(normal, reference).normalize();
         const v = new THREE.Vector3().crossVectors(normal, u).normalize();
-        const origin = normal.clone().multiplyScalar(-plane.constant)
-          .addScaledVector(normal, -maxDimension * 1e-4);
+        const origin = normal.clone().multiplyScalar(-plane.constant);
         const surfacePositions = [];
         const surfaceIndices = [];
         const edgePositions = [];
@@ -376,11 +434,79 @@ async function initializeViewer() {
           }
         });
 
-        const fillGraph = new Map([...graph].map(([key, neighbors]) => [key, new Set(neighbors)]));
         const projectedPoints = new Map([...pointsByKey].map(([key, point]) => {
           const relative = point.clone().sub(origin);
           return [key, new THREE.Vector2(relative.dot(u), relative.dot(v))];
         }));
+        const graphSegments = [];
+        graph.forEach((neighbors, key) => {
+          neighbors.forEach((neighbor) => {
+            if (key < neighbor) graphSegments.push({ start: key, end: neighbor, splits: [] });
+          });
+        });
+        const graphVertices = [...projectedPoints.entries()];
+        graphSegments.forEach((segment) => {
+          const start = projectedPoints.get(segment.start);
+          const direction = projectedPoints.get(segment.end).clone().sub(start);
+          const lengthSquared = direction.lengthSq();
+          if (lengthSquared <= tolerance * tolerance) return;
+          const margin = tolerance / Math.sqrt(lengthSquared);
+          graphVertices.forEach(([key, point]) => {
+            if (key === segment.start || key === segment.end) return;
+            const relative = point.clone().sub(start);
+            const t = relative.dot(direction) / lengthSquared;
+            if (t <= margin || t >= 1 - margin) return;
+            const closest = start.clone().addScaledVector(direction, t);
+            if (closest.distanceToSquared(point) <= tolerance * tolerance) {
+              segment.splits.push({ key, t });
+            }
+          });
+        });
+        const cross2d = (first, second) => first.x * second.y - first.y * second.x;
+        graphSegments.forEach((first, firstIndex) => {
+          const firstStart = projectedPoints.get(first.start);
+          const firstDirection = projectedPoints.get(first.end).clone().sub(firstStart);
+          for (let secondIndex = firstIndex + 1; secondIndex < graphSegments.length; secondIndex += 1) {
+            const second = graphSegments[secondIndex];
+            if (first.start === second.start || first.start === second.end
+              || first.end === second.start || first.end === second.end) continue;
+            const secondStart = projectedPoints.get(second.start);
+            const secondDirection = projectedPoints.get(second.end).clone().sub(secondStart);
+            const denominator = cross2d(firstDirection, secondDirection);
+            if (Math.abs(denominator) <= tolerance * tolerance) continue;
+            const difference = secondStart.clone().sub(firstStart);
+            const firstT = cross2d(difference, secondDirection) / denominator;
+            const secondT = cross2d(difference, firstDirection) / denominator;
+            const firstMargin = tolerance / firstDirection.length();
+            const secondMargin = tolerance / secondDirection.length();
+            if (firstT <= firstMargin || firstT >= 1 - firstMargin
+              || secondT <= secondMargin || secondT >= 1 - secondMargin) continue;
+            const projected = firstStart.clone().addScaledVector(firstDirection, firstT);
+            const world = origin.clone().addScaledVector(u, projected.x).addScaledVector(v, projected.y);
+            const key = pointKey(world);
+            if (!pointsByKey.has(key)) pointsByKey.set(key, world);
+            projectedPoints.set(key, projected);
+            first.splits.push({ key, t: firstT });
+            second.splits.push({ key, t: secondT });
+          }
+        });
+        graph.clear();
+        pointsByKey.forEach((__, key) => graph.set(key, new Set()));
+        edgeKeys.clear();
+        const addGraphEdge = (start, end) => {
+          if (start === end) return;
+          graph.get(start).add(end);
+          graph.get(end).add(start);
+          edgeKeys.add([start, end].sort().join("|"));
+        };
+        graphSegments.forEach(({ start, end, splits }) => {
+          const orderedNodes = [start, ...splits.sort((first, second) => first.t - second.t)
+            .map(({ key }) => key), end];
+          for (let index = 0; index < orderedNodes.length - 1; index += 1) {
+            addGraphEdge(orderedNodes[index], orderedNodes[index + 1]);
+          }
+        });
+        const fillGraph = new Map([...graph].map(([key, neighbors]) => [key, new Set(neighbors)]));
         const findSegmentIntersections = (startKey, endKey, startPoint, endPoint) => {
           const cross = (first, second) => first.x * second.y - first.y * second.x;
           const direction = endPoint.clone().sub(startPoint);
@@ -440,6 +566,7 @@ async function initializeViewer() {
         let unmatchedNodes = [...graph]
           .filter(([, neighbors]) => neighbors.size % 2 === 1)
           .map(([key]) => key);
+        const maxClosureGap = maxDimension * 0.15;
         while (unmatchedNodes.length >= 2) {
           let bestConnection = null;
           let bestCrossingConnection = null;
@@ -453,13 +580,14 @@ async function initializeViewer() {
               const secondPoint = projectedPoints.get(secondKey);
               const connection = secondPoint.clone().sub(firstPoint);
               const distance = connection.length();
-              if (distance <= tolerance * 0.01) continue;
+              if (distance <= tolerance * 0.01 || distance > maxClosureGap) continue;
               connection.normalize();
               const intersections = isDirectEdge
                 ? []
                 : findSegmentIntersections(firstKey, secondKey, firstPoint, secondPoint);
               const secondDirection = openingDirection(secondKey);
               const alignment = firstDirection.dot(connection) + secondDirection.dot(connection.clone().negate());
+              if (alignment < 1) continue;
               const score = distance + maxDimension * 0.05 * (2 - alignment);
               const candidate = { first, second, firstKey, secondKey, score, intersections, isDirectEdge };
               if (intersections.length) {
@@ -608,7 +736,7 @@ async function initializeViewer() {
               if (simpleLoop.length < 3) return;
               const projected = simpleLoop.map((key) => projectedPoints.get(key));
               const area = THREE.ShapeUtils.area(projected);
-              if (area <= tolerance * tolerance || !isSimplePolygon(projected, tolerance)) return;
+              if (area <= tolerance * tolerance) return;
               const canonicalLoop = [...simpleLoop].sort().join("|");
               if (loopKeys.has(canonicalLoop)) return;
               loopKeys.add(canonicalLoop);
@@ -662,34 +790,6 @@ async function initializeViewer() {
           hasEdges: edgePositions.length > 0,
         };
       };
-      const scheduleSectionSurface = (index, enabled) => {
-        window.clearTimeout(surfaceTimers[index]);
-        const updateSurface = () => {
-          const cap = sectionSurfaces[index];
-          const edges = sectionEdges[index];
-          if (!enabled) {
-            cap.visible = false;
-            cap.geometry.dispose();
-            cap.geometry = new THREE.BufferGeometry();
-            edges.visible = false;
-            edges.geometry.dispose();
-            edges.geometry = new THREE.BufferGeometry();
-            return;
-          }
-          const geometries = createSectionGeometries(clippingPlanes[index]);
-          cap.geometry.dispose();
-          cap.geometry = geometries.surfaceGeometry;
-          cap.visible = geometries.hasSurface;
-          edges.geometry.dispose();
-          edges.geometry = geometries.edgeGeometry;
-          edges.visible = geometries.hasEdges;
-        };
-        if (!enabled) {
-          updateSurface();
-          return;
-        }
-        surfaceTimers[index] = window.setTimeout(updateSurface, 100);
-      };
       const setCameraDirection = (direction, up = new THREE.Vector3(0, 1, 0)) => {
         const distance = camera.position.distanceTo(controls.target);
         controls.target.set(0, 0, 0);
@@ -703,14 +803,16 @@ async function initializeViewer() {
         selectedFaceKey = `${face.sign > 0 ? "+" : "-"}${face.axis}`;
       };
       const orientationCubeScene = new THREE.Scene();
-      orientationCubeScene.add(new THREE.HemisphereLight(0xffffff, 0x777777, 2));
-      const orientationKeyLight = new THREE.DirectionalLight(0xffffff, 2);
+      orientationCubeScene.add(new THREE.HemisphereLight(0xffffff, 0x9a9a9a, 1.15));
+      const orientationKeyLight = new THREE.DirectionalLight(0xffffff, 2.2);
       orientationKeyLight.position.set(2, 3, 4);
       orientationCubeScene.add(orientationKeyLight);
       const orientationCamera = new THREE.OrthographicCamera(-1.2, 1.2, 1.2, -1.2, 0.01, 100);
       const orientationRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       orientationRenderer.setClearColor(0x000000, 0);
       orientationRenderer.setPixelRatio(Math.min(window.devicePixelRatio * 2, 4));
+      orientationRenderer.outputColorSpace = THREE.SRGBColorSpace;
+      orientationRenderer.toneMapping = THREE.NeutralToneMapping;
       orientationRenderer.domElement.setAttribute("aria-hidden", "true");
       orientationRenderer.domElement.className = "model-orientation-canvas";
       const orientationLabels = document.createElement("div");
@@ -770,8 +872,24 @@ async function initializeViewer() {
           orientationCubeScene.add(orientationRoot);
           orientationModel.traverse((part) => {
             if (!part.isMesh) return;
-            part.material = part.material.clone();
-            part.material.side = THREE.DoubleSide;
+            const recolorMaterial = (sourceMaterial) => {
+              const cubeMaterial = sourceMaterial.clone();
+              cubeMaterial.color?.setHex(0xffffff);
+              cubeMaterial.map = null;
+              cubeMaterial.vertexColors = false;
+              cubeMaterial.emissiveMap = null;
+              if (cubeMaterial.emissive) {
+                cubeMaterial.emissive.setHex(0x333333);
+                cubeMaterial.emissiveIntensity = 0.05;
+              }
+              cubeMaterial.roughness = 0.88;
+              cubeMaterial.metalness = 0;
+              cubeMaterial.side = THREE.DoubleSide;
+              return cubeMaterial;
+            };
+            part.material = Array.isArray(part.material)
+              ? part.material.map(recolorMaterial)
+              : recolorMaterial(part.material);
           });
 
           const orientationHalfExtents = orientationSize.clone().multiplyScalar(0.5);
@@ -1004,12 +1122,16 @@ async function initializeViewer() {
         const settings = { position: initialPlanePosition, rotation: [0, 0, 0] };
         const planeHelper = planeHelpers[index];
         const sliderControls = [];
+        const hidePlane = () => {
+          window.clearTimeout(planeHelper.hideTimer);
+          planeHelper.group.visible = false;
+        };
         const showPlane = () => {
           planeHelper.group.visible = true;
           window.clearTimeout(planeHelper.hideTimer);
           planeHelper.hideTimer = window.setTimeout(() => {
             planeHelper.group.visible = false;
-          }, 4000);
+          }, 900);
         };
         const updatePlane = (showPreview = true) => {
           rotation.set(...settings.rotation.map((degrees) => THREE.MathUtils.degToRad(degrees)));
@@ -1023,7 +1145,6 @@ async function initializeViewer() {
             new THREE.Vector3(0, 0, 1),
             clippingPlanes[index].normal,
           );
-          scheduleSectionSurface(index, enabledInput.checked);
           if (showPreview) {
             showPlane();
           } else {
@@ -1033,8 +1154,19 @@ async function initializeViewer() {
         };
         enabledInput.addEventListener("change", updatePlane);
 
-        const addSlider = (label, min, max, step, value, onChange, suffix, target, compact = false) => {
-          const row = document.createElement("label");
+        const addSlider = (
+          label,
+          min,
+          max,
+          step,
+          value,
+          onChange,
+          suffix,
+          target,
+          compact = false,
+          presets = [],
+        ) => {
+          const row = document.createElement("div");
           row.className = `cut-plane-slider${compact ? " cut-plane-slider-position" : ""}`;
           const title = document.createElement("span");
           title.textContent = label;
@@ -1045,21 +1177,85 @@ async function initializeViewer() {
           input.step = String(step);
           input.value = String(value);
           input.setAttribute("aria-label", label);
+          input.addEventListener("pointerup", hidePlane);
+          input.addEventListener("pointercancel", hidePlane);
+          input.addEventListener("keyup", hidePlane);
+          let markerButtons = [];
+          const updateMarkers = (nextValue) => {
+            const snapTolerance = (max - min) * 0.025;
+            markerButtons.forEach(({ button, markerValue }) => {
+              const isSelected = Math.abs(markerValue - nextValue) <= snapTolerance;
+              button.classList.toggle("is-active", isSelected);
+              button.setAttribute("aria-pressed", String(isSelected));
+            });
+          };
+          const updateValue = (nextValue) => {
+            input.value = String(nextValue);
+            output.value = `${Number(nextValue.toFixed(2))}${suffix}`;
+            updateMarkers(nextValue);
+            onChange(nextValue);
+          };
           const output = document.createElement("output");
           output.value = `${Number(value.toFixed(2))}${suffix}`;
           input.addEventListener("input", () => {
-            const nextValue = Number(input.value);
-            output.value = `${Number(nextValue.toFixed(2))}${suffix}`;
-            onChange(nextValue);
+            updateValue(Number(input.value));
           });
-          row.append(title, input, output);
+          if (compact) {
+            const rangeWrap = document.createElement("div");
+            rangeWrap.className = "cut-plane-range-wrap";
+            rangeWrap.append(input);
+            const markers = document.createElement("div");
+            markers.className = "cut-plane-main-markers";
+            markers.setAttribute("role", "group");
+            markers.setAttribute("aria-label", english ? "Main cut positions" : "Repères de coupe principaux");
+            markerButtons = presets.map(({ value: markerValue, label: markerLabel }, markerIndex) => {
+              const fraction = (markerValue - min) / (max - min);
+              const marker = document.createElement("button");
+              marker.type = "button";
+              marker.className = "cut-plane-main-marker";
+              marker.style.left = `${fraction * 100}%`;
+              marker.textContent = String(markerIndex + 1);
+              marker.title = english
+                ? `Main cut — ${markerLabel}`
+                : `Coupe principale — ${markerLabel}`;
+              marker.setAttribute("aria-label", marker.title);
+              marker.addEventListener("click", () => {
+                enabledInput.checked = true;
+                updateValue(markerValue);
+                enabledInput.dispatchEvent(new Event("change", { bubbles: true }));
+                hidePlane();
+              });
+              markers.append(marker);
+              return { button: marker, markerValue };
+            });
+            rangeWrap.append(markers);
+            input.addEventListener("change", () => {
+              const range = max - min;
+              const nearest = presets
+                .map(({ value: markerValue }) => markerValue)
+                .reduce((best, candidate) => Math.abs(candidate - Number(input.value))
+                  < Math.abs(best - Number(input.value)) ? candidate : best);
+              if (Number.isFinite(nearest)
+                && Math.abs(nearest - Number(input.value)) <= range * 0.025) updateValue(nearest);
+            });
+            updateMarkers(value);
+            row.append(title, rangeWrap, output);
+          } else {
+            row.append(title, input, output);
+          }
+          input.addEventListener("change", hidePlane);
           target.append(row);
-          sliderControls.push({ input, output, suffix });
+          sliderControls.push({ input, output, suffix, updateMarkers });
         };
 
         const positionMin = index === 1 ? -size.y / 2 : -planeRadius;
         const positionMax = index === 1 ? size.y / 2 : planeRadius;
-        const positionStep = (positionMax - positionMin) / 100;
+        const positionStep = (positionMax - positionMin) / 1000;
+        const positionPresets = [
+          [{ value: -3.63, label: "-3.63 m" }],
+          [-2.28, 0.22, 3.5].map((value) => ({ value, label: `${value} m` })),
+          [{ value: 0, label: "0 m" }],
+        ][index];
         addSlider(
           english ? "Position" : "Position",
           positionMin,
@@ -1073,9 +1269,11 @@ async function initializeViewer() {
           " m",
           panel,
           true,
+          positionPresets,
         );
         const advanced = document.createElement("details");
         advanced.className = "cut-plane-advanced";
+        advanced.hidden = true;
         const advancedSummary = document.createElement("summary");
         advancedSummary.textContent = english ? "Advanced" : "Avancé";
         const rotationControls = document.createElement("div");
@@ -1103,31 +1301,26 @@ async function initializeViewer() {
         planeStates.push({ enabledInput, settings, sliderControls, updatePlane, planeHelper });
       });
       cutControls.hidden = false;
-      resetButton.addEventListener("click", () => {
-        planeStates.forEach(({ enabledInput, settings, sliderControls, updatePlane }, index) => {
-          enabledInput.checked = false;
-          settings.position = index === 1 ? size.y / 2 : 0;
-          settings.rotation.fill(0);
-          sliderControls.forEach(({ input, output, suffix }, sliderIndex) => {
-            const value = sliderIndex === 0 ? settings.position : 0;
-            input.value = String(value);
-            output.value = `${Number(value.toFixed(2))}${suffix}`;
-          });
-          updatePlane(false);
-        });
-      });
 
       const distance = maxDimension * 3.5;
-      const initialPosition = new THREE.Vector3(distance, distance * 0.72, distance);
+      const initialPosition = new THREE.Vector3(-distance * 1.35, distance * 1.2, distance);
       camera.position.copy(initialPosition);
       camera.near = maxDimension / 1000;
       camera.far = maxDimension * 20;
       camera.updateProjectionMatrix();
+      ssaoPass.ssaoMaterial.uniforms.cameraNear.value = camera.near;
+      ssaoPass.ssaoMaterial.uniforms.cameraFar.value = camera.far;
+      ssaoPass.depthRenderMaterial.uniforms.cameraNear.value = camera.near;
+      ssaoPass.depthRenderMaterial.uniforms.cameraFar.value = camera.far;
       controls.minDistance = maxDimension * 0.08;
       controls.maxDistance = maxDimension * 12;
       controls.target.set(0, 0, 0);
       controls.update();
       controls.saveState();
+      resetButton.addEventListener("click", () => {
+        controls.reset();
+        updateOrientationCube();
+      });
       updateOrientationCube();
       status.remove();
     },
@@ -1142,7 +1335,7 @@ async function initializeViewer() {
   const render = () => {
     controls.update();
     updateOrientationCube();
-    renderer.render(scene, camera);
+    composer.render();
     requestAnimationFrame(render);
   };
   render();
