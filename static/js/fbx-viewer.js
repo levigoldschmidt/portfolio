@@ -256,18 +256,6 @@ async function initializeViewer() {
       });
       const surfaceTimers = planeDefinitions.map(() => 0);
       let planeStates = [];
-      const pointInPolygon = (point, polygon) => {
-        let inside = false;
-        for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
-          const a = polygon[i];
-          const b = polygon[j];
-          if ((a.y > point.y) !== (b.y > point.y)
-            && point.x < ((b.x - a.x) * (point.y - a.y)) / (b.y - a.y) + a.x) {
-            inside = !inside;
-          }
-        }
-        return inside;
-      };
       const isSimplePolygon = (polygon, coordinateTolerance) => {
         const areaTolerance = coordinateTolerance * coordinateTolerance;
         const cross = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
@@ -317,7 +305,7 @@ async function initializeViewer() {
         const u = new THREE.Vector3().crossVectors(normal, reference).normalize();
         const v = new THREE.Vector3().crossVectors(normal, u).normalize();
         const origin = normal.clone().multiplyScalar(-plane.constant)
-          .addScaledVector(normal, maxDimension * 1e-4);
+          .addScaledVector(normal, -maxDimension * 1e-4);
         const surfacePositions = [];
         const surfaceIndices = [];
         const edgePositions = [];
@@ -341,7 +329,6 @@ async function initializeViewer() {
           edgeKeys.add(edgeKey);
           pointsByKey.set(startKey, start);
           pointsByKey.set(endKey, end);
-          edgePositions.push(start.x, start.y, start.z, end.x, end.y, end.z);
           if (!graph.has(startKey)) graph.set(startKey, new Set());
           if (!graph.has(endKey)) graph.set(endKey, new Set());
           graph.get(startKey).add(endKey);
@@ -389,57 +376,194 @@ async function initializeViewer() {
           }
         });
 
-        const graphComponents = [];
-        const visitedComponents = new Set();
-        for (const key of graph.keys()) {
-          if (visitedComponents.has(key)) continue;
-          const component = [];
-          const pending = [key];
-          visitedComponents.add(key);
-          while (pending.length) {
-            const current = pending.pop();
-            component.push(current);
-            graph.get(current).forEach((neighbor) => {
-              if (visitedComponents.has(neighbor)) return;
-              visitedComponents.add(neighbor);
-              pending.push(neighbor);
-            });
-          }
-          graphComponents.push(component);
-        }
         const fillGraph = new Map([...graph].map(([key, neighbors]) => [key, new Set(neighbors)]));
-        const openChains = [];
-        for (const component of graphComponents) {
-          const endpoints = component.filter((key) => graph.get(key).size === 1);
-          const edgeCount = component.reduce((total, key) => total + graph.get(key).size, 0) / 2;
-          if (endpoints.length === 2 && edgeCount >= 3
-            && component.every((key) => graph.get(key).size <= 2)) {
-            openChains.push(endpoints);
-          }
-        }
-        const unmatchedEndpoints = openChains.flat();
-        const maxClosureGap = maxDimension * 0.02;
-        while (unmatchedEndpoints.length >= 2) {
-          let closest = null;
-          for (let first = 0; first < unmatchedEndpoints.length; first += 1) {
-            for (let second = first + 1; second < unmatchedEndpoints.length; second += 1) {
-              const distance = pointsByKey.get(unmatchedEndpoints[first])
-                .distanceTo(pointsByKey.get(unmatchedEndpoints[second]));
-              if (distance > maxClosureGap || (closest && distance >= closest.distance)) continue;
-              closest = { first, second, distance };
-            }
-          }
-          if (!closest) break;
-          const [secondKey] = unmatchedEndpoints.splice(closest.second, 1);
-          const [firstKey] = unmatchedEndpoints.splice(closest.first, 1);
-          fillGraph.get(firstKey).add(secondKey);
-          fillGraph.get(secondKey).add(firstKey);
-        }
-
         const projectedPoints = new Map([...pointsByKey].map(([key, point]) => {
           const relative = point.clone().sub(origin);
           return [key, new THREE.Vector2(relative.dot(u), relative.dot(v))];
         }));
+        const findSegmentIntersections = (startKey, endKey, startPoint, endPoint) => {
+          const cross = (first, second) => first.x * second.y - first.y * second.x;
+          const direction = endPoint.clone().sub(startPoint);
+          const intersections = [];
+          for (const [key, neighbors] of graph) {
+            for (const neighbor of neighbors) {
+              if (key >= neighbor || key === startKey || key === endKey
+                || neighbor === startKey || neighbor === endKey) continue;
+              const edgeStart = projectedPoints.get(key);
+              const edgeEnd = projectedPoints.get(neighbor);
+              const edgeDirection = edgeEnd.clone().sub(edgeStart);
+              const denominator = cross(direction, edgeDirection);
+              if (Math.abs(denominator) <= tolerance * tolerance) continue;
+              const difference = edgeStart.clone().sub(startPoint);
+              const connectionT = cross(difference, edgeDirection) / denominator;
+              const edgeT = cross(difference, direction) / denominator;
+              const connectionMargin = tolerance / direction.length();
+              const edgeMargin = tolerance / edgeDirection.length();
+              if (connectionT <= connectionMargin || connectionT >= 1 - connectionMargin
+                || edgeT <= edgeMargin || edgeT >= 1 - edgeMargin) continue;
+              intersections.push({
+                key,
+                neighbor,
+                connectionT,
+                edgeT,
+                point: startPoint.clone().addScaledVector(direction, connectionT),
+              });
+            }
+          }
+          return intersections;
+        };
+        const openingDirection = (key) => {
+          const point = projectedPoints.get(key);
+          const neighbors = [...graph.get(key)]
+            .map((neighbor) => projectedPoints.get(neighbor))
+            .map((neighbor) => Math.atan2(neighbor.y - point.y, neighbor.x - point.x))
+            .sort((first, second) => first - second);
+          if (neighbors.length === 1) {
+            return new THREE.Vector2(
+              Math.cos(neighbors[0] + Math.PI),
+              Math.sin(neighbors[0] + Math.PI),
+            );
+          }
+          let largestGap = -Infinity;
+          let direction = 0;
+          neighbors.forEach((angle, index) => {
+            const nextAngle = index === neighbors.length - 1
+              ? neighbors[0] + Math.PI * 2
+              : neighbors[index + 1];
+            const gap = nextAngle - angle;
+            if (gap <= largestGap) return;
+            largestGap = gap;
+            direction = angle + gap / 2;
+          });
+          return new THREE.Vector2(Math.cos(direction), Math.sin(direction));
+        };
+        let unmatchedNodes = [...graph]
+          .filter(([, neighbors]) => neighbors.size % 2 === 1)
+          .map(([key]) => key);
+        while (unmatchedNodes.length >= 2) {
+          let bestConnection = null;
+          let bestCrossingConnection = null;
+          for (let first = 0; first < unmatchedNodes.length; first += 1) {
+            const firstKey = unmatchedNodes[first];
+            const firstPoint = projectedPoints.get(firstKey);
+            const firstDirection = openingDirection(firstKey);
+            for (let second = first + 1; second < unmatchedNodes.length; second += 1) {
+              const secondKey = unmatchedNodes[second];
+              const isDirectEdge = graph.get(firstKey).has(secondKey);
+              const secondPoint = projectedPoints.get(secondKey);
+              const connection = secondPoint.clone().sub(firstPoint);
+              const distance = connection.length();
+              if (distance <= tolerance * 0.01) continue;
+              connection.normalize();
+              const intersections = isDirectEdge
+                ? []
+                : findSegmentIntersections(firstKey, secondKey, firstPoint, secondPoint);
+              const secondDirection = openingDirection(secondKey);
+              const alignment = firstDirection.dot(connection) + secondDirection.dot(connection.clone().negate());
+              const score = distance + maxDimension * 0.05 * (2 - alignment);
+              const candidate = { first, second, firstKey, secondKey, score, intersections, isDirectEdge };
+              if (intersections.length) {
+                if (!bestCrossingConnection || score < bestCrossingConnection.score) {
+                  bestCrossingConnection = candidate;
+                }
+              } else if (!bestConnection || score < bestConnection.score) {
+                bestConnection = candidate;
+              }
+            }
+          }
+          bestConnection ||= bestCrossingConnection;
+          if (!bestConnection) break;
+          const [secondKey] = unmatchedNodes.splice(bestConnection.second, 1);
+          const [firstKey] = unmatchedNodes.splice(bestConnection.first, 1);
+          if (bestConnection.isDirectEdge) {
+            const firstPoint = projectedPoints.get(firstKey);
+            const secondPoint = projectedPoints.get(secondKey);
+            const midpoint = firstPoint.clone().add(secondPoint).multiplyScalar(0.5);
+            const direction = secondPoint.clone().sub(firstPoint).normalize();
+            const offset = new THREE.Vector2(-direction.y, direction.x).multiplyScalar(maxDimension * 1e-4);
+            const worldPoint = origin.clone().addScaledVector(u, midpoint.x + offset.x)
+              .addScaledVector(v, midpoint.y + offset.y);
+            const middleKey = pointKey(worldPoint);
+            pointsByKey.set(middleKey, worldPoint);
+            projectedPoints.set(middleKey, midpoint.add(offset));
+            graph.set(middleKey, new Set());
+            fillGraph.set(middleKey, new Set());
+            const addOffsetEdge = (start, end) => {
+              graph.get(start).add(end);
+              graph.get(end).add(start);
+              fillGraph.get(start).add(end);
+              fillGraph.get(end).add(start);
+              edgeKeys.add([start, end].sort().join("|"));
+            };
+            addOffsetEdge(firstKey, middleKey);
+            addOffsetEdge(middleKey, secondKey);
+            continue;
+          }
+          const intersectionsByEdge = new Map();
+          const connectionNodes = new Map();
+          bestConnection.intersections.forEach((intersection) => {
+            const worldPoint = origin.clone()
+              .addScaledVector(u, intersection.point.x)
+              .addScaledVector(v, intersection.point.y);
+            const key = pointKey(worldPoint);
+            if (!pointsByKey.has(key)) {
+              pointsByKey.set(key, worldPoint);
+              projectedPoints.set(key, intersection.point);
+              graph.set(key, new Set());
+              fillGraph.set(key, new Set());
+            }
+            if (!connectionNodes.has(key)) {
+              connectionNodes.set(key, { key, t: intersection.connectionT });
+            }
+            const edgeId = [intersection.key, intersection.neighbor].sort().join("|");
+            if (!intersectionsByEdge.has(edgeId)) {
+              intersectionsByEdge.set(edgeId, {
+                start: intersection.key,
+                end: intersection.neighbor,
+                points: [],
+              });
+            }
+            intersectionsByEdge.get(edgeId).points.push({ key, t: intersection.edgeT });
+          });
+          const addFillEdge = (start, end) => {
+            graph.get(start).add(end);
+            graph.get(end).add(start);
+            fillGraph.get(start).add(end);
+            fillGraph.get(end).add(start);
+            edgeKeys.add([start, end].sort().join("|"));
+          };
+          intersectionsByEdge.forEach(({ start, end, points }) => {
+            graph.get(start).delete(end);
+            graph.get(end).delete(start);
+            fillGraph.get(start).delete(end);
+            fillGraph.get(end).delete(start);
+            edgeKeys.delete([start, end].sort().join("|"));
+            const edgeNodes = [start, ...points.sort((first, second) => first.t - second.t)
+              .map(({ key }) => key), end];
+            for (let index = 0; index < edgeNodes.length - 1; index += 1) {
+              addFillEdge(edgeNodes[index], edgeNodes[index + 1]);
+            }
+          });
+          const connectionPath = [firstKey, ...[...connectionNodes.values()]
+            .sort((first, second) => first.t - second.t).map(({ key }) => key), secondKey];
+          for (let index = 0; index < connectionPath.length - 1; index += 1) {
+            addFillEdge(connectionPath[index], connectionPath[index + 1]);
+          }
+        }
+        const splitRepeatedLoop = (loop) => {
+          for (let first = 0; first < loop.length; first += 1) {
+            const repeatedIndex = loop.indexOf(loop[first], first + 1);
+            if (repeatedIndex === -1) continue;
+            const inner = loop.slice(first, repeatedIndex);
+            const outer = loop.slice(0, first + 1).concat(loop.slice(repeatedIndex + 1));
+            return [
+              ...(inner.length >= 3 ? splitRepeatedLoop(inner) : []),
+              ...(outer.length >= 3 ? splitRepeatedLoop(outer) : []),
+            ];
+          }
+          return [loop];
+        };
+
         const orderedNeighbors = new Map([...fillGraph].map(([key, neighbors]) => [
           key,
           [...neighbors].sort((first, second) => {
@@ -479,54 +603,28 @@ async function initializeViewer() {
                 break;
               }
             }
-            if (!closed || loop.length < 3 || new Set(loop).size !== loop.length) continue;
-            const projected = loop.map((key) => projectedPoints.get(key));
-            const area = THREE.ShapeUtils.area(projected);
-            if (area <= tolerance * tolerance || !isSimplePolygon(projected, tolerance)) continue;
-            const canonicalLoop = [...loop].sort().join("|");
-            if (loopKeys.has(canonicalLoop)) continue;
-            loopKeys.add(canonicalLoop);
-            loops.push(loop.map((key) => pointsByKey.get(key)));
+            if (!closed || loop.length < 3) continue;
+            splitRepeatedLoop(loop).forEach((simpleLoop) => {
+              if (simpleLoop.length < 3) return;
+              const projected = simpleLoop.map((key) => projectedPoints.get(key));
+              const area = THREE.ShapeUtils.area(projected);
+              if (area <= tolerance * tolerance || !isSimplePolygon(projected, tolerance)) return;
+              const canonicalLoop = [...simpleLoop].sort().join("|");
+              if (loopKeys.has(canonicalLoop)) return;
+              loopKeys.add(canonicalLoop);
+              loops.push(simpleLoop.map((key) => pointsByKey.get(key)));
+            });
           }
         }
-        const contours = loops.map((points) => {
+        loops.forEach((points) => {
           const projected = points.map((point) => {
             const relative = point.clone().sub(origin);
             return new THREE.Vector2(relative.dot(u), relative.dot(v));
           });
-          return {
-            points: projected,
-            area: Math.abs(THREE.ShapeUtils.area(projected)),
-            parent: -1,
-            depth: 0,
-          };
-        }).filter(({ area }) => area > tolerance * tolerance);
-        contours.forEach((contour, contourIndex) => {
-          let parentArea = Infinity;
-          contours.forEach((candidate, candidateIndex) => {
-            if (contourIndex === candidateIndex || candidate.area <= contour.area
-              || candidate.area >= parentArea) return;
-            if (pointInPolygon(contour.points[0], candidate.points)) {
-              contour.parent = candidateIndex;
-              parentArea = candidate.area;
-            }
-          });
-        });
-        contours.forEach((contour) => {
-          let parent = contour.parent;
-          while (parent !== -1) {
-            contour.depth += 1;
-            parent = contours[parent].parent;
-          }
-        });
-        contours.forEach((contour, contourIndex) => {
-          if (contour.depth % 2 !== 0) return;
-          const holes = contours.filter((candidate) => candidate.parent === contourIndex
-            && candidate.depth === contour.depth + 1).map((candidate) => candidate.points);
-          const flattened = [contour.points, ...holes].flat();
-          const triangles = THREE.ShapeUtils.triangulateShape(contour.points, holes);
+          if (Math.abs(THREE.ShapeUtils.area(projected)) <= tolerance * tolerance) return;
+          const triangles = THREE.ShapeUtils.triangulateShape(projected, []);
           const offset = surfacePositions.length / 3;
-          flattened.forEach((point) => {
+          projected.forEach((point) => {
             const worldPoint = origin.clone().addScaledVector(u, point.x).addScaledVector(v, point.y);
             surfacePositions.push(worldPoint.x, worldPoint.y, worldPoint.z);
           });
@@ -543,6 +641,14 @@ async function initializeViewer() {
           surfaceGeometry.computeBoundingBox();
           surfaceGeometry.computeBoundingSphere();
         }
+        graph.forEach((neighbors, key) => {
+          neighbors.forEach((neighbor) => {
+            if (key >= neighbor) return;
+            const start = pointsByKey.get(key);
+            const end = pointsByKey.get(neighbor);
+            edgePositions.push(start.x, start.y, start.z, end.x, end.y, end.z);
+          });
+        });
         const edgeGeometry = new THREE.BufferGeometry();
         edgeGeometry.setAttribute("position", new THREE.Float32BufferAttribute(edgePositions, 3));
         if (edgePositions.length) {
