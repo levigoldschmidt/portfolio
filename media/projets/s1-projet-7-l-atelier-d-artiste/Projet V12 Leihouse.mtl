@@ -1,0 +1,256 @@
+# FILE:Projet V12 Leihouse.obj
+newmtl GDLM1_SHADOW_MATERIAL
+Ka 0.228885 0.228885 0.228885
+Kd 0.228885 0.228885 0.228885
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Peinture_-_Gris_clair
+Ka 0.612706 0.612706 0.612706
+Kd 0.270118 0.270118 0.270118
+Ks 0.0990005 0.0990005 0.1
+illum 2
+Ns 0.72
+newmtl PEN_MATERIAL4
+Ka 0.15259 0.15259 0.15259
+Kd 0.15259 0.15259 0.15259
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl PEN_MATERIAL1
+Ka 0.15259 0.15259 0.15259
+Kd 0.15259 0.15259 0.15259
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl PEN_MATERIAL92
+Ka 0.44036 0.44036 0.44036
+Kd 0.44036 0.44036 0.44036
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Bois_-_Pin_granuleux_horizontal
+Ka 0.572784 0.530745 0.454549
+Kd 0.530039 0.491137 0.420627
+Ks 0.152 0.152 0.152
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Wood - Pine Grained Horizontal -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Wood - Pine Grained Horizontal -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Wood - Pine Grained Horizontal -opt.jpg
+newmtl Verre_-_Clair_rapide
+Ka 0.64 0.658667 0.648
+Kd 0.564706 0.581176 0.571765
+Ks 1 1 1
+illum 2
+d 0.39
+Ns 79.52
+newmtl PEN_MATERIAL3
+Ka 0.15259 0.15259 0.15259
+Kd 0.15259 0.15259 0.15259
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl GDLM9_PEN_MATERIAL0
+Ka 0.844892 0.844892 0.844892
+Kd 0.844892 0.844892 0.844892
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl PEN_MATERIAL87
+Ka 0.44036 0.44036 0.44036
+Kd 0.44036 0.44036 0.44036
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Béton_-_02
+Ka 0.408392 0.408392 0.408392
+Kd 0.498039 0.498039 0.498039
+Ks 0.171294 0.179451 0.201882
+illum 2
+Ns 11
+map_Ka Projet V12 Leihouse_Textures\Concrete - 02 -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Concrete - 02 -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Concrete - 02 -opt.jpg
+newmtl Enduit_-_Blanc_nature
+Ka 0.75 0.75 0.75
+Kd 0.95 0.95 0.95
+Ks 0.0793725 0.0774902 0.0759216
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Stucco - White Rough cb -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Stucco - White Rough cb -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Stucco - White Rough cb -opt.jpg
+newmtl Métal_-_Chrome_01
+Ka 0.486863 0.486863 0.486863
+Kd 0.224706 0.224706 0.224706
+Ks 0.96 0.96 0.96
+illum 2
+Ns 53.92
+newmtl Métal_-_Aluminium
+Ka 0.71586 0.687236 0.687236
+Kd 0.128488 0.12335 0.12335
+Ks 0.544738 0.544738 0.544738
+illum 2
+Ns 10.2
+newmtl Verre_-_Mirroir
+Ka 0.745098 0.786078 0.793529
+Kd 0.196078 0.206863 0.208824
+Ks 1 1 1
+illum 2
+Ns 46.24
+newmtl Peinture_-_Blanc_titanium
+Ka 0.93 0.93 0.93
+Kd 0.41 0.41 0.41
+Ks 0.0990005 0.0990005 0.1
+illum 2
+Ns 0.72
+newmtl Céramique_-_Porcelaine
+Ka 0.571355 0.585048 0.59
+Kd 0.629459 0.644545 0.65
+Ks 0.2 0.2 0.2
+illum 2
+Ns 9
+newmtl Métal_-_Acier_inoxydable
+Ka 0.532353 0.535294 0.567647
+Kd 0.390392 0.392549 0.416275
+Ks 0.82349 0.803961 0.787686
+illum 2
+Ns 13
+map_Ka Projet V12 Leihouse_Textures\Metal - Stainless Steel -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Metal - Stainless Steel -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Metal - Stainless Steel -opt.jpg
+newmtl Textile_-_01
+Ka 0.660706 0.633176 0.608706
+Kd 0.762353 0.730588 0.702353
+Ks 0 0 0
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Textile - 01 cb -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Textile - 01 cb -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Textile - 01 cb -opt.jpg
+newmtl Plastique_-_laminé
+Ka 0.703529 0.605647 0.507765
+Kd 0.559216 0.481412 0.403608
+Ks 0.241176 0.241176 0.241176
+illum 2
+Ns 4.2
+newmtl Bois_-_Noyer_horizontal
+Ka 0.273255 0.228588 0.194431
+Kd 0.252863 0.211529 0.179922
+Ks 0.152 0.152 0.152
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Wood - Walnut Horizontal -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Wood - Walnut Horizontal -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Wood - Walnut Horizontal -opt.jpg
+newmtl Bois_-_Pin_granuleux_vertical
+Ka 0.572784 0.530745 0.454549
+Kd 0.530039 0.491137 0.420627
+Ks 0.152 0.152 0.152
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Wood - Pine Grained Vertical -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Wood - Pine Grained Vertical -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Wood - Pine Grained Vertical -opt.jpg
+newmtl Peinture_-_Anthracite
+Ka 0.167765 0.167765 0.167765
+Kd 0.0739608 0.0739608 0.0739608
+Ks 0.0990005 0.0990005 0.1
+illum 2
+Ns 0.72
+newmtl GDLM24_Opaque
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Peinture_-_Pêche
+Ka 0.926353 0.656471 0.492353
+Kd 0.408392 0.289412 0.217059
+Ks 0.0990005 0.0990005 0.1
+illum 2
+Ns 0.72
+newmtl Béton_-_04
+Ka 0.322824 0.324745 0.303608
+Kd 0.474353 0.477176 0.446118
+Ks 0.356948 0.3491 0.306226
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Concrete - 04 cb -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Concrete - 04 cb -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Concrete - 04 cb -opt.jpg
+newmtl Béton_-_Lissé
+Ka 0.491647 0.491647 0.491647
+Kd 0.663333 0.663333 0.663333
+Ks 0.0759216 0.0759216 0.0759216
+illum 2
+Ns 0.36
+map_Ka Projet V12 Leihouse_Textures\Concrete - Light crbn -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Concrete - Light crbn -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Concrete - Light crbn -opt.jpg
+newmtl Transp_-_Verre_clair
+Ka 0.64 0.658667 0.648
+Kd 0.564706 0.581176 0.571765
+Ks 1 1 1
+illum 2
+d 0.31
+Ns 79.52
+newmtl Peinture_-_Gris_foncé
+Ka 0.331882 0.331882 0.331882
+Kd 0.146314 0.146314 0.146314
+Ks 0.0990005 0.0990005 0.1
+illum 2
+Ns 0.72
+newmtl Peinture_-_Blanc_brillant
+Ka 0.88 0.88 0.88
+Kd 0.3 0.3 0.3
+Ks 0.683104 0.683104 0.69
+illum 2
+Ns 38.56
+newmtl Brique_-_Rouge
+Ka 0.513333 0.329412 0.304706
+Kd 0.513333 0.329412 0.304706
+Ks 0 0 0
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Brick - Red -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Brick - Red -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Brick - Red -opt.jpg
+newmtl PEN_MATERIAL91
+Ka 0.44036 0.44036 0.44036
+Kd 0.44036 0.44036 0.44036
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Verre_-_Bleu
+Ka 0.150118 0.196745 0.283176
+Kd 0.517647 0.678431 0.976471
+Ks 1 1 1
+illum 2
+d 0.78
+Ns 34
+newmtl PEN_MATERIAL89
+Ka 0.44036 0.44036 0.44036
+Kd 0.44036 0.44036 0.44036
+Ks 0 0 0
+illum 2
+Ns 0
+newmtl Métal_-_Fer
+Ka 0.243016 0.252075 0.271919
+Kd 0.198562 0.205964 0.222178
+Ks 0.24902 0.24902 0.24902
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Metal - Iron -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Metal - Iron -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Metal - Iron -opt.jpg
+newmtl Stuc_-_Jaune_nature
+Ka 0.75 0.614706 0.367647
+Kd 0.95 0.778627 0.465686
+Ks 0.0793725 0.0774902 0.0759216
+illum 2
+Ns 0
+map_Ka Projet V12 Leihouse_Textures\Stucco - Yellow Rough cb -opt.jpg
+map_Kd Projet V12 Leihouse_Textures\Stucco - Yellow Rough cb -opt.jpg
+map_Ks Projet V12 Leihouse_Textures\Stucco - Yellow Rough cb -opt.jpg

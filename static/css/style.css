@@ -211,8 +211,16 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 .model-controls p, .model-controls button {
   color: var(--muted-fg); font-size: 10px; letter-spacing: .06em;
 }
-.model-controls button { flex: none; text-decoration: underline; text-underline-offset: 3px; }
+.model-control-actions { display: flex; flex: none; gap: 16px; }
+.model-controls button { text-decoration: underline; text-underline-offset: 3px; }
 .model-controls button:hover, .model-controls button:focus-visible { color: var(--fg); }
+.interactive-model:fullscreen {
+  display: flex; width: 100%; max-width: none; height: 100vh; min-height: 0; padding: 16px;
+  flex-direction: column; overflow: hidden; background: #fff;
+}
+.interactive-model:fullscreen .model-stage { flex: 1 1 0; height: auto; min-height: 160px; }
+.interactive-model:fullscreen .model-cut-controls { max-height: 22vh; overflow-y: auto; }
+.interactive-model:fullscreen .model-slicing-note { padding-top: 6px; }
 .model-cut-controls {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 18px; padding-top: 12px;
 }
@@ -242,6 +250,8 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 @media (max-width: 600px) {
   .model-stage { height: 58vh; min-height: 300px; }
   .model-controls { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .interactive-model:fullscreen { padding: 8px; }
+  .interactive-model:fullscreen .model-controls p { display: none; }
 }
 
 .image-grid { display: none; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: start; }

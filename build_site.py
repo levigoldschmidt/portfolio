@@ -549,6 +549,7 @@ class Builder:
                 )
                 inner = (
                     '<div class="interactive-model" data-fbx-viewer>'
+                    f'<span class="visually-hidden" data-model-scale="{esc(s.get("unit_scale", 1))}"></span>'
                     f'<div class="model-stage" data-model-stage><div class="model-orientation" data-model-orientation '
                     f'data-model-orientation-src="{esc(orientation_model)}" '
                     f'aria-label="{esc(self.tr("Cube d’orientation"))}" hidden></div>'
@@ -556,10 +557,14 @@ class Builder:
                     f'{esc(self.tr("Chargement du modèle 3D…"))}</p></div>'
                     '<div class="model-controls">'
                     f'<p>{esc(self.tr("Faites glisser pour faire tourner le modèle, utilisez la molette ou pincez pour zoomer, et le clic droit ou deux doigts pour le déplacer."))}</p>'
+                    '<div class="model-control-actions">'
                     f'<button type="button" data-model-reset>{esc(self.tr("Réinitialiser les plans"))}</button>'
+                    f'<button type="button" data-model-fullscreen>{esc(self.tr("Plein écran"))}</button>'
+                    '</div>'
+                    '<span class="visually-hidden" data-model-fullscreen-status role="status" aria-live="polite"></span>'
                     f'</div><div class="model-cut-controls" data-model-cut-controls '
                     f'aria-label="{esc(self.tr("Plans de coupe"))}" hidden></div>'
-                    f'<p class="model-slicing-note">{esc(self.tr("Chaque plan se déplace selon sa normale et s’incline avec les rotations X/Y/Z ; les surfaces de coupe ne sont pas refermées."))}</p>'
+                    f'<p class="model-slicing-note">{esc(self.tr("Chaque plan se déplace selon sa normale et s’incline avec les rotations X/Y/Z ; les surfaces coupées apparaissent en noir."))}</p>'
                     f'<span class="visually-hidden" data-model-src="{esc(model)}"></span></div>'
                     f'<script type="module" src="{page.rel("assets/js/fbx-viewer.js")}?v={self.fbx_script_version}"></script>'
                 )
