@@ -236,7 +236,7 @@ async function initializeViewer() {
       const planeRadius = size.length() / 2;
       const rotation = new THREE.Euler();
       const planeDefinitions = [
-        { normal: new THREE.Vector3(1, 0, 0), enabled: true },
+        { normal: new THREE.Vector3(1, 0, 0), enabled: false },
         { normal: new THREE.Vector3(0, 1, 0), clipSign: -1, enabled: false },
         { normal: new THREE.Vector3(0, 0, 1), enabled: false },
       ];
