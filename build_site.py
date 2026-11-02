@@ -170,7 +170,7 @@ class Builder:
         self.pages: list[str] = []
         self.style_version = hashlib.sha256((STATIC / "css" / "style.css").read_bytes()).hexdigest()[:12]
         self.script_version = hashlib.sha256((STATIC / "js" / "main.js").read_bytes()).hexdigest()[:12]
-        self.fbx_script_version = hashlib.sha256((STATIC / "js" / "fbx-viewer.js").read_bytes()).hexdigest()[:12]
+        self.fbx_script_version = hashlib.sha256((STATIC / "js" / "archi-viewer.js").read_bytes()).hexdigest()[:12]
 
     def tr(self, text: str, **values: str | int) -> str:
         translated = self.translations.get(text, text) if self.language == "en" else text
@@ -541,15 +541,24 @@ class Builder:
             if kind == "text":
                 inner = f'<p class="prose">{esc(self.tr(s["text"]))}</p>'
             elif kind == "3d_model":
-                layers = s.get("layers") or [{"file": s["file"], "label": ""}]
+                layers = s.get("layers") or ([{"file": s["file"], "label": ""}] if s.get("file") else [])
+                if not layers:
+                    raise SystemExit(f"error: 3d_model section '{s['id']}' of '{p['slug']}' needs 'layers' or 'file'")
                 model = page.rel(self.images.original(layers[0]["file"]))
                 orientation_model = (
                     page.rel(self.images.original(s["orientation_model"]))
                     if s.get("orientation_model")
                     else ""
                 )
+                viewer_config = ""
+                if s.get("viewer_config"):
+                    config_path = CONTENT / s["viewer_config"]
+                    if not config_path.is_file():
+                        raise SystemExit(f"error: viewer config not found: {config_path}")
+                    viewer_config = json.dumps(json.loads(config_path.read_text(encoding="utf-8")),
+                                               ensure_ascii=False, separators=(",", ":"))
                 inner = (
-                    '<div class="interactive-model" data-fbx-viewer>'
+                    f'<div class="interactive-model" data-archi-viewer data-viewer-config="{esc(viewer_config)}">'
                     f'<span class="visually-hidden" data-model-scale="{esc(s.get("unit_scale", 1))}"></span>'
                     f'<div class="model-stage" data-model-stage><div class="model-orientation" data-model-orientation '
                     f'data-model-orientation-src="{esc(orientation_model)}" '
@@ -572,12 +581,13 @@ class Builder:
                     + "".join(
                         f'<span class="visually-hidden" data-model-src="{esc(page.rel(self.images.original(layer["file"])))}" '
                         f'data-model-label="{esc(self.tr(layer.get("label", "")))}"'
+                        + (f' data-model-type="{esc(layer["type"])}"' if layer.get("type") else "")
                         + (' data-model-context="true"' if layer.get("context") else "")
                         + '></span>'
                         for layer in layers
                     )
                     + '</div>'
-                    f'<script type="module" src="{page.rel("assets/js/fbx-viewer.js")}?v={self.fbx_script_version}"></script>'
+                    f'<script type="module" src="{page.rel("assets/js/archi-viewer.js")}?v={self.fbx_script_version}"></script>'
                 )
             elif kind == "images":
                 images = s.get("images")

@@ -1,13 +1,30 @@
-const viewer = document.querySelector("[data-fbx-viewer]");
-async function initializeViewer() {
-  if (!viewer) return;
+// Default cut planes (used when the viewer config defines none): X, Y (flipped, bounded by the model height) and Z.
+const DEFAULT_CUT_PLANES = [
+  { normal: [1, 0, 0] },
+  { normal: [0, 1, 0], flip: true, range: "bounds", position: "max" },
+  { normal: [0, 0, 1] },
+];
+
+function readViewerConfig(viewer) {
+  const raw = viewer.dataset.viewerConfig;
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error("Invalid archi-viewer configuration.", error);
+    return {};
+  }
+}
+
+async function initializeViewer(viewer) {
+  const viewerConfig = readViewerConfig(viewer);
   const stage = viewer.querySelector("[data-model-stage]");
   const sources = [...viewer.querySelectorAll("[data-model-src]")].map((element) => ({
     src: element.dataset.modelSrc,
     label: element.dataset.modelLabel || "",
-    context: element.dataset.modelContext === "true",
+    context: element.dataset.modelType === "environment" || element.dataset.modelContext === "true",
   }));
-  const urban = sources.length > 1;
+  const urban = typeof viewerConfig.urban === "boolean" ? viewerConfig.urban : sources.length > 1;
   const modelScale = Number(viewer.querySelector("[data-model-scale]")?.dataset.modelScale || 1);
   const orientationSource = viewer.querySelector("[data-model-orientation]").dataset.modelOrientationSrc;
   const status = stage.querySelector(".model-status");
@@ -291,11 +308,42 @@ async function initializeViewer() {
       scene.add(shadowGround);
       const planeRadius = size.length() / 2;
       const rotation = new THREE.Euler();
-      const planeDefinitions = [
-        { normal: new THREE.Vector3(1, 0, 0), enabled: false },
-        { normal: new THREE.Vector3(0, 1, 0), clipSign: -1, enabled: false },
-        { normal: new THREE.Vector3(0, 0, 1), enabled: false },
-      ];
+      const cutPlaneConfigs = Array.isArray(viewerConfig.cut_planes) ? viewerConfig.cut_planes : DEFAULT_CUT_PLANES;
+      const planeDefinitions = cutPlaneConfigs.map((config) => {
+        const matrix = new THREE.Matrix4();
+        if (Array.isArray(config.matrix) && config.matrix.length === 16) matrix.fromArray(config.matrix);
+        const origin = new THREE.Vector3().setFromMatrixPosition(matrix);
+        const normal = new THREE.Vector3(...(config.normal || [0, 0, 1]))
+          .transformDirection(matrix);
+        const flip = config.flip ? -1 : 1;
+        // Half extent of the model's bounding box projected on the plane normal.
+        const boundsHalf = (Math.abs(normal.x) * size.x + Math.abs(normal.y) * size.y + Math.abs(normal.z) * size.z) / 2;
+        const offset = origin.dot(normal);
+        let range = [-planeRadius, planeRadius];
+        if (Array.isArray(config.range) && config.range.length === 2) {
+          range = config.range.map(Number);
+        } else if (config.range === "bounds") {
+          range = [-boundsHalf - offset, boundsHalf - offset];
+        }
+        let position = 0;
+        if (config.position === "max") position = range[1];
+        else if (config.position === "min") position = range[0];
+        else if (Number.isFinite(Number(config.position))) position = Number(config.position);
+        return {
+          label: config.label || "",
+          normal,
+          origin,
+          clipSign: flip,
+          enabled: Boolean(config.enabled),
+          range,
+          position,
+          presets: (config.presets || []).map((preset) => {
+            const value = typeof preset === "number" ? preset : Number(preset.value);
+            const label = typeof preset === "object" && preset.label ? preset.label : `${value} m`;
+            return { value, label };
+          }).filter(({ value }) => Number.isFinite(value)),
+        };
+      });
       const clippingPlanes = planeDefinitions.map(({ normal }) => new THREE.Plane(normal.clone(), 0));
       const clayMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff,
@@ -426,10 +474,15 @@ async function initializeViewer() {
         ? "Section planes are available once the environment is hidden."
         : "Les plans de coupe sont disponibles lorsque l’environnement est masqué.";
       let cutAllowed = true;
+      // The Paramètres section (toggle, or tree when relocated in the side panel) to hide while an environment is shown.
+      let settingsContainer = null;
       function updateCutAvailability() {
         cutAllowed = !modelLayers.some((layer) => layer.context && layer.object.visible);
         cutControls.toggleAttribute("data-cut-locked", !cutAllowed);
         cutControls.title = cutAllowed ? "" : lockMessage;
+        const settingsHost = settingsContainer || settingsToggle;
+        settingsHost.hidden = !cutAllowed;
+        if (!settingsContainer) settingsPanel.hidden = !cutAllowed || settingsToggle.getAttribute("aria-expanded") !== "true";
         planeStates.forEach((state) => state.updatePlane(false));
       }
       const layerTree = document.createElement("details");
@@ -489,6 +542,7 @@ async function initializeViewer() {
         const settingsSummary = document.createElement("summary");
         settingsSummary.textContent = english ? "Settings" : "Paramètres";
         settingsTree.append(settingsSummary, settings);
+        settingsContainer = settingsTree;
         sidePanel.append(layerTree, settingsTree, actions);
         viewer.querySelector(".model-controls")?.classList.add("model-controls-relocated");
         viewer.querySelector(".model-slicing-note")?.remove();
@@ -1288,7 +1342,8 @@ async function initializeViewer() {
         panel.className = "model-cut-plane";
         const title = document.createElement("h3");
         title.className = "model-cut-plane-title";
-        title.textContent = english ? `Section plane ${index + 1}` : `Plan de coupe ${index + 1}`;
+        title.textContent = definition.label
+          || (english ? `Section plane ${index + 1}` : `Plan de coupe ${index + 1}`);
         panel.append(title);
 
         const toggleLabel = document.createElement("label");
@@ -1301,7 +1356,7 @@ async function initializeViewer() {
         toggleLabel.append(enabledInput, toggleText);
         panel.append(toggleLabel);
 
-        const initialPlanePosition = index === 1 ? size.y / 2 : 0;
+        const initialPlanePosition = definition.position;
         const settings = { position: initialPlanePosition, rotation: [0, 0, 0] };
         const planeHelper = planeHelpers[index];
         const sliderControls = [];
@@ -1319,11 +1374,13 @@ async function initializeViewer() {
         const updatePlane = (showPreview = true) => {
           rotation.set(...settings.rotation.map((degrees) => THREE.MathUtils.degToRad(degrees)));
           const planeNormal = definition.normal.clone().applyEuler(rotation).normalize();
-          clippingPlanes[index].normal.copy(planeNormal).multiplyScalar(definition.clipSign || 1);
+          const planeOffset = definition.origin.dot(planeNormal);
+          clippingPlanes[index].normal.copy(planeNormal).multiplyScalar(definition.clipSign);
           clippingPlanes[index].constant = enabledInput.checked && cutAllowed
-            ? -settings.position * (definition.clipSign || 1) - maxDimension * 1e-5
+            ? -(settings.position + planeOffset) * definition.clipSign - maxDimension * 1e-5
             : planeRadius * 2;
-          planeHelper.group.position.copy(planeNormal).multiplyScalar(settings.position + 0.025);
+          planeHelper.group.position.copy(definition.origin)
+            .addScaledVector(planeNormal, settings.position + 0.025);
           planeHelper.group.quaternion.setFromUnitVectors(
             new THREE.Vector3(0, 0, 1),
             clippingPlanes[index].normal,
@@ -1411,8 +1468,9 @@ async function initializeViewer() {
               markers.append(marker);
               return { button: marker, markerValue };
             });
-            rangeWrap.append(markers);
+            if (presets.length) rangeWrap.append(markers);
             input.addEventListener("change", () => {
+              if (!presets.length) return;
               const range = max - min;
               const nearest = presets
                 .map(({ value: markerValue }) => markerValue)
@@ -1431,14 +1489,10 @@ async function initializeViewer() {
           sliderControls.push({ input, output, suffix, updateMarkers });
         };
 
-        const positionMin = index === 1 ? -size.y / 2 : -planeRadius;
-        const positionMax = index === 1 ? size.y / 2 : planeRadius;
+        const positionMin = definition.range[0];
+        const positionMax = definition.range[1];
         const positionStep = (positionMax - positionMin) / 1000;
-        const positionPresets = [
-          [{ value: -3.63, label: "-3.63 m" }],
-          [-2.28, 0.22, 3.5].map((value) => ({ value, label: `${value} m` })),
-          [{ value: 0, label: "0 m" }],
-        ][index];
+        const positionPresets = definition.presets;
         addSlider(
           english ? "Position" : "Position",
           positionMin,
@@ -1591,4 +1645,4 @@ async function initializeViewer() {
   render();
 }
 
-initializeViewer();
+document.querySelectorAll("[data-archi-viewer]").forEach((viewer) => initializeViewer(viewer));

@@ -260,7 +260,7 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 .model-controls button { text-decoration: underline; text-underline-offset: 3px; }
 .model-controls button:hover, .model-controls button:focus-visible { color: var(--fg); }
 .model-settings-panel { max-height: 36vh; overflow-y: auto; }
-.model-settings-panel[hidden] { display: none; }
+.model-settings-panel[hidden], .model-layer-tree[hidden], [data-model-settings-toggle][hidden] { display: none; }
 .interactive-model:fullscreen {
   --viewer-pad: 16px;
   display: flex; width: 100%; max-width: none; height: 100vh; min-height: 0; padding: var(--viewer-pad);
