@@ -5,8 +5,8 @@ const DEFAULT_CUT_PLANES = [
   { normal: [0, 0, 1] },
 ];
 
-function readViewerConfig(viewer) {
-  const raw = viewer.dataset.viewerConfig;
+function readViewerConfig(element, key = "viewerConfig") {
+  const raw = element.dataset[key];
   if (!raw) return {};
   try {
     return JSON.parse(raw);
@@ -23,6 +23,7 @@ async function initializeViewer(viewer) {
     src: element.dataset.modelSrc,
     label: element.dataset.modelLabel || "",
     context: element.dataset.modelType === "environment" || element.dataset.modelContext === "true",
+    config: readViewerConfig(element, "modelConfig"),
   }));
   const urban = typeof viewerConfig.urban === "boolean" ? viewerConfig.urban : sources.length > 1;
   const modelScale = Number(viewer.querySelector("[data-model-scale]")?.dataset.modelScale || 1);
@@ -238,7 +239,12 @@ async function initializeViewer(viewer) {
             loaded.forEach((layer, layerIndex) => {
               layer.name = sources[layerIndex].label || layer.name;
               root.add(layer);
-              modelLayers.push({ object: layer, label: sources[layerIndex].label || `Modèle ${layerIndex + 1}`, context: sources[layerIndex].context });
+              modelLayers.push({
+                object: layer,
+                label: sources[layerIndex].label || `Modèle ${layerIndex + 1}`,
+                context: sources[layerIndex].context,
+                config: sources[layerIndex].config,
+              });
             });
             onLoad(root);
           }
@@ -306,24 +312,32 @@ async function initializeViewer(viewer) {
       shadowGround.receiveShadow = true;
       shadowGround.renderOrder = 1;
       scene.add(shadowGround);
-      const planeRadius = size.length() / 2;
       const rotation = new THREE.Euler();
-      const cutPlaneConfigs = Array.isArray(viewerConfig.cut_planes) ? viewerConfig.cut_planes : DEFAULT_CUT_PLANES;
-      const planeDefinitions = cutPlaneConfigs.map((config) => {
+      const axisLabels = ["X", "Y", "Z"];
+      const toCutPlaneDefinitions = (configs, layerBox, planeRadius) => configs.map((config) => {
         const matrix = new THREE.Matrix4();
         if (Array.isArray(config.matrix) && config.matrix.length === 16) matrix.fromArray(config.matrix);
         const origin = new THREE.Vector3().setFromMatrixPosition(matrix);
         const normal = new THREE.Vector3(...(config.normal || [0, 0, 1]))
           .transformDirection(matrix);
-        const flip = config.flip ? -1 : 1;
-        // Half extent of the model's bounding box projected on the plane normal.
-        const boundsHalf = (Math.abs(normal.x) * size.x + Math.abs(normal.y) * size.y + Math.abs(normal.z) * size.z) / 2;
         const offset = origin.dot(normal);
         let range = [-planeRadius, planeRadius];
         if (Array.isArray(config.range) && config.range.length === 2) {
           range = config.range.map(Number);
         } else if (config.range === "bounds") {
-          range = [-boundsHalf - offset, boundsHalf - offset];
+          // Extent of the layer's bounding box projected on the plane normal.
+          let low = Infinity;
+          let high = -Infinity;
+          for (let i = 0; i < 8; i += 1) {
+            const projection = new THREE.Vector3(
+              i & 1 ? layerBox.max.x : layerBox.min.x,
+              i & 2 ? layerBox.max.y : layerBox.min.y,
+              i & 4 ? layerBox.max.z : layerBox.min.z,
+            ).dot(normal);
+            low = Math.min(low, projection);
+            high = Math.max(high, projection);
+          }
+          range = [low - offset, high - offset];
         }
         let position = 0;
         if (config.position === "max") position = range[1];
@@ -333,7 +347,7 @@ async function initializeViewer(viewer) {
           label: config.label || "",
           normal,
           origin,
-          clipSign: flip,
+          clipSign: config.flip ? -1 : 1,
           enabled: Boolean(config.enabled),
           range,
           position,
@@ -344,7 +358,8 @@ async function initializeViewer(viewer) {
           }).filter(({ value }) => Number.isFinite(value)),
         };
       });
-      const clippingPlanes = planeDefinitions.map(({ normal }) => new THREE.Plane(normal.clone(), 0));
+      // Base materials are cloned for each layer with that layer's own clipping planes.
+      const clippingPlanes = [];
       const clayMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         emissive: 0xffffff,
@@ -433,57 +448,109 @@ async function initializeViewer(viewer) {
         polygonOffsetFactor: -1,
         polygonOffsetUnits: -1,
       });
-      const contextObjects = modelLayers.filter((layer) => layer.context).map((layer) => layer.object);
-      const isContextPart = (part) => contextObjects.some((object) => {
-        for (let node = part; node; node = node.parent) if (node === object) return true;
-        return false;
-      });
       if (urban) {
         [clayMaterial, interiorMaterial, whiteMaterial].forEach((material) => {
           material.flatShading = true;
         });
       }
-      model.traverse((part) => {
-        if (!part.isMesh) return;
-        const isContext = urban && isContextPart(part);
-        const isDimensionGeometry = /00_COTATION|COTATION|DIMENSION/i.test(part.name);
-        if (isContext) {
-          part.material = contextMaterial;
-        } else if (!isDimensionGeometry && glassName.test(part.name)) {
-          part.material = glazingMaterial;
-        } else if (interiorName.test(part.name)) {
-          part.material = interiorMaterial;
-        } else if (whiteStructureName.test(part.name) || whiteFloorName.test(part.name)) {
-          part.material = whiteMaterial;
-        } else {
-          part.material = clayMaterial;
+      const baseMaterials = {
+        clay: clayMaterial,
+        interior: interiorMaterial,
+        white: whiteMaterial,
+        glazing: glazingMaterial,
+        edge: edgeMaterial,
+        context: contextMaterial,
+        contextEdge: contextEdgeMaterial,
+      };
+      const createMaterialSet = (planes) => Object.fromEntries(Object.entries(baseMaterials).map(([key, base]) => {
+        const material = base.clone();
+        material.onBeforeCompile = base.onBeforeCompile;
+        material.customProgramCacheKey = base.customProgramCacheKey;
+        material.clippingPlanes = planes;
+        return [key, material];
+      }));
+      const layerCenterOffset = center.clone().negate();
+      modelLayers.forEach((layer) => {
+        const isContext = urban && layer.context;
+        const layerBox = new THREE.Box3().setFromObject(layer.object).translate(layerCenterOffset);
+        const planeRadius = Math.max(layerBox.getSize(new THREE.Vector3()).length() / 2, maxDimension * 1e-3);
+        if (!layer.context) {
+          const configs = layer.config?.cut_planes ?? viewerConfig.cut_planes ?? DEFAULT_CUT_PLANES;
+          const definitions = toCutPlaneDefinitions(configs, layerBox, planeRadius);
+          const planeGeometry = new THREE.PlaneGeometry(planeRadius * 2, planeRadius * 2);
+          layer.cut = {
+            definitions,
+            planeRadius,
+            allowed: true,
+            states: [],
+            clippingPlanes: definitions.map(({ normal }) => new THREE.Plane(normal.clone(), 0)),
+            helpers: definitions.map(() => {
+              const group = new THREE.Group();
+              const surface = new THREE.Mesh(
+                planeGeometry,
+                new THREE.MeshBasicMaterial({
+                  color: 0x808590,
+                  transparent: true,
+                  opacity: 0.035,
+                  side: THREE.DoubleSide,
+                  depthWrite: false,
+                  depthTest: true,
+                }),
+              );
+              surface.renderOrder = 5;
+              const outline = new THREE.LineSegments(
+                new THREE.EdgesGeometry(planeGeometry),
+                new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.25, depthTest: false }),
+              );
+              outline.renderOrder = 6;
+              group.add(surface, outline);
+              group.visible = false;
+              scene.add(group);
+              return { group, hideTimer: 0 };
+            }),
+          };
         }
-        part.castShadow = !isDimensionGeometry;
-        part.receiveShadow = !isDimensionGeometry;
-        if (!isDimensionGeometry) {
-          const edgeGeometry = new THREE.EdgesGeometry(part.geometry, 25);
-          const edges = new THREE.LineSegments(edgeGeometry, isContext ? contextEdgeMaterial : edgeMaterial);
-          edges.name = "Architectural edges";
-          edges.renderOrder = 2;
-          part.add(edges);
-        }
+        const materials = createMaterialSet(layer.cut ? layer.cut.clippingPlanes : []);
+        layer.object.traverse((part) => {
+          if (!part.isMesh) return;
+          const isDimensionGeometry = /00_COTATION|COTATION|DIMENSION/i.test(part.name);
+          if (isContext) {
+            part.material = materials.context;
+          } else if (!isDimensionGeometry && glassName.test(part.name)) {
+            part.material = materials.glazing;
+          } else if (interiorName.test(part.name)) {
+            part.material = materials.interior;
+          } else if (whiteStructureName.test(part.name) || whiteFloorName.test(part.name)) {
+            part.material = materials.white;
+          } else {
+            part.material = materials.clay;
+          }
+          part.castShadow = !isDimensionGeometry;
+          part.receiveShadow = !isDimensionGeometry;
+          if (!isDimensionGeometry) {
+            const edgeGeometry = new THREE.EdgesGeometry(part.geometry, 25);
+            const edges = new THREE.LineSegments(edgeGeometry, isContext ? materials.contextEdge : materials.edge);
+            edges.name = "Architectural edges";
+            edges.renderOrder = 2;
+            part.add(edges);
+          }
+        });
       });
       centeredModel.add(model);
 
-      const lockMessage = english
-        ? "Section planes are available once the environment is hidden."
-        : "Les plans de coupe sont disponibles lorsque l’environnement est masqué.";
-      let cutAllowed = true;
-      // The Paramètres section (toggle, or tree when relocated in the side panel) to hide while an environment is shown.
-      let settingsContainer = null;
+      const multiLayer = modelLayers.length > 1;
+      // Each building layer owns a "Paramètres" section: a tree child in multi-layer mode, the classic panel otherwise.
       function updateCutAvailability() {
-        cutAllowed = !modelLayers.some((layer) => layer.context && layer.object.visible);
-        cutControls.toggleAttribute("data-cut-locked", !cutAllowed);
-        cutControls.title = cutAllowed ? "" : lockMessage;
-        const settingsHost = settingsContainer || settingsToggle;
-        settingsHost.hidden = !cutAllowed;
-        if (!settingsContainer) settingsPanel.hidden = !cutAllowed || settingsToggle.getAttribute("aria-expanded") !== "true";
-        planeStates.forEach((state) => state.updatePlane(false));
+        const environmentVisible = modelLayers.some((layer) => layer.context && layer.object.visible);
+        modelLayers.forEach((layer) => {
+          if (!layer.cut) return;
+          layer.cut.allowed = !environmentVisible && layer.object.visible;
+          layer.settingsHost.hidden = !layer.cut.allowed;
+          if (!multiLayer) {
+            settingsPanel.hidden = !layer.cut.allowed || settingsToggle.getAttribute("aria-expanded") !== "true";
+          }
+          layer.cut.states.forEach((state) => state.updatePlane(false));
+        });
       }
       const layerTree = document.createElement("details");
       layerTree.className = "model-layer-tree";
@@ -491,7 +558,8 @@ async function initializeViewer(viewer) {
       const layerTreeSummary = document.createElement("summary");
       layerTreeSummary.textContent = english ? "Model tree" : "Arborescence";
       const layerList = document.createElement("ul");
-      modelLayers.forEach(({ object, label, context: isEnvironment }, index) => {
+      modelLayers.forEach((layer, index) => {
+        const { object, label, context: isEnvironment } = layer;
         const item = document.createElement("li");
         const row = document.createElement("div");
         row.className = "model-layer-row";
@@ -527,23 +595,34 @@ async function initializeViewer(viewer) {
         });
         row.append(checkbox, focusButton);
         item.append(row);
+        if (layer.cut) {
+          if (multiLayer) {
+            const settingsTree = document.createElement("details");
+            settingsTree.className = "model-layer-tree model-settings-tree";
+            const settingsSummary = document.createElement("summary");
+            settingsSummary.textContent = english ? "Settings" : "Paramètres";
+            const settingsBody = document.createElement("div");
+            settingsBody.className = "model-cut-controls";
+            settingsBody.setAttribute("aria-label", english ? "Section planes" : "Plans de coupe");
+            settingsTree.append(settingsSummary, settingsBody);
+            item.append(settingsTree);
+            layer.settingsHost = settingsTree;
+            layer.settingsBody = settingsBody;
+          } else {
+            layer.settingsHost = settingsToggle;
+            layer.settingsBody = cutControls;
+          }
+        }
         layerList.append(item);
       });
       layerTree.append(layerTreeSummary, layerList);
-      if (modelLayers.length > 1) {
+      if (multiLayer) {
         const sidePanel = document.createElement("div");
         sidePanel.className = "model-side-panel";
         const actions = viewer.querySelector(".model-control-actions");
-        const settings = viewer.querySelector("[data-model-settings-panel]");
         settingsToggle.remove();
-        settings.hidden = false;
-        const settingsTree = document.createElement("details");
-        settingsTree.className = "model-layer-tree model-settings-tree";
-        const settingsSummary = document.createElement("summary");
-        settingsSummary.textContent = english ? "Settings" : "Paramètres";
-        settingsTree.append(settingsSummary, settings);
-        settingsContainer = settingsTree;
-        sidePanel.append(layerTree, settingsTree, actions);
+        settingsPanel.remove();
+        sidePanel.append(layerTree, actions);
         viewer.querySelector(".model-controls")?.classList.add("model-controls-relocated");
         viewer.querySelector(".model-slicing-note")?.remove();
         viewer.append(sidePanel);
@@ -560,33 +639,6 @@ async function initializeViewer(viewer) {
         sidePanelDocked.addEventListener("change", fitStage);
       }
 
-      const axisLabels = ["X", "Y", "Z"];
-      const planeGeometry = new THREE.PlaneGeometry(planeRadius * 2, planeRadius * 2);
-      const planeHelpers = planeDefinitions.map(() => {
-        const group = new THREE.Group();
-        const surface = new THREE.Mesh(
-          planeGeometry,
-          new THREE.MeshBasicMaterial({
-            color: 0x808590,
-            transparent: true,
-            opacity: 0.035,
-            side: THREE.DoubleSide,
-            depthWrite: false,
-            depthTest: true,
-          }),
-        );
-        surface.renderOrder = 5;
-        const outline = new THREE.LineSegments(
-          new THREE.EdgesGeometry(planeGeometry),
-          new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.25, depthTest: false }),
-        );
-        outline.renderOrder = 6;
-        group.add(surface, outline);
-        group.visible = false;
-        scene.add(group);
-        return { group, hideTimer: 0 };
-      });
-      let planeStates = [];
       const createSectionGeometries = (plane) => {
         const tolerance = Math.max(maxDimension * 1e-5, 1e-5);
         const pointKey = (point) => [
@@ -1336,8 +1388,8 @@ async function initializeViewer(viewer) {
         },
       );
 
-      planeStates = [];
-      planeDefinitions.forEach((definition, index) => {
+      const buildCutPanels = (cut, container) => {
+      cut.definitions.forEach((definition, index) => {
         const panel = document.createElement("section");
         panel.className = "model-cut-plane";
         const title = document.createElement("h3");
@@ -1358,7 +1410,9 @@ async function initializeViewer(viewer) {
 
         const initialPlanePosition = definition.position;
         const settings = { position: initialPlanePosition, rotation: [0, 0, 0] };
-        const planeHelper = planeHelpers[index];
+        const planeHelper = cut.helpers[index];
+        const planeRadius = cut.planeRadius;
+        const clippingPlane = cut.clippingPlanes[index];
         const sliderControls = [];
         const hidePlane = () => {
           window.clearTimeout(planeHelper.hideTimer);
@@ -1375,15 +1429,15 @@ async function initializeViewer(viewer) {
           rotation.set(...settings.rotation.map((degrees) => THREE.MathUtils.degToRad(degrees)));
           const planeNormal = definition.normal.clone().applyEuler(rotation).normalize();
           const planeOffset = definition.origin.dot(planeNormal);
-          clippingPlanes[index].normal.copy(planeNormal).multiplyScalar(definition.clipSign);
-          clippingPlanes[index].constant = enabledInput.checked && cutAllowed
+          clippingPlane.normal.copy(planeNormal).multiplyScalar(definition.clipSign);
+          clippingPlane.constant = enabledInput.checked && cut.allowed
             ? -(settings.position + planeOffset) * definition.clipSign - maxDimension * 1e-5
             : planeRadius * 2;
           planeHelper.group.position.copy(definition.origin)
             .addScaledVector(planeNormal, settings.position + 0.025);
           planeHelper.group.quaternion.setFromUnitVectors(
             new THREE.Vector3(0, 0, 1),
-            clippingPlanes[index].normal,
+            clippingPlane.normal,
           );
           if (showPreview) {
             showPlane();
@@ -1533,9 +1587,18 @@ async function initializeViewer(viewer) {
         advanced.append(advancedSummary, rotationControls);
         panel.append(advanced);
 
-        cutControls.append(panel);
+        container.append(panel);
         updatePlane(false);
-        planeStates.push({ enabledInput, settings, sliderControls, updatePlane, planeHelper });
+        cut.states.push({ enabledInput, settings, sliderControls, updatePlane, planeHelper });
+      });
+      };
+      modelLayers.forEach((layer) => {
+        if (layer.cut && layer.settingsBody) buildCutPanels(layer.cut, layer.settingsBody);
+        // A layer without any plane has no Paramètres section.
+        if (layer.cut && !layer.cut.definitions.length) {
+          layer.settingsHost.hidden = true;
+          layer.cut = null;
+        }
       });
       cutControls.hidden = false;
       updateCutAvailability();

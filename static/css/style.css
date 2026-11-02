@@ -227,13 +227,16 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 .model-layer-row { display: flex; align-items: center; gap: 5px; }
 .model-side-panel .model-layer-focus { padding: 0; background: none; border: 0; cursor: pointer; text-align: left; }
 .model-side-panel .model-layer-focus:hover, .model-side-panel .model-layer-focus:focus-visible { text-decoration: underline; }
-.model-settings-tree > .model-settings-panel { padding: 2px 0 0 10px; }
+.model-settings-tree > .model-cut-controls { padding: 2px 0 0 10px; }
+.model-layer-tree .model-settings-tree { margin: 2px 0 0 12px; }
 .model-side-panel .model-cut-plane { border-bottom: 0; padding: 0 0 4px; }
 .model-layer-tree input { width: 10px; height: 10px; margin: 0; accent-color: var(--fg); }
-.model-cut-controls[data-cut-locked] { opacity: 0.4; pointer-events: none; }
-.model-cut-lock-note { margin: 0 0 6px; font-size: 10px; }
 .model-orientation {
   position: absolute; z-index: 2; top: 12px; right: 12px; width: 112px; height: 112px;
+}
+/* Hide the orientation cube on phones and tablets (any orientation) and on narrow windows. */
+@media (hover: none) and (pointer: coarse), (max-width: 600px) {
+  .model-orientation { display: none; }
 }
 .model-orientation-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; cursor: pointer; }
 .model-orientation-labels { position: absolute; inset: 0; pointer-events: none; }

@@ -550,13 +550,16 @@ class Builder:
                     if s.get("orientation_model")
                     else ""
                 )
-                viewer_config = ""
-                if s.get("viewer_config"):
-                    config_path = CONTENT / s["viewer_config"]
+                def load_viewer_config(rel: str) -> str:
+                    if not rel:
+                        return ""
+                    config_path = CONTENT / rel
                     if not config_path.is_file():
                         raise SystemExit(f"error: viewer config not found: {config_path}")
-                    viewer_config = json.dumps(json.loads(config_path.read_text(encoding="utf-8")),
-                                               ensure_ascii=False, separators=(",", ":"))
+                    return json.dumps(json.loads(config_path.read_text(encoding="utf-8")),
+                                      ensure_ascii=False, separators=(",", ":"))
+
+                viewer_config = load_viewer_config(s.get("viewer_config", ""))
                 inner = (
                     f'<div class="interactive-model" data-archi-viewer data-viewer-config="{esc(viewer_config)}">'
                     f'<span class="visually-hidden" data-model-scale="{esc(s.get("unit_scale", 1))}"></span>'
@@ -582,6 +585,8 @@ class Builder:
                         f'<span class="visually-hidden" data-model-src="{esc(page.rel(self.images.original(layer["file"])))}" '
                         f'data-model-label="{esc(self.tr(layer.get("label", "")))}"'
                         + (f' data-model-type="{esc(layer["type"])}"' if layer.get("type") else "")
+                        + (f' data-model-config="{esc(load_viewer_config(layer["viewer_config"]))}"'
+                           if layer.get("viewer_config") else "")
                         + (' data-model-context="true"' if layer.get("context") else "")
                         + '></span>'
                         for layer in layers
