@@ -541,7 +541,8 @@ class Builder:
             if kind == "text":
                 inner = f'<p class="prose">{esc(self.tr(s["text"]))}</p>'
             elif kind == "3d_model":
-                model = page.rel(self.images.original(s["file"]))
+                layers = s.get("layers") or [{"file": s["file"], "label": ""}]
+                model = page.rel(self.images.original(layers[0]["file"]))
                 orientation_model = (
                     page.rel(self.images.original(s["orientation_model"]))
                     if s.get("orientation_model")
@@ -568,7 +569,14 @@ class Builder:
                     f'aria-label="{esc(self.tr("Plans de coupe"))}"></div>'
                     f'<p class="model-slicing-note">{esc(self.tr("Les repères indiquent les positions principales des plans de coupe. Les contours et surfaces de coupe sont temporairement désactivés."))}</p>'
                     f'</div>'
-                    f'<span class="visually-hidden" data-model-src="{esc(model)}"></span></div>'
+                    + "".join(
+                        f'<span class="visually-hidden" data-model-src="{esc(page.rel(self.images.original(layer["file"])))}" '
+                        f'data-model-label="{esc(self.tr(layer.get("label", "")))}"'
+                        + (' data-model-context="true"' if layer.get("context") else "")
+                        + '></span>'
+                        for layer in layers
+                    )
+                    + '</div>'
                     f'<script type="module" src="{page.rel("assets/js/fbx-viewer.js")}?v={self.fbx_script_version}"></script>'
                 )
             elif kind == "images":

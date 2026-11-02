@@ -2,7 +2,12 @@ const viewer = document.querySelector("[data-fbx-viewer]");
 async function initializeViewer() {
   if (!viewer) return;
   const stage = viewer.querySelector("[data-model-stage]");
-  const source = viewer.querySelector("[data-model-src]").dataset.modelSrc;
+  const sources = [...viewer.querySelectorAll("[data-model-src]")].map((element) => ({
+    src: element.dataset.modelSrc,
+    label: element.dataset.modelLabel || "",
+    context: element.dataset.modelContext === "true",
+  }));
+  const urban = sources.length > 1;
   const modelScale = Number(viewer.querySelector("[data-model-scale]")?.dataset.modelScale || 1);
   const orientationSource = viewer.querySelector("[data-model-orientation]").dataset.modelOrientationSrc;
   const status = stage.querySelector(".model-status");
@@ -100,7 +105,7 @@ async function initializeViewer() {
   renderer.toneMapping = THREE.NoToneMapping;
   renderer.localClippingEnabled = true;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = urban ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
   stage.append(renderer.domElement);
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -122,12 +127,12 @@ async function initializeViewer() {
   composer.addPass(new OutputPass());
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-  const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+  const keyLight = new THREE.DirectionalLight(0xffffff, urban ? 1.1 : 1.15);
   keyLight.castShadow = true;
-  keyLight.shadow.mapSize.set(2048, 2048);
+  keyLight.shadow.mapSize.set(urban ? 4096 : 2048, urban ? 4096 : 2048);
   keyLight.shadow.bias = -0.0001;
   keyLight.shadow.normalBias = 0.02;
-  keyLight.shadow.radius = 4;
+  keyLight.shadow.radius = urban ? 1 : 4;
   scene.add(keyLight);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -135,6 +140,26 @@ async function initializeViewer() {
   controls.enablePan = true;
   controls.screenSpacePanning = true;
   controls.target.set(0, 0, 0);
+  if (urban) {
+    // Le défilement de la page reste prioritaire : zoom à la molette avec Ctrl/⌘ (ou en plein écran), glissement vertical à un doigt = défilement.
+    const wheelHint = document.createElement("p");
+    wheelHint.className = "model-wheel-hint";
+    wheelHint.textContent = english ? "Use Ctrl + scroll to zoom" : "Ctrl + molette pour zoomer";
+    wheelHint.hidden = true;
+    stage.append(wheelHint);
+    let hintTimer = 0;
+    renderer.domElement.addEventListener("wheel", (event) => {
+      const allowed = event.ctrlKey || event.metaKey || document.fullscreenElement === viewer;
+      controls.enableZoom = allowed;
+      window.setTimeout(() => { controls.enableZoom = true; }, 0);
+      if (!allowed) {
+        wheelHint.hidden = false;
+        window.clearTimeout(hintTimer);
+        hintTimer = window.setTimeout(() => { wheelHint.hidden = true; }, 1200);
+      }
+    }, { capture: true, passive: true });
+    stage.classList.add("model-stage-scrollable");
+  }
 
   const resize = () => {
     const width = stage.clientWidth;
@@ -154,20 +179,15 @@ async function initializeViewer() {
   resize();
 
   let updateOrientationCube = () => {};
-  const sourceExtension = source.toLowerCase().split("?")[0].split(".").pop();
-  const ModelLoader = sourceExtension === "obj"
-    ? OBJLoader
-    : sourceExtension === "gltf" || sourceExtension === "glb"
-      ? GLTFLoader
-      : FBXLoader;
-  const loader = new ModelLoader();
-  const loadModel = (onLoad, onError) => {
-    if (loader instanceof OBJLoader) {
+  const loadSingleModel = (source, onLoad, onError) => {
+    const extension = source.toLowerCase().split("?")[0].split(".").pop();
+    if (extension === "obj") {
+      const objLoader = new OBJLoader();
       new THREE.FileLoader().setResponseType("text").load(
         source,
         (text) => {
           try {
-            onLoad(loader.parse(text.replace(/^\s*(?:trace_obj|shadow_obj)\b.*$/gm, "")));
+            onLoad(objLoader.parse(text.replace(/^\s*(?:trace_obj|shadow_obj)\b.*$/gm, "")));
           } catch (error) {
             onError(error);
           }
@@ -175,15 +195,41 @@ async function initializeViewer() {
         undefined,
         onError,
       );
-      return;
+    } else if (extension === "gltf" || extension === "glb") {
+      new GLTFLoader().load(source, (gltf) => onLoad(gltf.scene), undefined, onError);
+    } else {
+      new FBXLoader().load(source, onLoad, undefined, onError);
     }
-    if (loader instanceof GLTFLoader) {
-      loader.load(source, (gltf) => onLoad(gltf.scene), undefined, onError);
-      return;
-    }
-    loader.load(source, onLoad, undefined, onError);
   };
-  loadModel(
+  const modelLayers = [];
+  const loadModel = (onLoad, onError) => {
+    const root = new THREE.Group();
+    const loaded = new Array(sources.length);
+    let remaining = sources.length;
+    let failed = false;
+    sources.forEach((entry, index) => {
+      loadSingleModel(
+        entry.src,
+        (object) => {
+          loaded[index] = object;
+          remaining -= 1;
+          if (remaining === 0 && !failed) {
+            loaded.forEach((layer, layerIndex) => {
+              layer.name = sources[layerIndex].label || layer.name;
+              root.add(layer);
+              modelLayers.push({ object: layer, label: sources[layerIndex].label || `Modèle ${layerIndex + 1}`, context: sources[layerIndex].context });
+            });
+            onLoad(root);
+          }
+        },
+        (error) => {
+          if (failed) return;
+          failed = true;
+          onError(error);
+        },
+      );
+    });
+  };  loadModel(
     (model) => {
       if (!Number.isFinite(modelScale) || modelScale <= 0) {
         console.error("The 3D model scale must be a positive finite number.");
@@ -209,11 +255,17 @@ async function initializeViewer() {
       cameraFrustumHeight = maxDimension * 0.84;
       resize();
       const lightDistance = maxDimension * 2;
-      keyLight.position.set(lightDistance, lightDistance * 1.5, lightDistance);
-      keyLight.shadow.camera.left = -maxDimension * 2;
-      keyLight.shadow.camera.right = maxDimension * 2;
-      keyLight.shadow.camera.top = maxDimension * 2;
-      keyLight.shadow.camera.bottom = -maxDimension * 2;
+      if (urban) {
+        // Soleil à 45° d'azimut et 45° d'altitude
+        keyLight.position.set(lightDistance * 0.5, lightDistance * Math.SQRT1_2, lightDistance * 0.5);
+      } else {
+        keyLight.position.set(lightDistance, lightDistance * 1.5, lightDistance);
+      }
+      const shadowExtent = maxDimension * (urban ? 0.75 : 2);
+      keyLight.shadow.camera.left = -shadowExtent;
+      keyLight.shadow.camera.right = shadowExtent;
+      keyLight.shadow.camera.top = shadowExtent;
+      keyLight.shadow.camera.bottom = -shadowExtent;
       keyLight.shadow.camera.near = 0.1;
       keyLight.shadow.camera.far = maxDimension * 8;
       keyLight.shadow.camera.updateProjectionMatrix();
@@ -299,10 +351,53 @@ async function initializeViewer() {
       const glassName = /(VERRE|VITRAGE|BAIE|FENETRE|FENÊTRE|WINDOW|GLASS)/i;
       const whiteStructureName = /(STRUCTURE|POTEAU|POUTRE|ESCALIER|01_PORTEUR.*BOIS)/i;
       const whiteFloorName = /(DALLE|PLANCHER|TOITURE|TOIT|ROOF|SLAB|FLOOR)/i;
+      const contextMaterial = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.35,
+        roughness: 0.95,
+        side: THREE.FrontSide,
+        flatShading: true,
+        clippingPlanes,
+      });
+      contextMaterial.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <normal_fragment_maps>",
+          `#include <normal_fragment_maps>
+          vec3 worldNormal = normalize(transpose(mat3(viewMatrix)) * normal);
+          float horizontalFace = smoothstep(0.55, 0.75, abs(worldNormal.y));
+          diffuseColor.rgb *= mix(vec3(0.918), vec3(1.0), horizontalFace);`,
+        );
+      };
+      contextMaterial.customProgramCacheKey = () => "urban-context-clay";
+      const contextEdgeMaterial = new THREE.LineBasicMaterial({
+        color: 0x666666,
+        transparent: true,
+        opacity: 0.18,
+        clippingPlanes,
+        depthTest: true,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -1,
+        polygonOffsetUnits: -1,
+      });
+      const contextObjects = modelLayers.filter((layer) => layer.context).map((layer) => layer.object);
+      const isContextPart = (part) => contextObjects.some((object) => {
+        for (let node = part; node; node = node.parent) if (node === object) return true;
+        return false;
+      });
+      if (urban) {
+        [clayMaterial, interiorMaterial, whiteMaterial].forEach((material) => {
+          material.flatShading = true;
+        });
+      }
       model.traverse((part) => {
         if (!part.isMesh) return;
+        const isContext = urban && isContextPart(part);
         const isDimensionGeometry = /00_COTATION|COTATION|DIMENSION/i.test(part.name);
-        if (!isDimensionGeometry && glassName.test(part.name)) {
+        if (isContext) {
+          part.material = contextMaterial;
+        } else if (!isDimensionGeometry && glassName.test(part.name)) {
           part.material = glazingMaterial;
         } else if (interiorName.test(part.name)) {
           part.material = interiorMaterial;
@@ -315,13 +410,93 @@ async function initializeViewer() {
         part.receiveShadow = !isDimensionGeometry;
         if (!isDimensionGeometry) {
           const edgeGeometry = new THREE.EdgesGeometry(part.geometry, 25);
-          const edges = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+          const edges = new THREE.LineSegments(edgeGeometry, isContext ? contextEdgeMaterial : edgeMaterial);
           edges.name = "Architectural edges";
           edges.renderOrder = 2;
           part.add(edges);
         }
       });
       centeredModel.add(model);
+
+      const lockMessage = english
+        ? "Section planes are available once the environment is hidden."
+        : "Les plans de coupe sont disponibles lorsque l’environnement est masqué.";
+      let cutAllowed = true;
+      function updateCutAvailability() {
+        cutAllowed = !modelLayers.some((layer) => layer.context && layer.object.visible);
+        cutControls.toggleAttribute("data-cut-locked", !cutAllowed);
+        cutControls.title = cutAllowed ? "" : lockMessage;
+        planeStates.forEach((state) => state.updatePlane(false));
+      }
+      const layerTree = document.createElement("details");
+      layerTree.className = "model-layer-tree";
+      layerTree.open = true;
+      const layerTreeSummary = document.createElement("summary");
+      layerTreeSummary.textContent = english ? "Model tree" : "Arborescence";
+      const layerList = document.createElement("ul");
+      modelLayers.forEach(({ object, label }, index) => {
+        const item = document.createElement("li");
+        const row = document.createElement("div");
+        row.className = "model-layer-row";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = true;
+        checkbox.id = `model-layer-${index}`;
+        checkbox.setAttribute("aria-label", label);
+        checkbox.addEventListener("change", () => {
+          object.visible = checkbox.checked;
+          updateCutAvailability();
+        });
+        const focusButton = document.createElement("button");
+        focusButton.type = "button";
+        focusButton.className = "model-layer-focus";
+        focusButton.textContent = label;
+        focusButton.title = english ? "Zoom on this element" : "Zoomer sur cet élément";
+        focusButton.addEventListener("click", () => {
+          const layerBounds = new THREE.Box3().setFromObject(object);
+          if (layerBounds.isEmpty()) return;
+          const layerCenter = layerBounds.getCenter(new THREE.Vector3());
+          const layerExtent = layerBounds.getSize(new THREE.Vector3()).length() * 0.85;
+          const offset = camera.position.clone().sub(controls.target);
+          controls.target.copy(layerCenter);
+          camera.position.copy(layerCenter).add(offset);
+          camera.zoom = Math.max(0.1, cameraFrustumHeight / layerExtent);
+          camera.updateProjectionMatrix();
+          controls.update();
+          updateOrientationCube();
+        });
+        row.append(checkbox, focusButton);
+        item.append(row);
+        layerList.append(item);
+      });
+      layerTree.append(layerTreeSummary, layerList);
+      if (modelLayers.length > 1) {
+        const sidePanel = document.createElement("div");
+        sidePanel.className = "model-side-panel";
+        const actions = viewer.querySelector(".model-control-actions");
+        const settings = viewer.querySelector("[data-model-settings-panel]");
+        settingsToggle.remove();
+        settings.hidden = false;
+        const settingsTree = document.createElement("details");
+        settingsTree.className = "model-layer-tree model-settings-tree";
+        const settingsSummary = document.createElement("summary");
+        settingsSummary.textContent = english ? "Settings" : "Paramètres";
+        settingsTree.append(settingsSummary, settings);
+        sidePanel.append(layerTree, settingsTree, actions);
+        viewer.querySelector(".model-controls")?.classList.add("model-controls-relocated");
+        viewer.querySelector(".model-slicing-note")?.remove();
+        stage.append(sidePanel);
+        // La page s'agrandit plutôt que d'ajouter une barre de défilement.
+        const fitStage = () => {
+          if (document.fullscreenElement === viewer) {
+            stage.style.minHeight = "";
+            return;
+          }
+          stage.style.minHeight = `${Math.max(360, sidePanel.offsetTop + sidePanel.offsetHeight + 16)}px`;
+        };
+        new ResizeObserver(fitStage).observe(sidePanel);
+        document.addEventListener("fullscreenchange", fitStage);
+      }
 
       const axisLabels = ["X", "Y", "Z"];
       const planeGeometry = new THREE.PlaneGeometry(planeRadius * 2, planeRadius * 2);
@@ -330,7 +505,7 @@ async function initializeViewer() {
         const surface = new THREE.Mesh(
           planeGeometry,
           new THREE.MeshBasicMaterial({
-            color: 0x10a9df,
+            color: 0x808590,
             transparent: true,
             opacity: 0.035,
             side: THREE.DoubleSide,
@@ -341,7 +516,7 @@ async function initializeViewer() {
         surface.renderOrder = 5;
         const outline = new THREE.LineSegments(
           new THREE.EdgesGeometry(planeGeometry),
-          new THREE.LineBasicMaterial({ color: 0x075779, transparent: true, opacity: 0.25, depthTest: false }),
+          new THREE.LineBasicMaterial({ color: 0x555555, transparent: true, opacity: 0.25, depthTest: false }),
         );
         outline.renderOrder = 6;
         group.add(surface, outline);
@@ -950,8 +1125,8 @@ async function initializeViewer() {
             orientationCubeScene.add(mesh);
             return mesh;
           };
-          const selectedSurface = makeSurfaceHighlight(0x168bc0, 0.88, 4);
-          const hoverSurface = makeSurfaceHighlight(0xf0b429, 0.88, 5);
+          const selectedSurface = makeSurfaceHighlight(0x000000, 0.2, 4);
+          const hoverSurface = makeSurfaceHighlight(0x000000, 0.1, 5);
           const applySurfaceHighlight = (target, hit) => {
             target.geometry = hit.object.geometry;
             hit.object.updateWorldMatrix(true, false);
@@ -960,9 +1135,9 @@ async function initializeViewer() {
             target.visible = true;
           };
           const highlightMaterial = new THREE.MeshBasicMaterial({
-            color: 0x168bc0,
+            color: 0x000000,
             transparent: true,
-            opacity: 0.88,
+            opacity: 0.2,
             depthWrite: false,
             side: THREE.DoubleSide,
             polygonOffset: true,
@@ -1137,7 +1312,7 @@ async function initializeViewer() {
           rotation.set(...settings.rotation.map((degrees) => THREE.MathUtils.degToRad(degrees)));
           const planeNormal = definition.normal.clone().applyEuler(rotation).normalize();
           clippingPlanes[index].normal.copy(planeNormal).multiplyScalar(definition.clipSign || 1);
-          clippingPlanes[index].constant = enabledInput.checked
+          clippingPlanes[index].constant = enabledInput.checked && cutAllowed
             ? -settings.position * (definition.clipSign || 1) - maxDimension * 1e-5
             : planeRadius * 2;
           planeHelper.group.position.copy(planeNormal).multiplyScalar(settings.position + 0.025);
@@ -1301,6 +1476,7 @@ async function initializeViewer() {
         planeStates.push({ enabledInput, settings, sliderControls, updatePlane, planeHelper });
       });
       cutControls.hidden = false;
+      updateCutAvailability();
 
       const distance = maxDimension * 3.5;
       const initialPosition = new THREE.Vector3(-distance * 1.35, distance * 1.2, distance);

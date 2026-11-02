@@ -347,6 +347,18 @@
           "text": "Objectifs : Concevoir l'analyse et la représentation graphique complète d'un bâtiment remarquable issu du Guide d'architecture Paris 1900-2008 d'Éric Lapierre. L'exercice repose sur un travail de recherche documentaire et de relevé in situ pour décrypter le projet sous ses aspects spatiaux, constructifs et techniques. L'objectif est de restituer avec précision l'édifice à travers la réalisation de documents graphiques normés (plans, coupes, façades), la fabrication d'une maquette d'étude et la formulation d'hypothèses architecturales pour les éléments non documentés.\n\nConcept : Analyse spatiale et constructive de l'ensemble mixte regroupant l'église Saint-Luc et son immeuble de logements. Le travail met en évidence l'articulation et la cohabitation entre le programme culturel/sacré de l'église et la fonction résidentielle au sein de la même structure.\n\nDurée : 3 semaines\n\nNote : 15/20 (Meilleure note)"
         },
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "file": "projets/s1-projet-6/batiment seul.obj",
+          "layers": [
+            { "label": "Bâtiment", "file": "projets/s1-projet-6/batiment seul.obj" },
+            { "label": "Environnement", "context": true, "file": "projets/s1-projet-6/environement.obj" }
+          ],
+          "unit_scale": 0.001,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
           "id": "process",
           "label": "Processus / Croquis",
           "type": "images",
