@@ -202,6 +202,10 @@ async function initializeViewer() {
     }
   };
   const modelLayers = [];
+  // Téléphone en portrait ou en paysage : le panneau n'est pas posé sur la scène avec une hauteur imposée.
+  const sidePanelDocked = window.matchMedia(
+    "(max-width: 700px) and (orientation: portrait), (orientation: landscape) and (max-height: 500px)",
+  );
   const loadModel = (onLoad, onError) => {
     const root = new THREE.Group();
     const loaded = new Array(sources.length);
@@ -434,18 +438,21 @@ async function initializeViewer() {
       const layerTreeSummary = document.createElement("summary");
       layerTreeSummary.textContent = english ? "Model tree" : "Arborescence";
       const layerList = document.createElement("ul");
-      modelLayers.forEach(({ object, label }, index) => {
+      modelLayers.forEach(({ object, label, context: isEnvironment }, index) => {
         const item = document.createElement("li");
         const row = document.createElement("div");
         row.className = "model-layer-row";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = true;
+        // L'environnement est masqué au chargement : la vue initiale cadre le bâtiment seul.
+        checkbox.checked = !isEnvironment;
+        object.visible = checkbox.checked;
         checkbox.id = `model-layer-${index}`;
         checkbox.setAttribute("aria-label", label);
         checkbox.addEventListener("change", () => {
           object.visible = checkbox.checked;
           updateCutAvailability();
+          if (isEnvironment) frameView(true, false);
         });
         const focusButton = document.createElement("button");
         focusButton.type = "button";
@@ -485,10 +492,10 @@ async function initializeViewer() {
         sidePanel.append(layerTree, settingsTree, actions);
         viewer.querySelector(".model-controls")?.classList.add("model-controls-relocated");
         viewer.querySelector(".model-slicing-note")?.remove();
-        stage.append(sidePanel);
+        viewer.append(sidePanel);
         // La page s'agrandit plutôt que d'ajouter une barre de défilement.
         const fitStage = () => {
-          if (document.fullscreenElement === viewer) {
+          if (document.fullscreenElement === viewer || sidePanelDocked.matches) {
             stage.style.minHeight = "";
             return;
           }
@@ -496,6 +503,7 @@ async function initializeViewer() {
         };
         new ResizeObserver(fitStage).observe(sidePanel);
         document.addEventListener("fullscreenchange", fitStage);
+        sidePanelDocked.addEventListener("change", fitStage);
       }
 
       const axisLabels = ["X", "Y", "Z"];
@@ -1492,11 +1500,77 @@ async function initializeViewer() {
       controls.maxDistance = maxDimension * 12;
       controls.target.set(0, 0, 0);
       controls.update();
-      controls.saveState();
-      resetButton.addEventListener("click", () => {
-        controls.reset();
-        updateOrientationCube();
+
+      let animationId = 0;
+      let userInteracted = false;
+      // Cadre les couches visibles (le bâtiment seul, ou bâtiment + environnement) pour qu'elles remplissent la scène.
+      function frameView(animate, resetDirection) {
+        cancelAnimationFrame(animationId);
+        scene.updateMatrixWorld(true);
+        const box = new THREE.Box3();
+        modelLayers.forEach(({ object }) => {
+          if (object.visible) box.union(new THREE.Box3().setFromObject(object));
+        });
+        if (box.isEmpty()) box.setFromObject(model);
+        const frameCenter = box.getCenter(new THREE.Vector3());
+        const direction = (resetDirection
+          ? initialPosition.clone()
+          : camera.position.clone().sub(controls.target)).normalize();
+        const basis = new THREE.Matrix4().lookAt(direction, new THREE.Vector3(), camera.up);
+        const right = new THREE.Vector3().setFromMatrixColumn(basis, 0);
+        const up = new THREE.Vector3().setFromMatrixColumn(basis, 1);
+        let halfWidth = 0;
+        let halfHeight = 0;
+        for (let i = 0; i < 8; i += 1) {
+          const corner = new THREE.Vector3(
+            i & 1 ? box.max.x : box.min.x,
+            i & 2 ? box.max.y : box.min.y,
+            i & 4 ? box.max.z : box.min.z,
+          ).sub(frameCenter);
+          halfWidth = Math.max(halfWidth, Math.abs(corner.dot(right)));
+          halfHeight = Math.max(halfHeight, Math.abs(corner.dot(up)));
+        }
+        const aspect = camera.aspect || 1;
+        const zoom = Math.min(
+          cameraFrustumHeight / (2 * Math.max(halfHeight, 1e-6)),
+          (cameraFrustumHeight * aspect) / (2 * Math.max(halfWidth, 1e-6)),
+        ) * 0.96;
+        const endPosition = frameCenter.clone().addScaledVector(direction, distance);
+        const startPosition = camera.position.clone();
+        const startTarget = controls.target.clone();
+        const startZoom = camera.zoom;
+        const apply = (t) => {
+          controls.target.lerpVectors(startTarget, frameCenter, t);
+          camera.position.lerpVectors(startPosition, endPosition, t);
+          camera.zoom = startZoom + (zoom - startZoom) * t;
+          camera.updateProjectionMatrix();
+          controls.update();
+          updateOrientationCube();
+        };
+        if (!animate) {
+          apply(1);
+          return;
+        }
+        const startTime = performance.now();
+        const step = (now) => {
+          const progress = Math.min(1, (now - startTime) / 700);
+          apply(1 - Math.pow(1 - progress, 3));
+          if (progress < 1) animationId = requestAnimationFrame(step);
+        };
+        animationId = requestAnimationFrame(step);
+      }
+      controls.addEventListener("start", () => {
+        userInteracted = true;
+        cancelAnimationFrame(animationId);
       });
+      frameView(false, true);
+      // Tant que l'utilisateur n'a pas bougé, un changement de taille de la scène recadre la vue.
+      const reframeOnResize = () => { if (!userInteracted) frameView(false, false); };
+      new ResizeObserver(reframeOnResize).observe(stage);
+      resetButton.addEventListener("click", () => {
+        frameView(true, true);
+      });
+      document.addEventListener("fullscreenchange", () => window.setTimeout(() => frameView(false, false), 100));
       updateOrientationCube();
       status.remove();
     },
