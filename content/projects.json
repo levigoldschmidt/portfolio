@@ -885,6 +885,14 @@
       "cover": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.png",
       "sections": [
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "Pièce", "type": "building", "file": "projets/tino/tino-final-assembly.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" }],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
           "id": "gallery",
           "label": "Images",
           "type": "images",
@@ -922,6 +930,17 @@
       "cover": "projets/enigmati-x/1_6.png",
       "cover_scale": 1.5,
       "sections": [
+        {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [
+            { "label": "Bras arrière", "type": "building", "file": "projets/enigmati-x/enigmatix-v3-bras.glb", "viewer_config": "viewers/object-cut-planes.json" },
+            { "label": "Reste du modèle", "type": "building", "file": "projets/enigmati-x/enigmatix-v3-reste.glb", "viewer_config": "viewers/object-cut-planes.json" }
+          ],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
         {
           "id": "gallery",
           "label": "Images",
@@ -1038,6 +1057,14 @@
           "label": "Texte",
           "type": "text",
           "text": "Aeris est une équipe de cinq membres du lycée Jean Mermoz de Saint-Louis, qualifiée pour la finale mondiale STEM Racing 2025 à Singapour après sa victoire aux finales nationales françaises.\n\nLe projet couvre tous les aspects d'une entreprise : ingénierie (conception CAO sous Onshape, simulations CFD, optimisation de la masse, usinage 5 axes chez ISL), gestion de projet (ClickUp, matrice RACI, budget de 30 000 €), marketing, réseaux sociaux, recherche de sponsors et développement durable.\n\nLa voiture Aeris, d'une masse d'environ 48,3 g, est équipée de roulements hybrides céramique Kanzen et de roues en aluminium 7075. Le modèle MATLAB/Simulink estime un temps de piste de 1,067 s sur 24 mètres.\n\nLes portfolios Enterprise, Project Management, Engineering, Engineering Drawings et 3D Renders sont disponibles dans la section PDF."
+        },
+        {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "Pit display", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/pit-display-world-finals.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
         {
           "id": "renders",

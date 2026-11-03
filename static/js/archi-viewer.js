@@ -238,6 +238,10 @@ async function initializeViewer(viewer) {
           if (remaining === 0 && !failed) {
             loaded.forEach((layer, layerIndex) => {
               layer.name = sources[layerIndex].label || layer.name;
+              const rotation = sources[layerIndex].config?.rotation;
+              if (Array.isArray(rotation)) {
+                layer.rotation.set(...rotation.map((degrees) => THREE.MathUtils.degToRad(Number(degrees) || 0)));
+              }
               root.add(layer);
               modelLayers.push({
                 object: layer,
@@ -511,10 +515,27 @@ async function initializeViewer(viewer) {
           };
         }
         const materials = createMaterialSet(layer.cut ? layer.cut.clippingPlanes : []);
+        const keepColors = layer.config?.colors === true && !isContext;
+        const coloredMaterials = new Map();
+        const colorMaterial = (source) => {
+          if (!coloredMaterials.has(source)) {
+            const material = source.clone();
+            material.metalness = 0;
+            material.roughness = Math.max(material.roughness ?? 0.8, 0.8);
+            material.emissive = (source.color || new THREE.Color(0xffffff)).clone();
+            material.emissiveIntensity = 0.2;
+            material.side = THREE.FrontSide;
+            material.clippingPlanes = layer.cut ? layer.cut.clippingPlanes : [];
+            coloredMaterials.set(source, material);
+          }
+          return coloredMaterials.get(source);
+        };
         layer.object.traverse((part) => {
           if (!part.isMesh) return;
           const isDimensionGeometry = /00_COTATION|COTATION|DIMENSION/i.test(part.name);
-          if (isContext) {
+          if (keepColors) {
+            part.material = Array.isArray(part.material) ? part.material.map(colorMaterial) : colorMaterial(part.material);
+          } else if (isContext) {
             part.material = materials.context;
           } else if (!isDimensionGeometry && glassName.test(part.name)) {
             part.material = materials.glazing;
@@ -538,7 +559,7 @@ async function initializeViewer(viewer) {
       });
       centeredModel.add(model);
 
-      const multiLayer = modelLayers.length > 1;
+      const multiLayer = modelLayers.length > 1 || modelLayers.some((layer) => layer.config?.tree === true);
       // Each building layer owns a "Paramètres" section: a tree child in multi-layer mode, the classic panel otherwise.
       function updateCutAvailability() {
         const environmentVisible = modelLayers.some((layer) => layer.context && layer.object.visible);
@@ -551,6 +572,12 @@ async function initializeViewer(viewer) {
           }
           layer.cut.states.forEach((state) => state.updatePlane(false));
         });
+        // La passe SSAO utilise son propre matériau : sans ces plans, la partie coupée continue de projeter de l'occlusion.
+        const ssaoPlanes = modelLayers.flatMap((layer) => (layer.cut?.allowed ? layer.cut.clippingPlanes : []));
+        if (ssaoPlanes.length || ssaoPass.normalMaterial.clippingPlanes?.length) {
+          ssaoPass.normalMaterial.clippingPlanes = ssaoPlanes;
+          ssaoPass.normalMaterial.needsUpdate = true;
+        }
       }
       const layerTree = document.createElement("details");
       layerTree.className = "model-layer-tree";
@@ -573,7 +600,7 @@ async function initializeViewer(viewer) {
         checkbox.addEventListener("change", () => {
           object.visible = checkbox.checked;
           updateCutAvailability();
-          if (isEnvironment) frameView(true, false);
+          frameView(true, false);
         });
         const focusButton = document.createElement("button");
         focusButton.type = "button";
@@ -1613,6 +1640,10 @@ async function initializeViewer(viewer) {
       ssaoPass.ssaoMaterial.uniforms.cameraFar.value = camera.far;
       ssaoPass.depthRenderMaterial.uniforms.cameraNear.value = camera.near;
       ssaoPass.depthRenderMaterial.uniforms.cameraFar.value = camera.far;
+      // Le rayon d'occlusion suit l'échelle du modèle (1,2 fixe produisait des ombres fantômes sur les petits objets).
+      ssaoPass.kernelRadius = maxDimension * 0.024;
+      ssaoPass.minDistance = 0.0002;
+      ssaoPass.maxDistance = 0.008;
       controls.minDistance = maxDimension * 0.08;
       controls.maxDistance = maxDimension * 12;
       controls.target.set(0, 0, 0);
@@ -1687,7 +1718,20 @@ async function initializeViewer(viewer) {
       resetButton.addEventListener("click", () => {
         frameView(true, true);
       });
-      document.addEventListener("fullscreenchange", () => window.setTimeout(() => frameView(false, false), 100));
+      document.addEventListener("fullscreenchange", () => {
+        // Le plein écran change la taille du canvas : on recrée les cibles de rendu (SSAO, ombres) pour éviter des textures corrompues.
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        resize();
+        ssaoPass.setSize(stage.clientWidth || 1, stage.clientHeight || 1);
+        if (keyLight.shadow.map) {
+          keyLight.shadow.map.dispose();
+          keyLight.shadow.map = null;
+        }
+        window.setTimeout(() => {
+          resize();
+          frameView(false, false);
+        }, 100);
+      });
       updateOrientationCube();
       status.remove();
     },
