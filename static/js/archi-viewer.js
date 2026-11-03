@@ -42,19 +42,35 @@ async function initializeViewer(viewer) {
     settingsToggle.setAttribute("aria-expanded", String(!isExpanded));
     settingsPanel.hidden = isExpanded;
   });
+  // Sur iPhone (et si l'API échoue) le plein écran natif n'existe pas pour un élément : on bascule sur un plein écran CSS.
+  const isFullscreen = () => document.fullscreenElement === viewer || viewer.classList.contains("is-pseudo-fullscreen");
   const updateFullscreenButton = () => {
-    const isFullscreen = document.fullscreenElement === viewer;
-    fullscreenButton.textContent = isFullscreen
+    const label = isFullscreen()
       ? (english ? "Exit fullscreen" : "Quitter le plein écran")
       : (english ? "Fullscreen" : "Plein écran");
-    fullscreenButton.setAttribute("aria-label", fullscreenButton.textContent);
+    fullscreenButton.setAttribute("aria-label", label);
+    fullscreenButton.title = label;
+    fullscreenButton.classList.toggle("is-active", isFullscreen());
+  };
+  const setPseudoFullscreen = (active) => {
+    viewer.classList.toggle("is-pseudo-fullscreen", active);
+    document.documentElement.classList.toggle("has-pseudo-fullscreen", active);
+    document.dispatchEvent(new Event("fullscreenchange"));
   };
   fullscreenButton.addEventListener("click", async () => {
     try {
-      if (document.fullscreenElement === viewer) {
+      if (viewer.classList.contains("is-pseudo-fullscreen")) {
+        setPseudoFullscreen(false);
+      } else if (document.fullscreenElement === viewer) {
         await document.exitFullscreen();
+      } else if (typeof viewer.requestFullscreen === "function") {
+        try {
+          await viewer.requestFullscreen();
+        } catch (error) {
+          setPseudoFullscreen(true);
+        }
       } else {
-        await viewer.requestFullscreen();
+        setPseudoFullscreen(true);
       }
       updateFullscreenButton();
     } catch (error) {
@@ -63,6 +79,9 @@ async function initializeViewer(viewer) {
         ? "Fullscreen mode could not be changed."
         : "Le mode plein écran n’a pas pu être modifié.";
     }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && viewer.classList.contains("is-pseudo-fullscreen")) setPseudoFullscreen(false);
   });
   document.addEventListener("fullscreenchange", updateFullscreenButton);
   updateFullscreenButton();
@@ -107,6 +126,11 @@ async function initializeViewer(viewer) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#ffffff");
   let cameraFrustumHeight = 1;
+  let ssaoBaseRadius = 0;
+  let ssaoBaseZoom = 1;
+  let ssaoRefHeight = 1;
+  const ssaoBaseMin = 0.0002;
+  const ssaoBaseMax = 0.008;
   const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.01, 100000);
   let renderer;
   try {
@@ -167,7 +191,7 @@ async function initializeViewer(viewer) {
     stage.append(wheelHint);
     let hintTimer = 0;
     renderer.domElement.addEventListener("wheel", (event) => {
-      const allowed = event.ctrlKey || event.metaKey || document.fullscreenElement === viewer;
+      const allowed = event.ctrlKey || event.metaKey || isFullscreen();
       controls.enableZoom = allowed;
       window.setTimeout(() => { controls.enableZoom = true; }, 0);
       if (!allowed) {
@@ -559,7 +583,8 @@ async function initializeViewer(viewer) {
       });
       centeredModel.add(model);
 
-      const multiLayer = modelLayers.length > 1 || modelLayers.some((layer) => layer.config?.tree === true);
+      // Mise en page du projet 6 (arborescence + Paramètres + Recadrer) pour tous les modèles.
+      const multiLayer = true;
       // Each building layer owns a "Paramètres" section: a tree child in multi-layer mode, the classic panel otherwise.
       function updateCutAvailability() {
         const environmentVisible = modelLayers.some((layer) => layer.context && layer.object.visible);
@@ -606,20 +631,8 @@ async function initializeViewer(viewer) {
         focusButton.type = "button";
         focusButton.className = "model-layer-focus";
         focusButton.textContent = label;
-        focusButton.title = english ? "Zoom on this element" : "Zoomer sur cet élément";
-        focusButton.addEventListener("click", () => {
-          const layerBounds = new THREE.Box3().setFromObject(object);
-          if (layerBounds.isEmpty()) return;
-          const layerCenter = layerBounds.getCenter(new THREE.Vector3());
-          const layerExtent = layerBounds.getSize(new THREE.Vector3()).length() * 0.85;
-          const offset = camera.position.clone().sub(controls.target);
-          controls.target.copy(layerCenter);
-          camera.position.copy(layerCenter).add(offset);
-          camera.zoom = Math.max(0.1, cameraFrustumHeight / layerExtent);
-          camera.updateProjectionMatrix();
-          controls.update();
-          updateOrientationCube();
-        });
+        focusButton.title = english ? "Show or hide this element" : "Afficher ou masquer cet élément";
+        focusButton.addEventListener("click", () => checkbox.click());
         row.append(checkbox, focusButton);
         item.append(row);
         if (layer.cut) {
@@ -655,7 +668,7 @@ async function initializeViewer(viewer) {
         viewer.append(sidePanel);
         // La page s'agrandit plutôt que d'ajouter une barre de défilement.
         const fitStage = () => {
-          if (document.fullscreenElement === viewer || sidePanelDocked.matches) {
+          if (isFullscreen() || sidePanelDocked.matches) {
             stage.style.minHeight = "";
             return;
           }
@@ -1712,6 +1725,11 @@ async function initializeViewer(viewer) {
         cancelAnimationFrame(animationId);
       });
       frameView(false, true);
+      // Référence : rayon d'occlusion calibré pour la vue initiale, puis maintenu constant en pixels (zoom, plein écran).
+      ssaoBaseRadius = maxDimension * 0.024 * camera.zoom;
+      ssaoBaseZoom = camera.zoom;
+      // Hauteur de référence hors plein écran : le rayon d'occlusion garde la même taille en pixels en plein écran.
+      ssaoRefHeight = isFullscreen() ? Math.min(stage.clientHeight, 560) : (stage.clientHeight || 1);
       // Tant que l'utilisateur n'a pas bougé, un changement de taille de la scène recadre la vue.
       const reframeOnResize = () => { if (!userInteracted) frameView(false, false); };
       new ResizeObserver(reframeOnResize).observe(stage);
@@ -1722,7 +1740,6 @@ async function initializeViewer(viewer) {
         // Le plein écran change la taille du canvas : on recrée les cibles de rendu (SSAO, ombres) pour éviter des textures corrompues.
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         resize();
-        ssaoPass.setSize(stage.clientWidth || 1, stage.clientHeight || 1);
         if (keyLight.shadow.map) {
           keyLight.shadow.map.dispose();
           keyLight.shadow.map = null;
@@ -1746,6 +1763,14 @@ async function initializeViewer(viewer) {
   const render = () => {
     controls.update();
     updateOrientationCube();
+    // Le rayon d'occlusion garde une taille constante à l'écran quel que soit le zoom.
+    if (ssaoBaseRadius) {
+      const radiusScale = (ssaoRefHeight / Math.max(stage.clientHeight, 1)) / Math.max(camera.zoom, 1e-3);
+      ssaoPass.kernelRadius = ssaoBaseRadius * radiusScale;
+      // Les seuils de profondeur (normalisés) doivent suivre le rayon, sinon l'occlusion disparaît une fois dézoomé.
+      ssaoPass.minDistance = ssaoBaseMin * radiusScale * ssaoBaseZoom;
+      ssaoPass.maxDistance = ssaoBaseMax * radiusScale * ssaoBaseZoom;
+    }
     composer.render();
     requestAnimationFrame(render);
   };
