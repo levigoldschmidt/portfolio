@@ -65,6 +65,13 @@ h1, h2, h3, p, ul { margin: 0; }
 .header-subnav { display: none; gap: 4px 12px; }
 .header-subnav a { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-fg); }
 .header-subnav a.active { color: var(--fg); }
+.site-header .header-back {
+  display: none; position: absolute; top: 12px; left: var(--pad-x);
+  align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: .12em; color: var(--muted-fg);
+}
+.site-header .header-back:hover { color: var(--fg); }
+.site-header.show-subnav .header-back { display: inline-flex; }
 .site-header.show-subnav .main-nav { display: none; }
 .site-header.show-subnav .header-subnav { display: flex; }
 

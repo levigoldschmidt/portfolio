@@ -293,6 +293,12 @@
     const headerNav = document.createElement("nav");
     headerNav.className = "header-subnav";
     headerNav.setAttribute("aria-label", english ? "Sections" : "Sections");
+    const backLink = document.querySelector(".back a");
+    if (backLink) {
+      const back = backLink.cloneNode(true);
+      back.classList.add("header-back");
+      header.querySelector(".inner").append(back);
+    }
     links.forEach((a) => headerNav.append(a.cloneNode(true)));
     header.querySelector(".inner").append(headerNav);
     const allLinks = [...links, ...$$("a", headerNav)];
