@@ -1062,7 +1062,7 @@
           "id": "model-3d",
           "label": "Maquette 3D interactive",
           "type": "3d_model",
-          "layers": [{ "label": "Pit display", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/pit-display-world-finals.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "layers": [{ "label": "Voiture Aeris", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/aeris-v3.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
           "unit_scale": 1,
           "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
@@ -1243,6 +1243,11 @@
           "label": "Pit display",
           "type": "images",
           "grayscale": true,
+          "model": {
+            "layers": [{ "label": "Pit display", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/pit-display-world-finals.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+            "unit_scale": 1,
+            "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+          },
           "images": [
             "projets/steam-racing-world-finals-singapour-2025/P_20250927_154828.jpg",
             "projets/steam-racing-world-finals-singapour-2025/P_20250927_154836.jpg",

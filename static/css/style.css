@@ -72,6 +72,7 @@ main { padding-top: var(--header-h); min-height: 60vh; }
 
 /* Shared section styles */
 .section { padding: 48px var(--pad-x); scroll-margin-top: 115px; }
+.model-gallery-gap { height: 8px; }
 .section-title {
   display: block; margin-bottom: 32px; font-weight: 400;
   font-size: 14px; letter-spacing: .2em; text-transform: uppercase;

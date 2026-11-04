@@ -535,7 +535,14 @@ class Builder:
         ]
         if not p["sections"]:
             body.append(f'<p class="coming-soon">{esc(self.tr("CONTENU À VENIR"))}</p>')
+        merged_models = {}
+        sections = []
         for s in p["sections"]:
+            if s.get("model"):
+                sections.append({**s["model"], "id": f"{s['id']}-model", "label": s["label"],
+                                 "type": "3d_model", "_merge_into": s["id"]})
+            sections.append(s)
+        for s in sections:
             heading = self.tr(s.get("heading", s["label"]))
             kind = s["type"]
             if kind == "text":
@@ -638,6 +645,11 @@ class Builder:
             else:
                 warnings.append(f"{p['slug']}: unknown section type {kind!r} skipped")
                 continue
+            if s.get("_merge_into"):
+                merged_models[s["_merge_into"]] = inner
+                continue
+            if s["id"] in merged_models:
+                inner = merged_models[s["id"]] + '<div class="model-gallery-gap" aria-hidden="true"></div>' + inner
             body.append(self.section(s["id"], heading, inner, large=kind == "pdfs",
                                      requires_code=s.get("requires_code", False)))
         text = next((s["text"] for s in p["sections"] if s["type"] == "text"), "")

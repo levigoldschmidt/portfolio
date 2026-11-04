@@ -128,7 +128,7 @@ async function initializeViewer(viewer) {
   let cameraFrustumHeight = 1;
   let ssaoBaseRadius = 0;
   let ssaoBaseZoom = 1;
-  let ssaoRefHeight = 1;
+  let ssaoRefHeight = 520;
   const ssaoBaseMin = 0.0002;
   const ssaoBaseMax = 0.008;
   const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.01, 100000);
@@ -155,7 +155,7 @@ async function initializeViewer(viewer) {
   ssaoPass.kernelRadius = 1.2;
   ssaoPass.ssaoMaterial.defines.PERSPECTIVE_CAMERA = 0;
   ssaoPass.depthRenderMaterial.defines.PERSPECTIVE_CAMERA = 0;
-  const ssaoIntensity = 1.5;
+  const ssaoIntensity = 0.8;
   const aoOutputExpression = "vec3( 1.0 - occlusion )";
   if (!ssaoPass.ssaoMaterial.fragmentShader.includes(aoOutputExpression)) {
     throw new Error("The Three.js SSAO shader output could not be configured.");
@@ -1654,7 +1654,7 @@ async function initializeViewer(viewer) {
       ssaoPass.depthRenderMaterial.uniforms.cameraNear.value = camera.near;
       ssaoPass.depthRenderMaterial.uniforms.cameraFar.value = camera.far;
       // Le rayon d'occlusion suit l'échelle du modèle (1,2 fixe produisait des ombres fantômes sur les petits objets).
-      ssaoPass.kernelRadius = maxDimension * 0.024;
+      ssaoPass.kernelRadius = maxDimension * 0.008;
       ssaoPass.minDistance = 0.0002;
       ssaoPass.maxDistance = 0.008;
       controls.minDistance = maxDimension * 0.08;
@@ -1726,10 +1726,9 @@ async function initializeViewer(viewer) {
       });
       frameView(false, true);
       // Référence : rayon d'occlusion calibré pour la vue initiale, puis maintenu constant en pixels (zoom, plein écran).
-      ssaoBaseRadius = maxDimension * 0.024 * camera.zoom;
+      ssaoBaseRadius = maxDimension * 0.008 * camera.zoom;
       ssaoBaseZoom = camera.zoom;
-      // Hauteur de référence hors plein écran : le rayon d'occlusion garde la même taille en pixels en plein écran.
-      ssaoRefHeight = isFullscreen() ? Math.min(stage.clientHeight, 560) : (stage.clientHeight || 1);
+      if (!isFullscreen() && stage.clientHeight) ssaoRefHeight = stage.clientHeight;
       // Tant que l'utilisateur n'a pas bougé, un changement de taille de la scène recadre la vue.
       const reframeOnResize = () => { if (!userInteracted) frameView(false, false); };
       new ResizeObserver(reframeOnResize).observe(stage);
@@ -1764,12 +1763,15 @@ async function initializeViewer(viewer) {
     controls.update();
     updateOrientationCube();
     // Le rayon d'occlusion garde une taille constante à l'écran quel que soit le zoom.
+    // SSAOPass ne copie la projection de la caméra qu'au redimensionnement : sans cela, le zoom et le plein écran désynchronisent l'occlusion.
+    ssaoPass.ssaoMaterial.uniforms.cameraProjectionMatrix.value.copy(camera.projectionMatrix);
+    ssaoPass.ssaoMaterial.uniforms.cameraInverseProjectionMatrix.value.copy(camera.projectionMatrixInverse);
     if (ssaoBaseRadius) {
-      const radiusScale = (ssaoRefHeight / Math.max(stage.clientHeight, 1)) / Math.max(camera.zoom, 1e-3);
-      ssaoPass.kernelRadius = ssaoBaseRadius * radiusScale;
-      // Les seuils de profondeur (normalisés) doivent suivre le rayon, sinon l'occlusion disparaît une fois dézoomé.
-      ssaoPass.minDistance = ssaoBaseMin * radiusScale * ssaoBaseZoom;
-      ssaoPass.maxDistance = ssaoBaseMax * radiusScale * ssaoBaseZoom;
+      // Rayon fixe en unités du modèle : l'ombre garde la même proportion avec la maquette (zoom, environnement, plein écran).
+      // En plein écran la scène est plus haute : le rayon est réduit pour garder la même taille d'ombre à l'écran que sur la page.
+      ssaoPass.kernelRadius = (ssaoBaseRadius / ssaoBaseZoom) * Math.min(1, ssaoRefHeight / Math.max(stage.clientHeight, 1)) * (isFullscreen() ? 0.6 : 1);
+      ssaoPass.minDistance = ssaoBaseMin;
+      ssaoPass.maxDistance = ssaoBaseMax;
     }
     composer.render();
     requestAnimationFrame(render);
