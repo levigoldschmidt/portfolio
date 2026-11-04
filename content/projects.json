@@ -68,6 +68,14 @@
       "cover": "projets/s2-intensif-structure/levigoldscmidt1010.jpg",
       "sections": [
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "Structure", "type": "building", "viewer_config": "viewers/default-cut-planes.json", "file": "projets/s2-intensif-structure/structure.obj" }],
+          "unit_scale": 0.001,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
           "id": "gallery",
           "label": "Compte rendu",
           "type": "images",
@@ -835,6 +843,14 @@
       "cover": "projets/cheepygood/df.PNG",
       "sections": [
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "CheepyGood", "type": "building", "file": "projets/cheepygood/cheepygood.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
           "id": "texte",
           "label": "Texte",
           "type": "text",
@@ -888,7 +904,10 @@
           "id": "model-3d",
           "label": "Maquette 3D interactive",
           "type": "3d_model",
-          "layers": [{ "label": "Pièce", "type": "building", "file": "projets/tino/tino-final-assembly.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" }],
+          "layers": [
+            { "label": "Pièce à isoler", "type": "building", "file": "projets/tino/tino-part-clamp.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" },
+            { "label": "Reste du modèle", "type": "building", "file": "projets/tino/tino-part-rest.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" }
+          ],
           "unit_scale": 1,
           "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
