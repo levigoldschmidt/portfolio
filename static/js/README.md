@@ -105,6 +105,8 @@ Every field is optional:
 | `position` | Initial offset along the normal from the origin: a number, `"min"` or `"max"` (default `0`). |
 | `presets`  | Any number of predefined positions, as numbers or `{ "value", "label" }`. They appear as numbered markers on the slider; clicking one enables the plane and moves it there, and releasing the slider near one snaps to it. |
 | `urban`    | Top-level option. Forces the urban lighting / Ctrl+wheel zoom mode. Default: `true` when there are several layers. |
+| `ssao_reference` | Set to `"building"` to scale ambient occlusion to the combined building layers instead of the entire scene, useful when the environment is much larger. Defaults to the entire scene. |
+| `center_reference` | Set to `"building"` to center the scene and cut-plane coordinates on the combined building layers rather than the entire scene. Defaults to the entire scene. |
 
 The plane's final normal is `matrix` applied to `normal`, then the user's
 rotation sliders (degrees, about X, Y, Z). The plane passes through

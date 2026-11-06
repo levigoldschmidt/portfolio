@@ -297,7 +297,6 @@ async function initializeViewer(viewer) {
 
       const bounds = new THREE.Box3().setFromObject(model);
       const size = bounds.getSize(new THREE.Vector3());
-      const center = bounds.getCenter(new THREE.Vector3());
       const maxDimension = Math.max(size.x, size.y, size.z);
       if (!Number.isFinite(maxDimension) || maxDimension <= 0) {
         console.error("The FBX model has no measurable geometry.");
@@ -306,6 +305,19 @@ async function initializeViewer(viewer) {
           : "Le modèle 3D n’a pas pu être chargé.";
         return;
       }
+
+      const buildingBounds = new THREE.Box3();
+      modelLayers.forEach((layer) => {
+        if (!layer.context) buildingBounds.union(new THREE.Box3().setFromObject(layer.object));
+      });
+      const buildingSize = buildingBounds.getSize(new THREE.Vector3());
+      const centerBounds = viewerConfig.center_reference === "building" && !buildingBounds.isEmpty()
+        ? buildingBounds
+        : bounds;
+      const center = centerBounds.getCenter(new THREE.Vector3());
+      const ssaoDimension = viewerConfig.ssao_reference === "building" && !buildingBounds.isEmpty()
+        ? Math.max(buildingSize.x, buildingSize.y, buildingSize.z)
+        : maxDimension;
 
       cameraFrustumHeight = maxDimension * 0.84;
       resize();
@@ -336,7 +348,7 @@ async function initializeViewer(viewer) {
         new THREE.ShadowMaterial({ color: 0x808590, opacity: 0.2 }),
       );
       shadowGround.rotation.x = -Math.PI / 2;
-      shadowGround.position.y = -size.y / 2 - maxDimension * 1e-4;
+      shadowGround.position.y = bounds.min.y - center.y - maxDimension * 1e-4;
       shadowGround.receiveShadow = true;
       shadowGround.renderOrder = 1;
       scene.add(shadowGround);
@@ -1654,7 +1666,7 @@ async function initializeViewer(viewer) {
       ssaoPass.depthRenderMaterial.uniforms.cameraNear.value = camera.near;
       ssaoPass.depthRenderMaterial.uniforms.cameraFar.value = camera.far;
       // Le rayon d'occlusion suit l'échelle du modèle (1,2 fixe produisait des ombres fantômes sur les petits objets).
-      ssaoPass.kernelRadius = maxDimension * 0.008;
+      ssaoPass.kernelRadius = ssaoDimension * 0.008;
       ssaoPass.minDistance = 0.0002;
       ssaoPass.maxDistance = 0.008;
       controls.minDistance = maxDimension * 0.08;
@@ -1726,7 +1738,7 @@ async function initializeViewer(viewer) {
       });
       frameView(false, true);
       // Référence : rayon d'occlusion calibré pour la vue initiale, puis maintenu constant en pixels (zoom, plein écran).
-      ssaoBaseRadius = maxDimension * 0.008 * camera.zoom;
+      ssaoBaseRadius = ssaoDimension * 0.008 * camera.zoom;
       ssaoBaseZoom = camera.zoom;
       if (!isFullscreen() && stage.clientHeight) ssaoRefHeight = stage.clientHeight;
       // Tant que l'utilisateur n'a pas bougé, un changement de taille de la scène recadre la vue.

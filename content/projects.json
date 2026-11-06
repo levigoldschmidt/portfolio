@@ -175,6 +175,18 @@
           "text": "Objectifs : Concevoir un ensemble de logements collectifs et inclusifs (colocations étudiantes, habitat transgénérationnel ou hébergement d'urgence) implanté sur le site historique de l'ancien hôpital de La Rochefoucauld, à Paris (14e arrondissement). Le projet repose sur la conception et la déclinaison d'« Unités d'habitation » combinatoires de 150 m², pensées pour accueillir 5 à 6 occupants en équilibrant vie communautaire et intimité individuelle. Insérée dans une bande constructible étroite le long d'une venelle en pente, cette architecture répétitive crée un filtre poreux entre la rue et le nouveau parc public. L'enjeu est de travailler l'imbrication des pleins et des vides, la relation au sol et les aménagements extérieurs tout en prolongeant la vocation sociale de ce site patrimonial.\n\nConcept : Développer le projet autour d'une trame carrée rigide organisée autour d'un patio central en triple hauteur. Cet atrium distribue les logements étudiants grâce à un jeu de passerelles suspendues. Chaque unité suit un plan carré identique doté d'une loggia privée. L'exploration de la façade épaisse permet d'intégrer du mobilier sur mesure (tables, banquettes, bacs de végétation) ainsi que des rideaux amovibles personnalisables pour chaque étudiant.\n\nDurée : 4 semaines\n\nNote : 17/20 (Meilleure note)"
         },
         {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [
+            { "label": "Bâtiment", "type": "building", "viewer_config": "viewers/default-cut-planes.json", "file": "projets/pfs-2-habitat-solidaire/projet-v16-batiment.glb" },
+            { "label": "Environnement", "type": "environment", "file": "projets/pfs-2-habitat-solidaire/projet-v16-environnement.glb" }
+          ],
+          "unit_scale": 0.001,
+          "viewer_config": "viewers/pfs-2.json",
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
           "id": "process",
           "label": "Processus / Croquis",
           "type": "images",
