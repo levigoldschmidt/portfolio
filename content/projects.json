@@ -9,8 +9,9 @@
       "id": "6acb7c51511bd7be12379afb",
       "slug": "s2-projet-1-the-room",
       "title": "S2 Projet 1 : the room",
+      "published": false,
       "category": "Architecture",
-      "year": "",
+      "year": "2025-2026",
       "cover": null,
       "sections": [
         {
@@ -86,7 +87,7 @@
       "slug": "s2-intensif-structure",
       "title": "S2 Intensif structure",
       "category": "Architecture",
-      "year": "",
+      "year": "2026-2027",
       "cover": "projets/s2-intensif-structure/levigoldscmidt1010.jpg",
       "sections": [
         {
@@ -136,6 +137,7 @@
           "id": "video",
           "label": "Vidéo",
           "type": "videos",
+          "published": false,
           "grayscale": true,
           "videos": [
             {
@@ -165,7 +167,7 @@
       "slug": "pfs-2-habitat-solidaire",
       "title": "PFS 2 : Habitat Solidaire",
       "category": "Architecture",
-      "year": "2026",
+      "year": "2025-2026",
       "cover": "projets/pfs-2-habitat-solidaire/GoldschmidtLevi1021_12.jpg",
       "sections": [
         {
@@ -278,7 +280,7 @@
       "slug": "s1-projet-7-l-atelier-d-artiste",
       "title": "S1 Projet 7 : L'Atelier d'Artiste",
       "category": "Architecture",
-      "year": "2025",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-7-l-atelier-d-artiste/LeviGoldscmidt1020.jpg",
       "sections": [
         {
@@ -380,7 +382,7 @@
       "slug": "s1-projet-6",
       "title": "S1 Projet 6",
       "category": "Architecture",
-      "year": "2024",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-6/LevyGoldschmit1011.jpg",
       "sections": [
         {
@@ -524,7 +526,7 @@
       "slug": "s1-projet-5",
       "title": "S1 Projet 5",
       "category": "Architecture",
-      "year": "2026",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-5/elementsgraphique_6.png",
       "sections": [
         {
@@ -596,7 +598,7 @@
       "slug": "pfs-1-un-espace-couvert",
       "title": "PFS 1 : Un Espace Couvert",
       "category": "Architecture",
-      "year": "2024",
+      "year": "2025-2026",
       "cover": "projets/pfs-1-un-espace-couvert/Image2_000.png",
       "sections": [
         {
@@ -680,7 +682,7 @@
       "slug": "s1-projet-3-la-fenetre-l-enveloppe",
       "title": "S1 Projet 3 : La Fenêtre L'Enveloppe",
       "category": "Architecture",
-      "year": "2024",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-3-la-fenetre-l-enveloppe/IMG_9711.JPEG",
       "sections": [
         {
@@ -747,7 +749,7 @@
       "slug": "s1-projet-2-le-toit-l-ossature",
       "title": "S1 Projet 2 : Le Toit L'Ossature",
       "category": "Architecture",
-      "year": "2024",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-2-le-toit-l-ossature/IMG_9707.JPEG",
       "sections": [
         {
@@ -816,7 +818,7 @@
       "slug": "s1-projet-1-le-mur-la-masse",
       "title": "S1 Projet 1 : Le Mur La Masse",
       "category": "Architecture",
-      "year": "2024",
+      "year": "2025-2026",
       "cover": "projets/s1-projet-1-le-mur-la-masse/IMG_9739.jpg",
       "sections": [
         {
@@ -869,34 +871,166 @@
       ]
     },
     {
-      "id": "6a4eacaafcaa495813c4c7d2",
-      "slug": "cheepygood",
-      "title": "CheepyGood",
+      "id": "6acced17fd972c4b34bf42e6",
+      "slug": "steam-racing-world-finals-singapour-2025",
+      "title": "Steam Racing World Finals Singapour 2025",
       "category": "Lycée",
-      "year": "2024",
-      "cover": "projets/cheepygood/df.PNG",
+      "year": "2024-2025",
+      "cover": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_13.jpg",
       "sections": [
-        {
-          "id": "model-3d",
-          "label": "Maquette 3D interactive",
-          "type": "3d_model",
-          "layers": [{ "label": "CheepyGood", "type": "building", "file": "projets/cheepygood/cheepygood.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
-          "unit_scale": 1,
-          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
-        },
         {
           "id": "texte",
           "label": "Texte",
           "type": "text",
-          "text": "CheepyGood by Minitech — Little robots that do big things. Projet de design produit développé au lycée : modélisation 3D d'un petit robot compact, vue éclatée et présentation éditoriale type magazine. Dimensions : 58 × 46 × 34 mm."
+          "text": "Aeris est une équipe de cinq membres du lycée Jean Mermoz de Saint-Louis, qualifiée pour la finale mondiale STEM Racing 2025 à Singapour après sa victoire aux finales nationales françaises.\n\nLe projet couvre tous les aspects d'une entreprise : ingénierie (conception CAO sous Onshape, simulations CFD, optimisation de la masse, usinage 5 axes chez ISL), gestion de projet (ClickUp, matrice RACI, budget de 30 000 €), marketing, réseaux sociaux, recherche de sponsors et développement durable.\n\nLa voiture Aeris, d'une masse d'environ 48,3 g, est équipée de roulements hybrides céramique Kanzen et de roues en aluminium 7075. Le modèle MATLAB/Simulink estime un temps de piste de 1,067 s sur 24 mètres.\n\nLes portfolios Enterprise, Project Management, Engineering, Engineering Drawings et 3D Renders sont disponibles dans la section PDF."
         },
         {
-          "id": "gallery",
-          "label": "Images",
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "Voiture Aeris", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/aeris-v3.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+        },
+        {
+          "id": "renders",
+          "label": "RENDU 3D",
           "type": "images",
           "grayscale": true,
           "images": [
-            "projets/cheepygood/arrg.PNG"
+            "projets/steam-racing-world-finals-singapour-2025/render-01.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-02.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-03.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-04.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-05.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-06.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-07.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-08.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-09.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-12.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-13.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-14.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-15.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-16.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-17.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-18.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-19.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-20.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/render-21.jpg"
+          ]
+        },
+        {
+          "id": "final-national",
+          "label": "FINAL NATIONAL",
+          "type": "images",
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_085422.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_085429.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_124541.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_130753.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_132426.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_134803.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-12.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-13.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-14.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-15.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-16.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-17.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-18.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-19.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-20.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-21.jpg"
+          ]
+        },
+        {
+          "id": "plans",
+          "label": "ENGINEERING DRAWING",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_12.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_13.jpg"
+          ]
+        },
+        {
+          "id": "process",
+          "label": "ENGINEERING PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/1.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/2.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/3.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/4.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/5.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/6.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/7.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_8.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_9.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_11.jpg"
+          ]
+        },
+        {
+          "id": "enterprise",
+          "label": "ENTERPRISE PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-01.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-02.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-03.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-04.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-05.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-06.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-07.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-08.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-09.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-10.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-11.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/enterprise-12.jpg"
+          ]
+        },
+        {
+          "id": "management",
+          "label": "MANAGEMENT PORTFOLIO",
+          "type": "images",
+          "grayscale": true,
+          "images": [
+            "projets/steam-racing-world-finals-singapour-2025/management-01.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-02.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-03.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-04.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-05.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-06.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/management-07.jpg"
           ]
         },
         {
@@ -906,57 +1040,79 @@
           "grayscale": true,
           "videos": [
             {
-              "youtube": "ACzamYSsTnM",
-              "thumbnail": "videos/ACzamYSsTnM.jpg"
+              "youtube": "CdkBjUj9o8c",
+              "thumbnail": "videos/CdkBjUj9o8c.jpg"
+            },
+            {
+              "youtube": "dWZzyhAs1Fw",
+              "start": 8940,
+              "thumbnail": "videos/dWZzyhAs1Fw.jpg"
+            },
+            {
+              "youtube": "VgGMCiO6VZw",
+              "thumbnail": "videos/VgGMCiO6VZw.jpg"
+            },
+            {
+              "youtube": "9i3xYSSv-KQ",
+              "thumbnail": "videos/9i3xYSSv-KQ.jpg"
+            },
+            {
+              "youtube": "2EILB7Cyb5s",
+              "thumbnail": "videos/2EILB7Cyb5s.jpg"
             }
           ]
         },
         {
-          "id": "pdfs",
-          "label": "PDF",
-          "type": "pdfs",
-          "files": [
-            {
-              "file": "projets/cheepygood/Codedifferentyeux_.pdf",
-              "name": "codedifferentyeux_.pdf",
-              "viewable": false
-            }
-          ],
-          "images_zip": true
-        }
-      ]
-    },
-    {
-      "id": "6a520138f0eb788229d0a355",
-      "slug": "tino",
-      "title": "Tino",
-      "category": "Lycée",
-      "year": "2024",
-      "cover": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.png",
-      "sections": [
-        {
-          "id": "model-3d",
-          "label": "Maquette 3D interactive",
-          "type": "3d_model",
-          "layers": [
-            { "label": "Pièce à isoler", "type": "building", "file": "projets/tino/tino-part-clamp.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" },
-            { "label": "Reste du modèle", "type": "building", "file": "projets/tino/tino-part-rest.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" }
-          ],
-          "unit_scale": 1,
-          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
-        },
-        {
-          "id": "gallery",
-          "label": "Images",
+          "id": "pit",
+          "label": "Pit display",
           "type": "images",
           "grayscale": true,
+          "model": {
+            "layers": [{ "label": "Pit display", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/pit-display-world-finals.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+            "unit_scale": 1,
+            "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
+          },
           "images": [
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_1.png",
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_2.png",
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_3.png",
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_4.png",
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_5.png",
-            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_6.png"
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154828.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154836.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154846.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154857.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154907.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154914.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154940.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154955.jpg",
+            "projets/steam-racing-world-finals-singapour-2025/P_20250927_155003.jpg"
+          ]
+        },
+        {
+          "id": "social",
+          "label": "Réseaux sociaux",
+          "type": "links",
+          "links": [
+            {
+              "label": "Instagram — @aeris.racing",
+              "url": "https://www.instagram.com/aeris.racing/"
+            },
+            {
+              "label": "LinkedIn — AERIS RACING",
+              "url": "https://www.linkedin.com/company/aeris-racing"
+            },
+            {
+              "label": "YouTube — @AerisF1inschoolyoutube",
+              "url": "https://www.youtube.com/@AerisF1inschoolyoutube/videos"
+            },
+            {
+              "label": "STEM Racing — stemracing.com",
+              "url": "https://www.stemracing.com/"
+            }
+          ],
+          "instagram_posts": [
+            "https://www.instagram.com/p/DHBYhUyI0g4/",
+            "https://www.instagram.com/p/DDGvqMqOoqv/",
+            "https://www.instagram.com/p/DNYpjgWoTsg/",
+            "https://www.instagram.com/reel/DH_tWEhIFxx/",
+            "https://www.instagram.com/p/DPBVuoiErhm/",
+            "https://www.instagram.com/reel/DO_IIezCAw2/"
           ]
         },
         {
@@ -965,9 +1121,29 @@
           "type": "pdfs",
           "files": [
             {
-              "file": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.pdf",
-              "name": "compte-rendutinolvigoldschmidt.pdf",
-              "viewable": false
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_enterprise_compressed.pdf",
+              "name": "t83_stem_racing_fr_enterprise_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_projectmanagement_compressed.pdf",
+              "name": "t83_stem_racing_fr_projectmanagement_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_drawings_compressed.pdf",
+              "viewable": true
+            },
+            {
+              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_compressed.pdf",
+              "name": "t83_stem_racing_fr_engineering_renders_compressed.pdf",
+              "viewable": true
             }
           ],
           "images_zip": true
@@ -979,7 +1155,7 @@
       "slug": "enigmati-x",
       "title": "Enigmati'X",
       "category": "Lycée",
-      "year": "2024",
+      "year": "2023-2023",
       "cover": "projets/enigmati-x/1_6.png",
       "cover_scale": 1.5,
       "sections": [
@@ -1098,170 +1274,82 @@
       ]
     },
     {
-      "id": "6acced17fd972c4b34bf42e6",
-      "slug": "steam-racing-world-finals-singapour-2025",
-      "title": "Steam Racing World Finals Singapour 2025",
+      "id": "6a520138f0eb788229d0a355",
+      "slug": "tino",
+      "title": "Tino",
       "category": "Lycée",
-      "year": "2025",
-      "cover": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_13.jpg",
+      "year": "2023-2024",
+      "cover": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.png",
       "sections": [
-        {
-          "id": "texte",
-          "label": "Texte",
-          "type": "text",
-          "text": "Aeris est une équipe de cinq membres du lycée Jean Mermoz de Saint-Louis, qualifiée pour la finale mondiale STEM Racing 2025 à Singapour après sa victoire aux finales nationales françaises.\n\nLe projet couvre tous les aspects d'une entreprise : ingénierie (conception CAO sous Onshape, simulations CFD, optimisation de la masse, usinage 5 axes chez ISL), gestion de projet (ClickUp, matrice RACI, budget de 30 000 €), marketing, réseaux sociaux, recherche de sponsors et développement durable.\n\nLa voiture Aeris, d'une masse d'environ 48,3 g, est équipée de roulements hybrides céramique Kanzen et de roues en aluminium 7075. Le modèle MATLAB/Simulink estime un temps de piste de 1,067 s sur 24 mètres.\n\nLes portfolios Enterprise, Project Management, Engineering, Engineering Drawings et 3D Renders sont disponibles dans la section PDF."
-        },
         {
           "id": "model-3d",
           "label": "Maquette 3D interactive",
           "type": "3d_model",
-          "layers": [{ "label": "Voiture Aeris", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/aeris-v3.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "layers": [
+            { "label": "Pièce à isoler", "type": "building", "file": "projets/tino/tino-part-clamp.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" },
+            { "label": "Reste du modèle", "type": "building", "file": "projets/tino/tino-part-rest.glb", "viewer_config": "viewers/object-cut-planes-top-back.json" }
+          ],
           "unit_scale": 1,
           "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
         {
-          "id": "renders",
-          "label": "RENDU 3D",
+          "id": "gallery",
+          "label": "Images",
           "type": "images",
           "grayscale": true,
           "images": [
-            "projets/steam-racing-world-finals-singapour-2025/render-01.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-02.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-03.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-04.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-05.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-06.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-07.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-08.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-09.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-11.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-12.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-13.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-14.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-15.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-16.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-17.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-18.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-19.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-20.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/render-21.jpg"
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_1.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_2.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_3.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_4.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_5.png",
+            "projets/tino/compte-renduTINOlviGOLDSCHMIDT_6.png"
           ]
         },
         {
-          "id": "final-national",
-          "label": "FINAL NATIONAL",
-          "type": "images",
-          "images": [
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_085422.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_085429.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_124541.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_130753.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_132426.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/P_20250308_134803.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-1.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-2.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-3.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-4.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-5.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-6.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-7.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-8.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-9.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-11.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-12.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-13.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-14.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-15.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-16.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-17.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-18.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-19.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-20.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/NATIONAL FINAL/Competition Toulon 2025-21.jpg"
-          ]
+          "id": "pdfs",
+          "label": "PDF",
+          "type": "pdfs",
+          "files": [
+            {
+              "file": "projets/tino/compte-renduTINOlviGOLDSCHMIDT.pdf",
+              "name": "compte-rendutinolvigoldschmidt.pdf",
+              "viewable": false
+            }
+          ],
+          "images_zip": true
+        }
+      ]
+    },
+    {
+      "id": "6a4eacaafcaa495813c4c7d2",
+      "slug": "cheepygood",
+      "title": "CheepyGood",
+      "category": "Lycée",
+      "year": "2022-2023",
+      "cover": "projets/cheepygood/df.PNG",
+      "sections": [
+        {
+          "id": "model-3d",
+          "label": "Maquette 3D interactive",
+          "type": "3d_model",
+          "layers": [{ "label": "CheepyGood", "type": "building", "file": "projets/cheepygood/cheepygood-assembly.gltf", "viewer_config": "viewers/object-cut-planes-colors.json" }],
+          "unit_scale": 1,
+          "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
         },
         {
-          "id": "plans",
-          "label": "ENGINEERING DRAWING",
+          "id": "texte",
+          "label": "Texte",
+          "type": "text",
+          "text": "CheepyGood by Minitech — Little robots that do big things. Projet de design produit développé au lycée : modélisation 3D d'un petit robot compact, vue éclatée et présentation éditoriale type magazine. Dimensions : 58 × 46 × 34 mm."
+        },
+        {
+          "id": "gallery",
+          "label": "Images",
           "type": "images",
-          "requires_code": true,
           "grayscale": true,
           "images": [
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_1.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_2.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_3.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_4.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_5.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_6.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_7.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_8.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_9.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_11.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_12.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_13.jpg"
-          ]
-        },
-        {
-          "id": "process",
-          "label": "ENGINEERING PORTFOLIO",
-          "type": "images",
-          "requires_code": true,
-          "grayscale": true,
-          "images": [
-            "projets/steam-racing-world-finals-singapour-2025/1.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/2.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/3.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/4.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/5.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/6.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/7.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/8.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/9.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_8.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_9.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_11.jpg"
-          ]
-        },
-        {
-          "id": "enterprise",
-          "label": "ENTERPRISE PORTFOLIO",
-          "type": "images",
-          "requires_code": true,
-          "grayscale": true,
-          "images": [
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-01.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-02.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-03.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-04.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-05.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-06.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-07.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-08.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-09.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-10.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-11.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/enterprise-12.jpg"
-          ]
-        },
-        {
-          "id": "management",
-          "label": "MANAGEMENT PORTFOLIO",
-          "type": "images",
-          "requires_code": true,
-          "grayscale": true,
-          "images": [
-            "projets/steam-racing-world-finals-singapour-2025/management-01.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-02.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-03.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-04.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-05.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-06.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/management-07.jpg"
+            "projets/cheepygood/arrg.PNG"
           ]
         },
         {
@@ -1271,111 +1359,20 @@
           "grayscale": true,
           "videos": [
             {
-              "youtube": "CdkBjUj9o8c",
-              "thumbnail": "videos/CdkBjUj9o8c.jpg"
-            },
-            {
-              "youtube": "dWZzyhAs1Fw",
-              "start": 8940,
-              "thumbnail": "videos/dWZzyhAs1Fw.jpg"
-            },
-            {
-              "youtube": "VgGMCiO6VZw",
-              "thumbnail": "videos/VgGMCiO6VZw.jpg"
-            },
-            {
-              "youtube": "9i3xYSSv-KQ",
-              "thumbnail": "videos/9i3xYSSv-KQ.jpg"
-            },
-            {
-              "youtube": "2EILB7Cyb5s",
-              "thumbnail": "videos/2EILB7Cyb5s.jpg"
+              "youtube": "ACzamYSsTnM",
+              "thumbnail": "videos/ACzamYSsTnM.jpg"
             }
-          ]
-        },
-        {
-          "id": "pit",
-          "label": "Pit display",
-          "type": "images",
-          "grayscale": true,
-          "model": {
-            "layers": [{ "label": "Pit display", "type": "building", "file": "projets/steam-racing-world-finals-singapour-2025/pit-display-world-finals.glb", "viewer_config": "viewers/object-cut-planes-colors.json" }],
-            "unit_scale": 1,
-            "orientation_model": "projets/s1-projet-7-l-atelier-d-artiste/Part Studio 1.gltf"
-          },
-          "images": [
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154828.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154836.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154846.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154857.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154907.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154914.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154940.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_154955.jpg",
-            "projets/steam-racing-world-finals-singapour-2025/P_20250927_155003.jpg"
-          ]
-        },
-        {
-          "id": "social",
-          "label": "Réseaux sociaux",
-          "type": "links",
-          "links": [
-            {
-              "label": "Instagram — @aeris.racing",
-              "url": "https://www.instagram.com/aeris.racing/"
-            },
-            {
-              "label": "LinkedIn — AERIS RACING",
-              "url": "https://www.linkedin.com/company/aeris-racing"
-            },
-            {
-              "label": "YouTube — @AerisF1inschoolyoutube",
-              "url": "https://www.youtube.com/@AerisF1inschoolyoutube/videos"
-            },
-            {
-              "label": "STEM Racing — stemracing.com",
-              "url": "https://www.stemracing.com/"
-            }
-          ],
-          "instagram_posts": [
-            "https://www.instagram.com/p/DHBYhUyI0g4/",
-            "https://www.instagram.com/p/DDGvqMqOoqv/",
-            "https://www.instagram.com/p/DNYpjgWoTsg/",
-            "https://www.instagram.com/reel/DH_tWEhIFxx/",
-            "https://www.instagram.com/p/DPBVuoiErhm/",
-            "https://www.instagram.com/reel/DO_IIezCAw2/"
           ]
         },
         {
           "id": "pdfs",
           "label": "PDF",
           "type": "pdfs",
-          "requires_code": true,
           "files": [
             {
-              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_enterprise_compressed.pdf",
-              "name": "t83_stem_racing_fr_enterprise_compressed.pdf",
-              "viewable": true
-            },
-            {
-              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_projectmanagement_compressed.pdf",
-              "name": "t83_stem_racing_fr_projectmanagement_compressed.pdf",
-              "viewable": true
-            },
-            {
-              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_compressed.pdf",
-              "name": "t83_stem_racing_fr_engineering_compressed.pdf",
-              "viewable": true
-            },
-            {
-              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_drawings_compressed.pdf",
-              "name": "t83_stem_racing_fr_engineering_drawings_compressed.pdf",
-              "viewable": true
-            },
-            {
-              "file": "projets/steam-racing-world-finals-singapour-2025/T83_STEM_RACING_FR_engineering_renders_compressed.pdf",
-              "name": "t83_stem_racing_fr_engineering_renders_compressed.pdf",
-              "viewable": true
+              "file": "projets/cheepygood/Codedifferentyeux_.pdf",
+              "name": "codedifferentyeux_.pdf",
+              "viewable": false
             }
           ],
           "images_zip": true
@@ -1403,6 +1400,7 @@
           "video_folders": [
             "projets/BMW 1502/Moteurs"
           ],
+          "normalize_videos": true,
           "mute_videos": true
         },
         {
@@ -1416,6 +1414,7 @@
           "video_folders": [
             "projets/BMW 1502/Carrosserie"
           ],
+          "normalize_videos": true,
           "mute_videos": true
         }
       ]

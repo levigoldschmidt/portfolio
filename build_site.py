@@ -156,6 +156,11 @@ class Builder:
     def __init__(self, args):
         self.site = load("site.json")
         self.projects = load("projects.json")
+        self.projects["projects"] = [
+            {**project, "sections": [section for section in project["sections"]
+                                     if section.get("published", True)]}
+            for project in self.projects["projects"] if project.get("published", True)
+        ]
         self.photos = load("photos.json")
         self.videos = load("videos.json")
         self.cv = load("cv.json")
@@ -171,6 +176,13 @@ class Builder:
         self.style_version = hashlib.sha256((STATIC / "css" / "style.css").read_bytes()).hexdigest()[:12]
         self.script_version = hashlib.sha256((STATIC / "js" / "main.js").read_bytes()).hexdigest()[:12]
         self.fbx_script_version = hashlib.sha256((STATIC / "js" / "archi-viewer.js").read_bytes()).hexdigest()[:12]
+        self.visitor_script_version = hashlib.sha256((STATIC / "js" / "visitor.js").read_bytes()).hexdigest()[:12]
+        self.visitor_endpoint = self.site.get("visitor_endpoint", "").strip()
+        if self.visitor_endpoint:
+            endpoint = urlparse(self.visitor_endpoint)
+            if (endpoint.scheme != "https" or not endpoint.hostname or endpoint.username or endpoint.password
+                    or endpoint.query or endpoint.fragment or endpoint.hostname.lower() in {"discord.com", "discordapp.com"}):
+                raise SystemExit("error: visitor_endpoint must be an HTTPS relay URL, not a Discord webhook")
 
     def tr(self, text: str, **values: str | int) -> str:
         translated = self.translations.get(text, text) if self.language == "en" else text
@@ -241,6 +253,11 @@ class Builder:
         if logo:
             head_extra.append(f'<link rel="icon" type="image/png" href="{rel(logo)}">')
             head_extra.append(f'<link rel="apple-touch-icon" href="{rel(logo)}">')
+        visitor_script = (
+            f'<script src="{rel("assets/js/visitor.js")}?v={self.visitor_script_version}" '
+            f'data-endpoint="{esc(self.visitor_endpoint)}" defer></script>'
+            if self.visitor_endpoint else ""
+        )
         return f"""<!doctype html>
 <html lang="{self.language}">
 <head>
@@ -255,6 +272,7 @@ class Builder:
 <link rel="stylesheet" href="{rel('assets/css/style.css')}?v={self.style_version}">
 <script type="importmap">{{"imports":{{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}}}</script>
 <script src="{rel('assets/js/main.js')}?v={self.script_version}" defer></script>
+{visitor_script}
 </head>
 <body>
 <header class="site-header">
@@ -360,6 +378,36 @@ class Builder:
         link_or_copy(cached, dest)
         return output
 
+    def compatible_video(self, rel_media: str) -> str:
+        src = MEDIA / rel_media
+        stat = src.stat()
+        digest = hashlib.sha256(f"v1:{rel_media}:{stat.st_mtime_ns}:{stat.st_size}".encode()).hexdigest()[:20]
+        cached = CACHE / "videos" / f"{digest}.mp4"
+        if not cached.exists():
+            cached.parent.mkdir(parents=True, exist_ok=True)
+            temporary = cached.with_name(f"{cached.stem}.tmp.mp4")
+            result = subprocess.run(
+                [
+                    imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-loglevel", "error",
+                    "-i", str(src), "-map", "0:v:0", "-map", "0:a?",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20",
+                    "-preset", "medium", "-c:a", "aac", "-movflags", "+faststart",
+                    "-metadata:s:v:0", "rotate=0", "-y", str(temporary),
+                ],
+                capture_output=True, text=True,
+            )
+            if result.returncode or not temporary.is_file():
+                error = result.stderr.strip() or "no video was produced"
+                if temporary.exists():
+                    temporary.unlink()
+                raise SystemExit(f"error: could not convert media/{rel_media}: {error}")
+            temporary.replace(cached)
+        output = f"media/_resized/videos/{cached.name}"
+        dest = OUT / output
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        link_or_copy(cached, dest)
+        return output
+
     def media_thumbnail(self, page: Page, rel_media: str, alt: str, gray: bool) -> str:
         if Path(rel_media).suffix.lower() not in VIDEO_EXT:
             return self.img(page, rel_media, alt=alt, width=THUMB_WIDTH, gray=gray)
@@ -369,12 +417,13 @@ class Builder:
                 f'<span class="video-play" aria-hidden="true">{ICONS["play"]}</span>')
 
     def image_section(self, page: Page, group: str, title: str, images: list[str], grayscale: bool,
-                      mute_videos: bool = False) -> str:
+                      mute_videos: bool = False, normalize_videos: bool = False) -> str:
         media = images
         large_media = []
         for path in media:
             if Path(path).suffix.lower() in VIDEO_EXT:
-                large_media.append(page.rel(self.images.original(path)))
+                video = self.compatible_video(path) if normalize_videos else self.images.original(path)
+                large_media.append(page.rel(video))
             else:
                 large_media.append(page.rel(self.images.variant(path, LARGE_WIDTH).src))
         gray_attr = " data-grayscale=true" if grayscale else ""
@@ -612,7 +661,8 @@ class Builder:
                 if "video_folders" in s:
                     images += self.files_in_folders(s["video_folders"], VIDEO_EXT)
                 inner = self.image_section(page, f"{p['slug']}-{s['id']}", heading, images,
-                                           p["category"] == "Architecture", s.get("mute_videos", False))
+                                           p["category"] == "Architecture", s.get("mute_videos", False),
+                                           s.get("normalize_videos", False))
             elif kind == "videos":
                 if "folders" in s:
                     videos = self.files_in_folders(s["folders"], VIDEO_EXT)

@@ -1,0 +1,16 @@
+name = "portfolio-visitor-relay"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://example.com"
+
+[[ratelimits]]
+name = "VISITOR_LIMIT"
+namespace_id = "1001"
+simple = { limit = 3, period = 60 }
+
+[[ratelimits]]
+name = "GLOBAL_LIMIT"
+namespace_id = "1002"
+simple = { limit = 30, period = 60 }

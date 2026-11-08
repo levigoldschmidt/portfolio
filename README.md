@@ -15,11 +15,15 @@ static/css, js  ─┘
 - `content/site.json`: site name, description, navigation, logo.
 - `content/projects.json`: categories and projects, in display order. Each
   project has a title, year, cover and a list of `sections`:
+  Set `published: false` on a project or section to hide it while keeping its
+  data for later; remove the flag or set it to `true` to publish it again.
   - `text`
   - `images` (`grayscale: true|false`), supplied as explicit image paths or
     discovered from media `folders`; optional `video_folders` adds local videos
     to the same image gallery with generated frame thumbnails; `mute_videos`
-    can silence those videos when opened
+    can silence those videos when opened. `normalize_videos: true` creates
+    cached H.264/AAC MP4 copies with baked-in orientation for browser playback,
+    without changing the source videos
   - `videos` (YouTube id and optional start time, or local media `folders`);
     YouTube videos can set `muted: true` to start muted while keeping player
     controls available
@@ -95,6 +99,35 @@ to stop the server.
   frame for each thumbnail; clicking it opens the video player. Set
   `mute_videos: true` on the image section to mute its videos.
 - **`site/`:** it is regenerated on every build, so don't edit it by hand.
+
+### Optional Discord visitor notifications
+
+The static site cannot keep a Discord webhook secret. The optional
+`visitor-relay/` Cloudflare Worker forwards a fixed notification without
+exposing the webhook URL. It does not send the page URL, visitor IP, or other
+visitor details to Discord. Cloudflare uses the client IP for per-IP rate
+limiting; the global and per-IP limits are per Cloudflare location, not a
+guarantee against abuse.
+
+1. Replace `ALLOWED_ORIGIN` in `visitor-relay/wrangler.toml` with the exact
+   HTTPS origin of the published site (no path or trailing slash). Adjust the
+   rate-limit namespace IDs if they are already used in your account.
+2. Deploy the Worker with Cloudflare Wrangler and configure the secret
+   `DISCORD_WEBHOOK_URL` in the Cloudflare dashboard or with
+   `wrangler secret put DISCORD_WEBHOOK_URL` from `visitor-relay/`.
+   Never put the webhook URL in the repository or in the site configuration.
+3. Set `visitor_endpoint` in `content/site.json` to the Worker's public HTTPS
+   URL, rebuild and publish the site. Leave it absent or empty to disable
+   notifications.
+
+The browser sends at most one successful notification per tab session;
+localhost and loopback addresses are excluded. This is not a unique-visitor
+counter: separate tabs, blocked storage, browser privacy tools, network errors,
+and rate limits can change the count. Failed requests can be retried on a later
+page load; interrupted requests are retried after 30 seconds. The endpoint
+remains public, and origin checks and rate limits do
+not prevent deliberate spoofing. Consider visitor notice and consent requirements
+before enabling this optional tracking.
 
 ### Build options
 
