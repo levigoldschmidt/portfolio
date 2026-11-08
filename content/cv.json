@@ -17,9 +17,13 @@
     },
     {
       "label": "1 Ferme Leihouse, Biederthal 68480, France"
+    },
+    {
+      "label": "Site - Portfolio : levi.leihouse.com",
+      "href": "https://levi.leihouse.com"
     }
   ],
-  "profile": "Étudiant en 2ᵉ année à l'École Nationale Supérieure d'Architecture de Paris-Val de Seine (ENSA PVS), je recherche un stage pratique de 4 semaines pour le mois de juillet 2027.",
+  "profile": "Étudiant en 2ᵉ année à l'École Nationale Supérieure d'Architecture Paris-Val de Seine, je recherche un stage pratique de 4 semaines en juillet 2027 pour intégrer le quotidien d'une agence d'architecture et comprendre activement toutes les étapes de réalisation d'un projet.",
   "sections": [
     {
       "title": "FORMATIONS",
@@ -55,7 +59,7 @@
         },
         {
           "heading": "2025 — Champion de France et finaliste mondial à Singapour de la compétition STEM Racing",
-          "description": "Ingénierie, gestion de projet (recherche de sponsors, budget) et présentation orale devant un jury international en anglais."
+          "description": "Ingénierie, gestion de projet, recherche de sponsors et présentation orale devant un jury international en anglais."
         },
         {
           "heading": "2021 — Stage de découverte en agence d'architecture",
@@ -79,7 +83,7 @@
         },
         {
           "label": "Langues",
-          "text": "français (langue maternelle), anglais (B2, section européenne), allemand (B1, niveau scolaire)."
+          "text": "français (langue maternelle), anglais (B2, section européenne), allemand (B1)."
         }
       ]
     },
@@ -89,7 +93,7 @@
       "items": [
         {
           "label": "Automobile & mécanique",
-          "text": "restauration en cours d'une BMW 1502 de 1975 (mécanique, électricité, carrosserie)."
+          "text": "restauration complète en cours d'une BMW 1502 de 1975 (mécanique, électricité, carrosserie)."
         },
         {
           "label": "Création audiovisuelle",

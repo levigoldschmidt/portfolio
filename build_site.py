@@ -543,8 +543,8 @@ class Builder:
                                      image=self.images.original(cv["hero"]) if cv.get("hero") else None,
                                      canonical=canonical))
 
-    def build_projects_index(self):
-        page = Page(self.localized_target("projets/index.html"))
+    def build_projects_index(self, path: str = "projets/index.html"):
+        page = Page(self.localized_target(path))
         categories = [
             category for category in self.projects["categories"]
             if any(project["category"] == category for project in self.projects["projects"])
@@ -570,7 +570,7 @@ class Builder:
         description = (f"Architecture and high-school projects — {self.site['name']}" if self.language == "en"
                        else f"Projets d’architecture et de lycée — {self.site['name']}")
         self.write(page, self.layout(page, title="Projets", body="\n".join(out), active="projets/",
-                                     description=description))
+                                     description=description, canonical=self.localized_target("projets/")))
 
     def build_project(self, p: dict):
         page = Page(self.localized_target(f"projets/{p['slug']}/index.html"))
@@ -841,8 +841,8 @@ class Builder:
         for language in ("fr", "en"):
             self.language = language
             prefix = "en/" if language == "en" else ""
-            self.build_cv(f"{prefix}index.html", active="cv/", canonical="en/" if language == "en" else "")
             self.build_cv(f"{prefix}cv/index.html", active="cv/", canonical="en/cv/" if language == "en" else "cv/")
+            self.build_projects_index("index.html")
             self.build_projects_index()
             for project in self.projects["projects"]:
                 self.build_project(project)

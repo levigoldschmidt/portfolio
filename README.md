@@ -151,6 +151,8 @@ before enabling this optional tracking.
   and the publish directory to `site`.
 - **Routes:** each page is a folder with an `index.html`, such as `/projets/`,
   `/photos/`, `/videos/`, `/cv/` and `/projets/<slug>/`.
+  The home page (`/`, or `/en/` in English) displays the projects; the CV
+  remains available at `/cv/` and `/en/cv/`.
   - French is the default language. Use the `FR / EN` switch in the header to
     change languages; English pages are generated under `/en/`, for example
     `/en/projets/`, `/en/photos/`, `/en/videos/` and `/en/cv/`.
